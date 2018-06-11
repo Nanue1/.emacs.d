@@ -128,6 +128,7 @@
 
   (require 'init-emacs-w3m)
   (require 'init-hydra)
+  (require 'init-orgpage)
 
   ;; {{ idle require other stuff
   (setq idle-require-idle-delay 2)
