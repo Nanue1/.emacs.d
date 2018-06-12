@@ -72,7 +72,7 @@
   (require 'init-spelling)
   (require 'init-gui-frames)
   (require 'init-ido)
-  (require 'init-dired)
+  ;(require 'init-dired)
   (require 'init-uniquify)
   (require 'init-ibuffer)
   (require 'init-ivy)
@@ -90,7 +90,7 @@
   (require 'init-ruby-mode)
   (require 'init-lisp)
   (require 'init-elisp)
-  (require 'init-yasnippet)
+  ;(require 'init-yasnippet)
   ;; Use bookmark instead
   (require 'init-cc-mode)
   (require 'init-gud)

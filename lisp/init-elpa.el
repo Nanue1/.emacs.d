@@ -28,7 +28,7 @@ But you may use safer HTTPS instead.")
     move-text
     string-edit ; looks magnars don't update stable tag frequently
     findr
-    mwe-log-commands
+    ;mwe-log-commands
     yaml-mode
     counsel-gtags ; the stable version is never released
     noflet
@@ -38,7 +38,7 @@ But you may use safer HTTPS instead.")
     idomenu
     buffer-move
     regex-tool
-    quack
+    ;quack
     legalese
     htmlize
     scratch
@@ -46,11 +46,11 @@ But you may use safer HTTPS instead.")
     bookmark+
     flymake-lua
     multi-term
-    dired+
+    ;dired+
     inflections
-    dropdown-list
+    ;dropdown-list
     lua-mode
-    tidy
+    ;tidy
     pomodoro
     auto-compile
     packed
@@ -59,25 +59,30 @@ But you may use safer HTTPS instead.")
     w3m
     erlang
     workgroups2
-    company-c-headers)
+    company-c-headers
+    )
   "Don't install any Melpa packages except these packages")
 
 ;; We include the org repository for completeness, but don't use it.
 ;; Lock org-mode temporarily:
 (setq package-archives
-      '(;; uncomment below line if you need use GNU ELPA
-        ;; ("gnu" . "https://elpa.gnu.org/packages/")
-        ;; ("org" . "http://orgmode.org/elpa/") ; latest org-mode
+      '(
         ("localelpa" . "~/.emacs.d/localelpa/")
+        ("milkbox" . "http://melpa.milkbox.net/packages/");org-page
+        ("org" . "http://orgmode.org/elpa/") ; latest org-mode
         ;; ("my-js2-mode" . "https://raw.githubusercontent.com/redguardtoo/js2-mode/release/") ; github has some issue
-        ("melpa" . "https://melpa.org/packages/")
+        ;; uncomment below line if you need use GNU ELPA
+        ;; ("gnu" . "https://elpa.gnu.org/packages/")
+        ;; ("gnu" . "http://elpa.emacs-china.org/gnu/")
+        ;; ("melpa" . "https://melpa.org/packages/")
+        ("melpa" . "http://elpa.emacs-china.org/melpa/")
         ("melpa-stable" . "https://stable.melpa.org/packages/")))
 
 ;; Un-comment below line if your extract https://github.com/redguardtoo/myelpa/archive/master.zip into ~/myelpa/
 ;; (setq package-archives '(("myelpa" . "~/myelpa")))
 
 ;; Or Un-comment below line if you install package from https://github.com/redguardtoo/myelpa/
-;; (setq package-archives '(("myelpa" . "https://raw.github.com/redguardtoo/myelpa/master/")))
+;;(setq package-archives '(("myelpa" . "https://raw.github.com/redguardtoo/myelpa/master/")))
 
 
 
@@ -150,7 +155,10 @@ But you may use safer HTTPS instead.")
 
 (package-initialize)
 
+(require 'org-page)
+
 (require-package 'async)
+(require-package 'org)
 (require-package 'dash) ; required by string-edit
 ; color-theme 6.6.1 in elpa is buggy
 (require-package 'color-theme)
@@ -183,7 +191,7 @@ But you may use safer HTTPS instead.")
 (require-package 'haml-mode)
 (require-package 'scss-mode)
 (require-package 'markdown-mode)
-(require-package 'dired+)
+;(require-package 'dired+)
 (require-package 'link)
 (require-package 'connection)
 (require-package 'dictionary) ; dictionary requires 'link and 'connection
@@ -204,18 +212,18 @@ But you may use safer HTTPS instead.")
 (require-package 'find-file-in-project)
 (require-package 'counsel-bbdb)
 (require-package 'elpy)
-(require-package 'hl-sexp)
+;(require-package 'hl-sexp)
 (require-package 'ibuffer-vc)
 (require-package 'less-css-mode)
 (require-package 'move-text)
-(require-package 'mwe-log-commands)
+;(require-package 'mwe-log-commands)
 (require-package 'page-break-lines)
 (require-package 'regex-tool)
 (require-package 'groovy-mode)
 (require-package 'ruby-compilation)
 (require-package 'emmet-mode)
 (require-package 'session)
-(require-package 'tidy)
+;(require-package 'tidy)
 (require-package 'unfill)
 (require-package 'w3m)
 (require-package 'idomenu)
@@ -228,11 +236,11 @@ But you may use safer HTTPS instead.")
 (require-package 'bbdb)
 (require-package 'pomodoro)
 (require-package 'flymake-lua)
-(require-package 'dropdown-list)
+;(require-package 'dropdown-list)
 ;; rvm-open-gem to get gem's code
 (require-package 'rvm)
 ;; C-x r l to list bookmarks
-(require-package 'bookmark+)
+;(require-package 'bookmark+)
 (require-package 'multi-term)
 (require-package 'js-doc)
 (require-package 'js2-mode)
@@ -255,7 +263,7 @@ But you may use safer HTTPS instead.")
 (require-package 'flx-ido)
 (require-package 'neotree)
 (require-package 'define-word)
-(require-package 'quack) ; for scheme
+;(require-package 'quack) ; for scheme
 (require-package 'hydra)
 (require-package 'ivy-hydra) ; @see https://oremacs.com/2015/07/23/ivy-multiaction/
 (require-package 'pyim)

@@ -1,4 +1,4 @@
-(require 'org-page)
+;(require-package 'org-page)
 (setq op/repository-directory "~/github/Nanue1.github.io")   ;; the repository location
 (setq op/site-domain "http://www.manue1.site/")         ;; your domain
 (setq op/site-main-title "manue1's site")
