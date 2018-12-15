@@ -1,24 +1,25 @@
+;; -*- coding: utf-8; lexical-binding: t; -*-
+
 ;; {{ @see http://emacs-journey.blogspot.com.au/2012/06/improving-ansi-term.html
 ;; kill the buffer when terminal is exited
 (defadvice term-sentinel (around my-advice-term-sentinel (proc msg))
   (if (memq (process-status proc) '(signal exit))
-      (let ((buffer (process-buffer proc)))
+      (let* ((buffer (process-buffer proc)))
         ad-do-it
         (kill-buffer buffer))
     ad-do-it))
 (ad-activate 'term-sentinel)
 
 ;; always use bash
-(defvar my-term-shell "/bin/bash")
+(defvar my-term-program "/bin/bash")
 (defadvice ansi-term (before force-bash)
-  (interactive (list my-term-shell)))
+  (interactive (list my-term-program)))
 (ad-activate 'ansi-term)
 
 ;; utf8
 (defun my-term-use-utf8 ()
   (set-buffer-process-coding-system 'utf-8-unix 'utf-8-unix))
 (add-hook 'term-exec-hook 'my-term-use-utf8)
-
 ;; }}
 
 ;; {{ multi-term
@@ -32,7 +33,7 @@
   "Switch to the term buffer last used, or create a new one if
     none exists, or if the current buffer is already a term."
   (interactive)
-  (let ((b (last-term-buffer (buffer-list))))
+  (let* ((b (last-term-buffer (buffer-list))))
     (if (or (not b) (eq 'term-mode major-mode))
         (multi-term)
       (switch-to-buffer b))))
@@ -48,7 +49,7 @@
   (interactive)
   (term-send-raw-string "\C-k"))
 
-(setq multi-term-program "/bin/bash")
+(setq multi-term-program my-term-program)
 ;; check `term-bind-key-alist' for key bindings
 (eval-after-load 'multi-term
   '(progn

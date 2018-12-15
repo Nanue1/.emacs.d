@@ -10,6 +10,7 @@ tramp
 recentf
 .session
 company-statistics-cache.el
+custom-set-variables.el
 ido.last
 emms
 auto-save-list

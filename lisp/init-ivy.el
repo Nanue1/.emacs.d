@@ -1,5 +1,40 @@
-(require 'counsel)
-;; (ivy-mode 1)
+;; -*- coding: utf-8; lexical-binding: t; -*-
+
+(eval-after-load 'counsel
+  '(progn
+     ;; automatically pick up cygwin cli tools for counse
+     (when *win64*
+       (let* ((path (getenv "path"))
+              (cygpath (or (and (file-exists-p "c:/cygwin64/bin") "c:/cygwin64/bin")
+                           (and (file-exists-p "d:/cygwin64/bin") "d:/cygwin64/bin")
+                           (and (file-exists-p "e:/cygwin64/bin") "e:/cygwin64/bin"))))
+         ;; `cygpath' could be nil on Windows
+         (when cygpath
+           (unless (string-match-p cygpath counsel-git-cmd)
+
+             (setq counsel-git-cmd (concat cygpath "/" counsel-git-cmd)))
+           (unless (string-match-p cygpath counsel-git-grep-cmd-default)
+             (setq counsel-git-grep-cmd-default (concat cygpath "/" counsel-git-grep-cmd-default)))
+           ;; ;; git-log does not work
+           ;; (unless (string-match-p cygpath counsel-git-log-cmd)
+           ;;   (setq counsel-git-log-cmd (concat "GIT_PAGER="
+           ;;                                     cygpath
+           ;;                                     "/cat "
+           ;;                                     cygpath
+           ;;                                     "/git log --grep '%s'")))
+           (unless (string-match-p cygpath counsel-grep-base-command)
+             (setq counsel-grep-base-command (concat cygpath "/" counsel-grep-base-command))))))
+
+     ;; @see https://oremacs.com/2015/07/23/ivy-multiaction/
+     ;; press "M-o" to choose ivy action
+     (ivy-set-actions
+      'counsel-find-file
+      '(("j" find-file-other-frame "other frame")
+        ("b" counsel-find-file-cd-bookmark-action "cd bookmark")
+        ("x" counsel-find-file-extern "open externally")
+        ("d" delete-file "delete")
+        ("r" counsel-find-file-as-root "open as root")))))
+
 ;; not good experience
 ;; (setq ivy-use-virtual-buffers t)
 (global-set-key (kbd "C-c C-r") 'ivy-resume)
@@ -9,7 +44,7 @@
 
 ;; {{ @see http://oremacs.com/2015/04/19/git-grep-ivy/
 (defun counsel-read-keyword (hint &optional default-when-no-active-region)
-  (let (keyword)
+  (let* (keyword)
     (cond
      ((region-active-p)
       (setq keyword (counsel-unquote-regex-parens (my-selected-str)))
@@ -21,23 +56,37 @@
                       (read-string hint)))))
     keyword))
 
+(defun my-counsel-recentf (&optional n)
+  "Find a file on `recentf-list'.
+If N is not nil, only list files in current project."
+  (interactive "P")
+  (unless (featurep 'recentf) (require 'recentf))
+  (recentf-mode 1)
+  (let* ((files (mapcar #'substring-no-properties recentf-list))
+         (root-dir (if (ffip-project-root) (file-truename (ffip-project-root)))))
+    (when (and n root-dir)
+      (setq files (delq nil (mapcar (lambda (f) (path-in-directory-p f root-dir)) files))))
+    (ivy-read "Recentf: "
+              files
+              :initial-input (if (region-active-p) (my-selected-str))
+              :action (lambda (f)
+                        (with-ivy-window
+                          (find-file f)))
+              :caller 'counsel-recentf)))
+
 (defmacro counsel-git-grep-or-find-api (fn git-cmd hint no-keyword)
   "Apply FN on the output lines of GIT-CMD.  HINT is hint when user input.
-Yank the file name at the same time.  FILTER is function to filter the collection"
+Yank the file name at the same time.  FILTER is function to filter the collection."
   `(let* ((str (if (buffer-file-name) (file-name-base (buffer-file-name)) ""))
           (default-directory (locate-dominating-file
                               default-directory ".git"))
-          collection)
-
-     (unless ,no-keyword
-       ;; selected region contains no regular expression
-       (setq keyword (counsel-read-keyword (concat "Enter " ,hint " pattern:" ))))
-
-     (setq collection
-           (split-string (shell-command-to-string (if ,no-keyword ,git-cmd
-                                                    (format ,git-cmd keyword)))
-                         "\n"
-                         t))
+          (keyword (unless ,no-keyword
+                     ;; selected region contains no regular expression
+                     (counsel-read-keyword (concat "Enter " ,hint " pattern:" ))))
+          (collection (split-string (shell-command-to-string (if ,no-keyword ,git-cmd
+                                                               (format ,git-cmd keyword)))
+                                    "\n"
+                                    t)))
      (cond
       ((and collection (= (length collection) 1))
        (funcall ,fn (car collection)))
@@ -100,7 +149,7 @@ Yank the file name at the same time.  FILTER is function to filter the collectio
   ;; ripgrep says that "-n" is enabled actually not,
   ;; so we manually add it
   (concat (executable-find "rg")
-          " -n -M 256 --no-heading --color never "
+          " -n -M 128 --no-heading --color never "
           (if for-swiper "-i '%s' %s" "-s")))
 
 (if (counsel-has-quick-grep)
@@ -142,9 +191,7 @@ Or else, find files since 24 weeks (6 months) ago."
 (defun counsel-bookmark-goto ()
   "Open ANY bookmark.  Requires bookmark+"
   (interactive)
-
-  (unless (featurep 'bookmark)
-    (require 'bookmark))
+  (unless (featurep 'bookmark) (require 'bookmark))
   (bookmark-maybe-load-default-file)
 
   (let* ((bookmarks (and (boundp 'bookmark-alist) bookmark-alist))
@@ -154,8 +201,7 @@ Or else, find files since 24 weeks (6 months) ago."
     (ivy-read "bookmarks:"
               collection
               :action (lambda (bookmark)
-                        (unless (featurep 'bookmark+)
-                          (require 'bookmark+))
+                        (local-require 'bookmark+)
                         (bookmark-jump bookmark)))))
 
 (defun counsel-yank-bash-history ()
@@ -169,138 +215,27 @@ Or else, find files since 24 weeks (6 months) ago."
                            (buffer-string))
                          "\n"
                          t))))
-      (ivy-read (format "Bash history:") collection
-                :action (lambda (val)
-                          (kill-new val)
-                          (message "%s => kill-ring" val)))))
+    (ivy-read (format "Bash history:") collection
+              :action (lambda (val)
+                        (kill-new val)
+                        (message "%s => kill-ring" val)))))
 
-(defun counsel-goto-recent-directory ()
-  "Goto recent directories."
-  (interactive)
+(defun counsel-recent-directory (&optional n)
+  "Goto recent directories.
+If N is not nil, only list directories in current project."
+  (interactive "P")
   (unless recentf-mode (recentf-mode 1))
-  (let* ((collection (delete-dups
-                      (append (mapcar 'file-name-directory recentf-list)
-                              ;; fasd history
-                              (if (executable-find "fasd")
-                                  (split-string (shell-command-to-string "fasd -ld") "\n" t))))))
-    (ivy-read "directories:" collection :action 'dired)))
+  (let* ((cands (delete-dups
+                 (append my-dired-directory-history
+                         (mapcar 'file-name-directory recentf-list)
+                         ;; fasd history
+                         (if (executable-find "fasd")
+                             (nonempty-lines (shell-command-to-string "fasd -ld"))))))
+         (root-dir (if (ffip-project-root) (file-truename (ffip-project-root)))))
+    (when (and n root-dir)
+      (setq cands (delq nil (mapcar (lambda (f) (path-in-directory-p f root-dir)) cands))))
+    (ivy-read "directories:" cands :action 'dired)))
 
-
-;; {{ ag/grep
-(defvar my-grep-ignore-dirs
-  '(".git"
-    ".bzr"
-    ".svn"
-    "bower_components"
-    "node_modules"
-    ".sass-cache"
-    ".cache"
-    "test"
-    "tests"
-    ".metadata"
-    "logs")
-  "Directories to ignore when grepping.")
-(defvar my-grep-ignore-file-exts
-  '("log"
-    "properties"
-    "session"
-    "swp")
-  "File extensions to ignore when grepping.")
-(defvar my-grep-ignore-file-names
-  '("TAGS"
-    "tags"
-    "GTAGS"
-    "GPATH"
-    ".bookmarks.el"
-    "*.svg"
-    "history"
-    "#*#"
-    "*.min.js"
-    "*bundle*.js"
-    "*vendor*.js"
-    "*.min.css"
-    "*~")
-  "File names to ignore when grepping.")
-
-(defvar my-grep-opts-cache '())
-
-(defun my-grep-exclude-opts (use-cache)
-  ;; (message "my-grep-exclude-opts called => %s" use-cache)
-  (let* ((ignore-dirs (if use-cache (plist-get my-grep-opts-cache :ignore-dirs)
-                        my-grep-ignore-dirs))
-         (ignore-file-exts (if use-cache (plist-get my-grep-opts-cache :ignore-file-exts)
-                             my-grep-ignore-file-exts))
-         (ignore-file-names (if use-cache (plist-get my-grep-opts-cache :ignore-file-names)
-                              my-grep-ignore-file-names)))
-    (cond
-     ((counsel-has-quick-grep)
-      (concat (mapconcat (lambda (e) (format "-g='!%s/*'" e))
-                         ignore-dirs " ")
-              " "
-              (mapconcat (lambda (e) (format "-g='!*.%s'" e))
-                         ignore-file-exts " ")
-              " "
-              (mapconcat (lambda (e) (format "-g='!%s'" e))
-                         ignore-file-names " ")))
-     (t
-      (concat (mapconcat (lambda (e) (format "--exclude-dir='%s'" e))
-                         ignore-dirs " ")
-              " "
-              (mapconcat (lambda (e) (format "--exclude='*.%s'" e))
-                         ignore-file-exts " ")
-              " "
-              (mapconcat (lambda (e) (format "--exclude='%s'" e))
-                         ignore-file-names " "))))))
-
-(defun my-grep-cli (keyword use-cache &optional extra-opts)
-  "Extended regex is used, like (pattern1|pattern2)."
-  (let* (opts cmd)
-    (unless extra-opts (setq extra-opts ""))
-    (cond
-     ((counsel-has-quick-grep)
-      (setq cmd (format "%s %s %s \"%s\" --"
-                        (counsel-find-quick-grep)
-                        (my-grep-exclude-opts use-cache)
-                        extra-opts
-                        keyword)))
-     (t
-      ;; use extended regex always
-      (setq cmd (format "grep -rsnE %s %s \"%s\" *"
-                        (my-grep-exclude-opts use-cache)
-                        extra-opts
-                        keyword))))
-    ;; (message "cmd=%s" cmd)
-    cmd))
-
-(defun my-root-dir ()
-  "If ffip is not installed, use `default-directory'."
-  (file-name-as-directory (or (and (fboundp 'ffip-get-project-root-directory)
-                                   (ffip-get-project-root-directory))
-                              default-directory)))
-
-;; TIP: after `M-x my-grep', you can:
-;; - then `C-c C-o' or `M-x ivy-occur'
-;; - `C-c C-c' or `M-x wgrep-finish-edit'
-(defun my-grep-occur ()
-  "Generate a custom occur buffer for `my-grep'."
-  (unless (eq major-mode 'ivy-occur-grep-mode)
-    (ivy-occur-grep-mode))
-  ;; useless to set `default-directory', it's already correct
-  ;; (message "default-directory=%s" default-directory)
-  ;; we use regex in elisp, don't unquote regex
-  (let* ((cands (ivy--filter ivy-text
-                             (split-string (shell-command-to-string (my-grep-cli keyword t))
-                                           "[\r\n]+" t))))
-    ;; (message "ivy-text=%s cands-length=%d" ivy-text (length cands))
-    ;; Need precise number of header lines for `wgrep' to work.
-    (insert (format "-*- mode:grep; default-directory: %S -*-\n\n\n"
-                    default-directory))
-    (insert (format "%d candidates:\n" (length cands)))
-    (ivy--occur-insert-lines
-     (mapcar
-      (lambda (cand) (concat "./" cand))
-      cands))))
-;; goto `wgrep-mode' automatically after `C-c C-o', (why press extra `C-x C-q'?)
 (defun ivy-occur-grep-mode-hook-setup ()
   ;; no syntax highlight, I only care performance when searching/replacing
   (font-lock-mode -1)
@@ -308,40 +243,8 @@ Or else, find files since 24 weeks (6 months) ago."
   (column-number-mode -1)
   ;; turn on wgrep right now
   ;; (ivy-wgrep-change-to-wgrep-mode) ; doesn't work, don't know why
-  )
+  (local-set-key (kbd "RET") #'ivy-occur-press-and-switch))
 (add-hook 'ivy-occur-grep-mode-hook 'ivy-occur-grep-mode-hook-setup)
-
-(defvar my-grep-show-full-directory t)
-(defvar my-grep-debug nil)
-(defun my-grep ()
-  "Grep at project root directory or current directory.
-Try to find best grep program (ripgrep, grep...) automatically.
-Extended regex like (pattern1|pattern2) is used."
-  (interactive)
-  (let* ((keyword (counsel-read-keyword "Enter grep pattern: "))
-         (default-directory (my-root-dir))
-         (collection (split-string (shell-command-to-string (my-grep-cli keyword nil)) "[\r\n]+" t))
-         (dir (if my-grep-show-full-directory (my-root-dir)
-                (file-name-as-directory (file-name-base (directory-file-name (my-root-dir)))))))
-
-    (setq my-grep-opts-cache (plist-put my-grep-opts-cache :ignore-dirs my-grep-ignore-dirs))
-    (setq my-grep-opts-cache (plist-put my-grep-opts-cache :ignore-file-exts my-grep-ignore-file-exts))
-    (setq my-grep-opts-cache (plist-put my-grep-opts-cache :ignore-file-names my-grep-ignore-file-names))
-    ;; (message "my-grep-opts-cache=%s" my-grep-opts-cache)
-
-    (ivy-read (format "matching \"%s\" at %s:" keyword dir)
-              collection
-              :history 'counsel-git-grep-history
-              :action `(lambda (line)
-                         (let* ((default-directory (my-root-dir)))
-                           (counsel--open-file line)))
-              :unwind (lambda ()
-                        (counsel-delete-process)
-                        (swiper--cleanup))
-              :caller 'my-grep)))
-(ivy-set-occur 'my-grep 'my-grep-occur)
-(ivy-set-display-transformer 'my-grep 'counsel-git-grep-transformer)
-;; }}
 
 (defun counsel-git-grep-by-selected ()
   (interactive)
@@ -352,11 +255,17 @@ Extended regex like (pattern1|pattern2) is used."
     (counsel-git-grep))))
 
 (defun counsel-browse-kill-ring (&optional n)
-  "Use `browse-kill-ring' if it exists and N is 1.
-If N > 1, assume just yank the Nth item in `kill-ring'.
-If N is nil, use `ivy-mode' to browse the `kill-ring'."
+  "If N > 1, assume just yank the Nth item in `kill-ring'.
+If N is nil, use `ivy-mode' to browse `kill-ring'."
   (interactive "P")
-  (my-select-from-kill-ring my-insert-str n))
+  (my-select-from-kill-ring (lambda (s)
+                              (let* ((plain-str (my-insert-str s))
+                                     (trimmed (s-trim plain-str)))
+                                (setq kill-ring (cl-delete-if
+                                                 `(lambda (e) (string= ,trimmed (s-trim e)))
+                                                 kill-ring))
+                                (kill-new plain-str)))
+                            n))
 
 (defun ivy-switch-buffer-matcher-pinyin (regexp candidates)
   (unless (featurep 'pinyinlib) (require 'pinyinlib))
@@ -386,9 +295,70 @@ If N is nil, use `ivy-mode' to browse the `kill-ring'."
 ;; {{ swiper&ivy-mode
 (defun swiper-the-thing ()
   (interactive)
-  (swiper (my-use-selected-string-or-ask "")))
+  ;; better performance on large files than swiper
+  (counsel-grep-or-swiper (my-use-selected-string-or-ask "")))
 
 (global-set-key (kbd "C-s") 'swiper)
 ;; }}
+
+(global-set-key (kbd "C-h v") 'counsel-describe-variable)
+(global-set-key (kbd "C-h f") 'counsel-describe-function)
+
+;; better performance on everything (especially windows), ivy-0.10.0 required
+;; @see https://github.com/abo-abo/swiper/issues/1218
+(setq ivy-dynamic-exhibit-delay-ms 250)
+
+;; Press C-p and Enter to select current input as candidate
+;; https://oremacs.com/2017/11/30/ivy-0.10.0/
+(setq ivy-use-selectable-prompt t)
+
+;; {{ input ":" at first to start pinyin search in any ivy-related packages
+(defvar ivy-pinyin-search-trigger-key ":")
+;; @see https://emacs-china.org/t/topic/2432/3
+(defun my-pinyinlib-build-regexp-string (str)
+  (cond
+   ((string= str ".*")
+    ".*")
+   (t
+    (pinyinlib-build-regexp-string str t))))
+
+(defun my-pinyin-regexp-helper (str)
+  (cond
+   ((string= str " ")
+    ".*")
+   ((string= str "")
+    nil)
+   (;; t
+    str)))
+
+(defun pinyin-to-utf8 (str)
+  (when (and (> (length str) 0)
+             (string= (substring str 0 1) ":"))
+    (let* ((collection (split-string (replace-regexp-in-string ivy-pinyin-search-trigger-key
+                                                               ""
+                                                               str) "")))
+      (unless (featurep 'pinyinlib) (require 'pinyinlib))
+      (mapconcat 'my-pinyinlib-build-regexp-string
+                 (delq nil (mapcar 'my-pinyin-regexp-helper
+                                   collection))
+                 ""))))
+
+(defun re-builder-pinyin (str)
+  (or (pinyin-to-utf8 str)
+      (ivy--regex-plus str)))
+
+(setq ivy-re-builders-alist
+      '((t . re-builder-pinyin)))
+;; }}
+
+(eval-after-load 'ivy
+  '(progn
+     ;; set actions when running C-x b
+     ;; replace "frame" with window to open in new window
+     (ivy-set-actions
+      'ivy-switch-buffer-by-pinyin
+      '(("j" switch-to-buffer-other-frame "other frame")
+        ("k" kill-buffer "kill")
+        ("r" ivy--rename-buffer-action "rename")))))
 
 (provide 'init-ivy)

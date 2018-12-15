@@ -1,4 +1,6 @@
-; some cool org tricks
+;; -*- coding: utf-8; lexical-binding: t; -*-
+
+;; some cool org tricks
 ;; @see http://emacs.stackexchange.com/questions/13820/inline-verbatim-and-code-with-quotes-in-org-mode
 
 ;; {{ NO spell check for embedded snippets
@@ -16,11 +18,11 @@
 
 ;; no spell check for property
 (defun org-mode-current-line-is-property ()
-  (string-match "^[ \t]+:[A-Z]+:[ \t]+" (my-line-str)))
+  (string-match-p "^[ \t]+:[A-Z]+:[ \t]+" (my-line-str)))
 
 ;; Please note flyspell only use ispell-word
 (defadvice org-mode-flyspell-verify (after org-mode-flyspell-verify-hack activate)
-  (let ((run-spellcheck ad-return-value))
+  (let* ((run-spellcheck ad-return-value))
     (if ad-return-value
       (cond
        ((org-mode-is-code-snippet)
@@ -47,7 +49,7 @@
 
 (defun my-setup-odt-org-convert-process ()
   (interactive)
-  (let ((cmd "/Applications/LibreOffice.app/Contents/MacOS/soffice"))
+  (let* ((cmd "/Applications/LibreOffice.app/Contents/MacOS/soffice"))
     (when (and *is-a-mac* (file-exists-p cmd))
       ;; org v7
       (setq org-export-odt-convert-processes '(("LibreOffice" "/Applications/LibreOffice.app/Contents/MacOS/soffice --headless --convert-to %f%x --outdir %d %i")))
@@ -84,13 +86,20 @@ If use-indirect-buffer is not nil, use `indirect-buffer' to hold the widen conte
                                                  use-indirect-buffer))
         ((equal major-mode 'org-mode)
          (org-narrow-to-subtree))
-        ((equal major-mode 'diff-mode)
+        ((derived-mode-p 'diff-mode)
          (let* (b e)
            (save-excursion
-             (setq b (diff-beginning-of-file))
+             ;; If the (point) is already beginning or end of file diff,
+             ;; the `diff-beginning-of-file' and `diff-end-of-file' return nil
+             (setq b (progn (diff-beginning-of-file) (point)))
              (setq e (progn (diff-end-of-file) (point))))
            (when (and b e (< b e))
              (narrow-to-region-indirect-buffer-maybe b e use-indirect-buffer))))
+        ((derived-mode-p 'prog-mode)
+         (mark-defun)
+         (narrow-to-region-indirect-buffer-maybe (region-beginning)
+                                                 (region-end)
+                                                 use-indirect-buffer))
         (t (error "Please select a region to narrow to"))))
 
 ;; Various preferences
@@ -118,11 +127,14 @@ If use-indirect-buffer is not nil, use `indirect-buffer' to hold the widen conte
       )
 
 ;; Refile targets include this file and any file contributing to the agenda - up to 5 levels deep
-(setq org-refile-targets (quote ((nil :maxlevel . 5) (org-agenda-files :maxlevel . 5))))
-;; Targets start with the file name - allows creating level 1 tasks
-(setq org-refile-use-outline-path (quote file))
-;; Targets complete in steps so we start with filename, TAB shows the next level of targets etc
-(setq org-outline-path-complete-in-steps t)
+(setq org-refile-targets '((nil :maxlevel . 5) (org-agenda-files :maxlevel . 5)))
+(setq org-refile-use-outline-path 'file)
+(setq org-outline-path-complete-in-steps nil)
+(defadvice org-refile (around org-refile-hack activate)
+  ;; when `org-refile' scanning org files, disable user's org-mode hooks
+  (let* ((force-buffer-file-temp-p t))
+    ad-do-it))
+
 
 (setq org-todo-keywords
       (quote ((sequence "TODO(t)" "STARTED(s)" "|" "DONE(d!/!)")
@@ -164,27 +176,32 @@ If use-indirect-buffer is not nil, use `indirect-buffer' to hold the widen conte
      (setq org-src-fontify-natively t)))
 
 (defun org-mode-hook-setup ()
-  (setq evil-auto-indent nil)
-  ;; org-mode's own flycheck will be loaded
-  (enable-flyspell-mode-conditionally)
+  (unless (is-buffer-file-temp)
+    (setq evil-auto-indent nil)
+    ;; org-mode's own flycheck will be loaded
+    (enable-flyspell-mode-conditionally)
 
-  ;; but I don't want to auto spell check when typing,
-  ;; please comment out `(flyspell-mode -1)` if you prefer auto spell check
-  (flyspell-mode -1)
+    ;; No auto spell check during Emacs startup
+    ;; please comment out `(flyspell-mode -1)` if you prefer auto spell check
+    (flyspell-mode -1)
 
-  ;; for some reason, org8 disable odt export by default
-  (add-to-list 'org-export-backends 'odt)
-  ;; (add-to-list 'org-export-backends 'org) ; for org-mime
+    ;; for some reason, org8 disable odt export by default
+    (add-to-list 'org-export-backends 'odt)
+    ;; (add-to-list 'org-export-backends 'org) ; for org-mime
 
-  ;; org-mime setup, run this command in org-file, than yank in `message-mode'
-  (local-set-key (kbd "C-c M-o") 'org-mime-org-buffer-htmlize)
+    ;; org-mime setup, run this command in org-file, than yank in `message-mode'
+    (local-set-key (kbd "C-c M-o") 'org-mime-org-buffer-htmlize)
 
-  ;; don't spell check double words
-  (setq flyspell-check-doublon nil)
+    ;; don't spell check double words
+    (setq flyspell-check-doublon nil)
 
-  ;; display wrapped lines instead of truncated lines
-  (setq truncate-lines nil)
-  (setq word-wrap t))
+    ;; create updated table of contents of org file
+    ;; @see https://github.com/snosov1/toc-org
+    (toc-org-enable)
+
+    ;; display wrapped lines instead of truncated lines
+    (setq truncate-lines nil)
+    (setq word-wrap t)))
 (add-hook 'org-mode-hook 'org-mode-hook-setup)
 
 (defadvice org-open-at-point (around org-open-at-point-choose-browser activate)
@@ -198,26 +215,21 @@ If use-indirect-buffer is not nil, use `indirect-buffer' to hold the widen conte
     ad-do-it))
 
 (defadvice org-publish (around org-publish-advice activate)
-  "Stop running major-mode hook when org-publish"
-  (let ((old load-user-customized-major-mode-hook))
-    (setq load-user-customized-major-mode-hook nil)
-    ad-do-it
-    (setq load-user-customized-major-mode-hook old)))
+  "Stop running `major-mode' hook when org-publish."
+  (let* ((load-user-customized-major-mode-hook nil))
+    ad-do-it))
 
 ;; {{ org2nikola set up
 (setq org2nikola-output-root-directory "~/.config/nikola")
 (setq org2nikola-use-google-code-prettify t)
-(setq org2nikola-prettify-unsupported-language
-      '(elisp "lisp"
-              emacs-lisp "lisp"))
+(setq org2nikola-prettify-unsupported-language '(elisp "lisp" emacs-lisp "lisp"))
 ;; }}
 
 (defun org-demote-or-promote (&optional is-promote)
   (interactive "P")
   (unless (region-active-p)
     (org-mark-subtree))
-  (if is-promote (org-do-promote)
-    (org-do-demote)))
+  (if is-promote (org-do-promote) (org-do-demote)))
 
 ;; {{ @see http://orgmode.org/worg/org-contrib/org-mime.html
 (defun org-mime-html-hook-setup ()

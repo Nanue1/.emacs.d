@@ -1,3 +1,5 @@
+;; -*- coding: utf-8; lexical-binding: t; -*-
+
 (setq w3m-coding-system 'utf-8
       w3m-file-coding-system 'utf-8
       w3m-file-name-coding-system 'utf-8
@@ -127,7 +129,9 @@
        (*is-a-mac* ; mac
         "open")
        (*unix* ; linux or unix
-        (executable-find "firefox"))
+        ;; prefer Chrome than Firefox
+        (or (executable-find "google-chrome")
+            (executable-find "firefox")))
        (t
         ;; Windows: you need add "firefox.exe" to environment variable PATH
         ;; @see https://en.wikipedia.org/wiki/PATH_(variable)

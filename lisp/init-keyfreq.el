@@ -1,4 +1,6 @@
-(require 'keyfreq)
+;; -*- coding: utf-8; lexical-binding: t; -*-
+
+(local-require 'keyfreq)
 
 (defun turnon-keyfreq-mode ()
   (interactive)
@@ -20,9 +22,6 @@
         backward-char
         backward-kill-word
         backward-word
-        browse-kill-ring-forward
-        browse-kill-ring-insert-and-quit
-        browse-kill-ring-quit
         clipboard-kill-ring-save
         comint-previous-input
         comint-send-input
@@ -142,6 +141,8 @@
         ivy-backward-delete-char
         ivy-done
         ivy-next-line
+        ivy-occur-next-line
+        ivy-occur-previous-line
         ivy-previous-line
         js-mode
         js2-line-break
@@ -172,6 +173,7 @@
         org-return
         org-self-insert-command
         org-todo
+        orgtbl-self-insert-command
         package-menu-execute
         paredit-backward-delete
         paredit-backward-kill-word

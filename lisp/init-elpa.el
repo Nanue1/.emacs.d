@@ -1,90 +1,127 @@
-(require 'package)
+;; -*- coding: utf-8; lexical-binding: t; -*-
 
-;; Set it to `t' to use safer HTTPS to download packages
-(defvar melpa-use-https-repo nil
-  "By default, HTTP is used to download packages.
-But you may use safer HTTPS instead.")
-
-;; List of VISIBLE packages from melpa-unstable (http://melpa.org)
-;; Feel free to add more packages!
+;; List of visible packages from melpa-unstable (http://melpa.org).
+;; Please add the package name into `melpa-include-packages`
+;; if it's not visible after  `list-packages'.
 (defvar melpa-include-packages
   '(ace-mc
+    color-theme ; emacs24 need this package
+    ace-window ; lastest stable is released on year 2014
+    artbollocks-mode
+    auto-package-update
     bbdb
+    evil-textobj-syntax
+    command-log-mode
+    vimrc-mode
+    auto-yasnippet
     dumb-jump
-    color-theme
+    websocket ; to talk to the browser
+    evil-exchange
+    evil-find-char-pinyin
+    evil-lion
+    counsel-css
+    iedit
+    undo-tree
     js-doc
+    jss ; remote debugger of browser
     ;; {{ since stable v0.9.1 released, we go back to stable version
-    ;; ivy
+    ivy ; stable counsel dependent unstable ivy
     ;; counsel
     ;; swiper
     ;; }}
+    moe-theme
+    ample-theme
+    molokai-theme
+    alect-themes
+    tangotango-theme
+    gruber-darker-theme
+    ample-zen-theme
+    flatland-theme
+    clues-theme
+    darkburn-theme
+    soothe-theme
+    dakrone-theme
+    busybee-theme
+    bubbleberry-theme
+    cherry-blossom-theme
+    heroku-theme
+    hemisu-theme
+    badger-theme
+    distinguished-theme
+    challenger-deep-theme
+    tao-theme
     wgrep
     robe
+    slime
     groovy-mode
     inf-ruby
-    company ; I won't wait another 2 years for stable
+    ;; company ; I won't wait another 2 years for stable
     simple-httpd
     dsvn
-    move-text
-    string-edit ; looks magnars don't update stable tag frequently
     findr
-    ;mwe-log-commands
+    mwe-log-commands
     yaml-mode
     counsel-gtags ; the stable version is never released
     noflet
     db
+    package-lint
     creole
     web
-    idomenu
     buffer-move
     regex-tool
-    ;quack
     legalese
     htmlize
     scratch
     session
-    bookmark+
     flymake-lua
     multi-term
-    ;dired+
     inflections
-    ;dropdown-list
     lua-mode
-    ;tidy
     pomodoro
     auto-compile
     packed
+    keyfreq
     gitconfig-mode
     textile-mode
     w3m
     erlang
     workgroups2
+    zoutline
     company-c-headers
-    )
-  "Don't install any Melpa packages except these packages")
+    company-statistics)
+  "Packages to install from melpa-unstable.")
 
-;; We include the org repository for completeness, but don't use it.
-;; Lock org-mode temporarily:
+(defvar melpa-stable-banned-packages nil
+  "Banned packages from melpa-stable")
+
+;; I don't use any packages from GNU ELPA because I want to minimize
+;; dependency on 3rd party web site.
 (setq package-archives
-      '(
-        ("localelpa" . "~/.emacs.d/localelpa/")
-        ("milkbox" . "http://melpa.milkbox.net/packages/");org-page
-        ("org" . "http://orgmode.org/elpa/") ; latest org-mode
-        ;; ("my-js2-mode" . "https://raw.githubusercontent.com/redguardtoo/js2-mode/release/") ; github has some issue
+      '(("localelpa" . "~/.emacs.d/localelpa/")
         ;; uncomment below line if you need use GNU ELPA
         ;; ("gnu" . "https://elpa.gnu.org/packages/")
-        ;; ("gnu" . "http://elpa.emacs-china.org/gnu/")
-        ;; ("melpa" . "https://melpa.org/packages/")
-        ("melpa" . "http://elpa.emacs-china.org/melpa/")
-        ("melpa-stable" . "https://stable.melpa.org/packages/")))
+        ("melpa" . "https://melpa.org/packages/")
+        ("melpa-stable" . "https://stable.melpa.org/packages/")
 
-;; Un-comment below line if your extract https://github.com/redguardtoo/myelpa/archive/master.zip into ~/myelpa/
-;; (setq package-archives '(("myelpa" . "~/myelpa")))
+        ;; Use either 163 or tsinghua mirror repository when official melpa
+        ;; is too slow or shutdown.
 
-;; Or Un-comment below line if you install package from https://github.com/redguardtoo/myelpa/
-;;(setq package-archives '(("myelpa" . "https://raw.github.com/redguardtoo/myelpa/master/")))
+        ;; ;; {{ Option 1: 163 mirror repository:
+        ;; ;; ("gnu" . "https://mirrors.163.com/elpa/gnu/")
+        ;; ("melpa" . "https://mirrors.163.com/elpa/melpa/")
+        ;; ("melpa-stable" . "https://mirrors.163.com/elpa/melpa-stable/")
+        ;; ;; }}
 
+        ;; ;; {{ Option 2: tsinghua mirror repository
+        ;; ;; @see https://mirror.tuna.tsinghua.edu.cn/help/elpa/ on usage:
+        ;; ;; ("gnu"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
+        ;; ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
+        ;; ("melpa-stable" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa-stable/")
+        ;; }}
+        ))
 
+;; Un-comment below line if you follow "Install stable version in easiest way"
+;; (setq package-archives '(("localelpa" . "~/.emacs.d/localelpa/") ("myelpa" . "~/projs/myelpa/")))
 
 ;;------------------------------------------------------------------------------
 ;; Internal implementation, newbies should NOT touch code below this line!
@@ -109,21 +146,15 @@ But you may use safer HTTPS instead.")
   (let* (rlt)
     (cond
       ((string= archive "melpa-stable")
-       (setq rlt t)
-       ;; don's install `request v0.0.3' which drop suppport of Emacs 24.3
-       (if (string= package "request") (setq rlt nil)))
+       (setq rlt (not (memq package melpa-stable-banned-packages))))
       ((string= archive "melpa")
-       (cond
-         ;; a few exceptions from unstable melpa
-         ((or (memq package melpa-include-packages)
-              ;; install all color themes
-              (string-match (format "%s" package) "-theme"))
-          (setq rlt t))
-         (t
-           ;; I don't trust melpa which is too unstable
-           (setq rlt nil))))
+       ;; We still need use some unstable packages
+       (setq rlt (or (string-match-p (format "%s" package)
+                                     (mapconcat (lambda (s) (format "%s" s)) melpa-include-packages " "))
+                      ;; color themes are welcomed
+                      (string-match-p "-theme" (format "%s" package)))))
       (t
-        ;; other third party repositories I trust
+        ;; I'm not picky on other repositories
         (setq rlt t)))
     rlt))
 
@@ -153,15 +184,8 @@ But you may use safer HTTPS instead.")
 ;; Fire up package.el and ensure the following packages are installed.
 ;;------------------------------------------------------------------------------
 
-(package-initialize)
-
-(require 'org-page)
-
 (require-package 'async)
-(require-package 'org)
-(require-package 'dash) ; required by string-edit
 ; color-theme 6.6.1 in elpa is buggy
-(require-package 'color-theme)
 (require-package 'auto-compile)
 (require-package 'smex)
 (require-package 'avy)
@@ -172,11 +196,11 @@ But you may use safer HTTPS instead.")
 (require-package 'haskell-mode)
 (require-package 'gitignore-mode)
 (require-package 'gitconfig-mode)
-(unless *emacs24old* (require-package 'gist))
+(require-package 'gist)
 (require-package 'wgrep)
 (require-package 'request)
 (require-package 'lua-mode)
-(unless *emacs24old* (require-package 'robe))
+(require-package 'robe)
 (require-package 'inf-ruby)
 (require-package 'workgroups2)
 (require-package 'yaml-mode)
@@ -191,7 +215,6 @@ But you may use safer HTTPS instead.")
 (require-package 'haml-mode)
 (require-package 'scss-mode)
 (require-package 'markdown-mode)
-;(require-package 'dired+)
 (require-package 'link)
 (require-package 'connection)
 (require-package 'dictionary) ; dictionary requires 'link and 'connection
@@ -211,22 +234,16 @@ But you may use safer HTTPS instead.")
 (require-package 'counsel) ; counsel => swiper => ivy
 (require-package 'find-file-in-project)
 (require-package 'counsel-bbdb)
-(require-package 'elpy)
-;(require-package 'hl-sexp)
 (require-package 'ibuffer-vc)
 (require-package 'less-css-mode)
-(require-package 'move-text)
-;(require-package 'mwe-log-commands)
-(require-package 'page-break-lines)
+(require-package 'command-log-mode)
 (require-package 'regex-tool)
 (require-package 'groovy-mode)
 (require-package 'ruby-compilation)
 (require-package 'emmet-mode)
 (require-package 'session)
-;(require-package 'tidy)
 (require-package 'unfill)
 (require-package 'w3m)
-(require-package 'idomenu)
 (require-package 'counsel-gtags)
 (require-package 'buffer-move)
 (require-package 'ace-window)
@@ -236,16 +253,14 @@ But you may use safer HTTPS instead.")
 (require-package 'bbdb)
 (require-package 'pomodoro)
 (require-package 'flymake-lua)
-;(require-package 'dropdown-list)
 ;; rvm-open-gem to get gem's code
 (require-package 'rvm)
 ;; C-x r l to list bookmarks
-;(require-package 'bookmark+)
 (require-package 'multi-term)
 (require-package 'js-doc)
 (require-package 'js2-mode)
-(unless *emacs24old*
-  (require-package 'rjsx-mode))
+(require-package 'js2-refactor)
+(require-package 'rjsx-mode)
 (require-package 's)
 ;; js2-refactor requires js2, dash, s, multiple-cursors, yasnippet
 ;; I don't use multiple-cursors, but js2-refactor requires it
@@ -255,15 +270,15 @@ But you may use safer HTTPS instead.")
 (require-package 'git-link)
 (require-package 'cliphist)
 (require-package 'yasnippet)
+(require-package 'yasnippet-snippets)
 (require-package 'company)
 (require-package 'company-c-headers)
+(require-package 'company-statistics)
+(require-package 'elpy)
 (require-package 'legalese)
 (require-package 'simple-httpd)
 ;; (require-package 'git-gutter) ; use my patched version
-(require-package 'flx-ido)
 (require-package 'neotree)
-(require-package 'define-word)
-;(require-package 'quack) ; for scheme
 (require-package 'hydra)
 (require-package 'ivy-hydra) ; @see https://oremacs.com/2015/07/23/ivy-multiaction/
 (require-package 'pyim)
@@ -272,5 +287,76 @@ But you may use safer HTTPS instead.")
 (require-package 'emms)
 (require-package 'package-lint) ; lint package before submit it to MELPA
 (require-package 'iedit)
+(require-package 'ace-pinyin)
+(require-package 'bash-completion)
+(require-package 'websocket) ; for debug debugging of browsers
+(require-package 'jss)
+(require-package 'undo-tree)
+(require-package 'evil)
+(require-package 'evil-escape)
+(require-package 'evil-exchange)
+(require-package 'evil-find-char-pinyin)
+(require-package 'evil-iedit-state)
+(require-package 'evil-mark-replace)
+(require-package 'evil-matchit)
+(require-package 'evil-nerd-commenter)
+(require-package 'evil-surround)
+(require-package 'evil-visualstar)
+(require-package 'evil-lion)
+(require-package 'evil-args)
+(require-package 'evil-textobj-syntax)
+(require-package 'slime)
+(require-package 'counsel-css)
+(require-package 'auto-package-update)
+(require-package 'keyfreq)
+(require-package 'adoc-mode) ; asciidoc files
+(require-package 'magit) ; Magit 2.12 is the last feature release to support Emacs 24.4.
+(require-package 'shackle)
+(require-package 'toc-org)
+(require-package 'artbollocks-mode)
+(require-package 'elpa-mirror)
+;; {{ @see https://pawelbx.github.io/emacs-theme-gallery/
+(require-package 'color-theme)
+;; emms v5.0 need seq
+(require-package 'seq)
+(require-package 'stripe-buffer)
+(require-package 'visual-regexp) ;; Press "M-x vr-*"
+(require-package 'vimrc-mode)
+
+(when *emacs25*
+  (require-package 'zenburn-theme)
+  (require-package 'color-theme-sanityinc-solarized)
+  (require-package 'color-theme-sanityinc-tomorrow)
+  (require-package 'monokai-theme)
+  (require-package 'molokai-theme) ; recommended
+  (require-package 'moe-theme)
+  (require-package 'cyberpunk-theme) ; recommended
+  (require-package 'ample-theme)
+  (require-package 'gotham-theme)
+  (require-package 'gruvbox-theme)
+  (require-package 'alect-themes)
+  (require-package 'grandshell-theme)
+  (require-package 'tangotango-theme)
+  (require-package 'gruber-darker-theme)
+  (require-package 'ample-zen-theme)
+  (require-package 'flatland-theme)
+  (require-package 'clues-theme)
+  (require-package 'darkburn-theme) ; recommended
+  (require-package 'dracula-theme) ; recommended
+  (require-package 'soothe-theme)
+  (require-package 'dakrone-theme)
+  (require-package 'busybee-theme)
+  (require-package 'bubbleberry-theme)
+  (require-package 'cherry-blossom-theme)
+  (require-package 'heroku-theme)
+  (require-package 'hemisu-theme)
+  (require-package 'badger-theme)
+  (require-package 'distinguished-theme)
+  (require-package 'challenger-deep-theme)
+  (require-package 'tao-theme))
+;; }}
+
+;; kill buffer without my confirmation
+(setq kill-buffer-query-functions (delq 'process-kill-buffer-query-function kill-buffer-query-functions))
 
 (provide 'init-elpa)

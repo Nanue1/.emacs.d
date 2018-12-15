@@ -1,12 +1,21 @@
+;; -*- coding: utf-8; lexical-binding: t; -*-
+
 ;; {{ shell and conf
 (add-to-list 'auto-mode-alist '("\\.[^b][^a][a-zA-Z]*rc$" . conf-mode))
 (add-to-list 'auto-mode-alist '("\\.aspell\\.en\\.pws\\'" . conf-mode))
+(add-to-list 'auto-mode-alist '("\\mimeapps\\.list$" . conf-mode))
 (add-to-list 'auto-mode-alist '("\\.editorconfig$" . conf-mode))
 (add-to-list 'auto-mode-alist '("\\.meta\\'" . conf-mode))
 (add-to-list 'auto-mode-alist '("\\.?muttrc\\'" . conf-mode))
 (add-to-list 'auto-mode-alist '("\\.mailcap\\'" . conf-mode))
 ;; }}
 
+;; Avoid potential lag:
+;; https://emacs.stackexchange.com/questions/28736/emacs-pointcursor-movement-lag/28746
+;; `next-line' triggers the `format-mode-line' which triggers `projectile-project-name'
+;; I use find-file-in-project instead of projectile. So I don't have this issue at all.
+;; Set `auto-window-vscroll' to nil to avoid triggering `format-mode-line'.
+(setq auto-window-vscroll nil)
 
 (add-to-list 'auto-mode-alist '("TAGS\\'" . text-mode))
 (add-to-list 'auto-mode-alist '("\\.ctags\\'" . text-mode))
@@ -21,7 +30,7 @@
 
 ;; {{ ace-link
 (ace-link-setup-default)
-(global-set-key (kbd "M-o") 'ace-link-addr)
+(global-set-key (kbd "M-o") 'ace-link)
 ;; }}
 
 ;; open header file under cursor
@@ -50,7 +59,6 @@
               compilation-scroll-output t
               ediff-split-window-function 'split-window-horizontally
               ediff-window-setup-function 'ediff-setup-windows-plain
-              save-interprogram-paste-before-kill t
               grep-highlight-matches t
               grep-scroll-output t
               indent-tabs-mode nil
@@ -67,50 +75,28 @@
               visible-bell nil)
 
 ;; @see http://www.emacswiki.org/emacs/SavePlace
-(require 'saveplace)
-(setq-default save-place t)
-
+(cond
+ ((fboundp 'save-place-mode)
+  (save-place-mode 1))
+ (t
+  (require 'saveplace)
+  (setq-default save-place t)))
 
 ;; {{ find-file-in-project (ffip)
-(defun my-git-show-selected-commit ()
-  "Run 'git show selected-commit' in shell."
-  (let* ((git-cmd "git --no-pager log --date=short --pretty=format:'%h|%ad|%s|%an'")
-         (git-cmd-rlts (split-string (shell-command-to-string git-cmd) "\n" t))
-         (line (ivy-read "git log:" git-cmd-rlts)))
-    (shell-command-to-string (format "git show %s"
-                                     (car (split-string line "|" t))))))
-
-(defun my-git-diff-current-file ()
-  "Run 'git diff version:current-file current-file'."
+(defun my-git-versions ()
   (let* ((git-cmd (concat "git --no-pager log --date=short --pretty=format:'%h|%ad|%s|%an' "
-                          buffer-file-name))
-         (git-root (locate-dominating-file default-directory ".git"))
-         (git-cmd-rlts (nconc (split-string (shell-command-to-string "git branch --no-color --all") "\n" t)
-                              (split-string (shell-command-to-string git-cmd) "\n" t)))
-         (line (ivy-read "git diff same file with version" git-cmd-rlts)))
-    (shell-command-to-string (format "git --no-pager diff %s:%s %s"
-                                     (replace-regexp-in-string "^ *\\*? *" "" (car (split-string line "|" t)))
-                                     (file-relative-name buffer-file-name git-root)
-                                     buffer-file-name))))
+                          buffer-file-name)))
+    (nconc (nonempty-lines (shell-command-to-string "git branch --no-color --all"))
+           (nonempty-lines (shell-command-to-string git-cmd)))))
+
 
 (setq ffip-match-path-instead-of-filename t)
-;; I only use git
-(setq ffip-diff-backends '(my-git-show-selected-commit
-                           my-git-diff-current-file
-                           ;; `git log -p' current file
-                           ("git diff" . "cd $(git rev-parse --show-toplevel) && git diff")
-                           ("git diff --cached" . "cd $(git rev-parse --show-toplevel) && git diff --cached")
-                           ("git log -p" . (shell-command-to-string (format "cd $(git rev-parse --show-toplevel) && git --no-pager log --date=short -p '%s'"
-                                                                            (buffer-file-name))))
-                           ("git log -Sstring -p" . (shell-command-to-string (format "cd $(git rev-parse --show-toplevel) && git --no-pager log --date=short -S'%s' -p"
-                                                            (read-string "Git search string:"))))
-                           ("diff from `kill-ring'" . (car kill-ring))))
 
 (defun neotree-project-dir ()
   "Open NeoTree using the git root."
   (interactive)
-  (let ((project-dir (ffip-get-project-root-directory))
-        (file-name (buffer-file-name)))
+  (let* ((project-dir (ffip-get-project-root-directory))
+         (file-name (buffer-file-name)))
     (if project-dir
         (progn
           (neotree-dir project-dir)
@@ -119,34 +105,21 @@
 ;; }}
 
 ;; {{ groovy-mode
- (add-to-list 'auto-mode-alist '("\\.groovy\\'" . groovy-mode))
- (add-to-list 'auto-mode-alist '("\\.gradle\\'" . groovy-mode))
+(add-to-list 'auto-mode-alist '("\\.groovy\\'" . groovy-mode))
+(add-to-list 'auto-mode-alist '("\\.gradle\\'" . groovy-mode))
 ;; }}
 
-;; {{ https://github.com/browse-kill-ring/browse-kill-ring
-(require 'browse-kill-ring)
-;; no duplicates
-(setq browse-kill-ring-display-style 'one-line
-      browse-kill-ring-display-duplicates nil
-      ;; preview is annoying
-      browse-kill-ring-show-preview nil)
-(browse-kill-ring-default-keybindings)
-;; hotkeys:
-;; n/p => next/previous
-;; s/r => search
-;; l => filter with regex
-;; g => update/refresh
-;; }}
+(add-to-list 'auto-mode-alist
+             '("\\.\\(bash_profile\\|bash_history\\|sh\\|bash\\|bashrc\\.local\\|zsh\\|bashrc\\)\\'" . sh-mode))
 
 ;; {{ gradle
 (defun my-run-gradle-in-shell (cmd)
   (interactive "sEnter a string:")
-  (let ((root-dir (locate-dominating-file default-directory
-                                          "build.gradle")))
+  (let* ((root-dir (locate-dominating-file default-directory
+                                           "build.gradle")))
     (if root-dir
-      (let ((default-directory root-dir))
-        (shell-command (concat "gradle " cmd "&"))))
-    ))
+        (let* ((default-directory root-dir))
+          (shell-command (concat "gradle " cmd "&"))))))
 ;; }}
 
 ;; cmake
@@ -197,7 +170,7 @@
 (add-hook 'comint-output-filter-functions 'comint-watch-for-password-prompt)
 
 ;; {{ which-key-mode
-(require 'which-key)
+(local-require 'which-key)
 (setq which-key-allow-imprecise-window-fit t) ; performance
 (setq which-key-separator ":")
 (which-key-mode 1)
@@ -210,15 +183,15 @@
 (defun my-M-x ()
   (interactive)
   (cond
-    (my-use-smex
-      (smex))
-    ((fboundp 'counsel-M-x)
-     ;; `counsel-M-x' will use `smex' to remember history
-     (counsel-M-x))
-    ((fboundp 'smex)
-     (smex))
-    (t
-      (execute-extended-command))))
+   (my-use-smex
+    (smex))
+   ((fboundp 'counsel-M-x)
+    ;; `counsel-M-x' will use `smex' to remember history
+    (counsel-M-x))
+   ((fboundp 'smex)
+    (smex))
+   (t
+    (execute-extended-command))))
 (global-set-key (kbd "M-x") 'my-M-x)
 (global-set-key (kbd "C-x C-m") 'my-M-x)
 
@@ -235,14 +208,24 @@
       (winner-undo)
       (message "NO COMPILATION ERRORS!"))))
 
+(defun my-electric-pair-inhibit (char)
+  (or
+   ;; input single/double quotes at the end of word
+   (and (memq char '(34 39))
+        (char-before (1- (point)))
+        (eq (char-syntax (char-before (1- (point)))) ?w))
+   (electric-pair-conservative-inhibit char)))
+
 (defun generic-prog-mode-hook-setup ()
-  ;; turn off `linum-mode' when there are more than 5000 lines
-  (if (buffer-too-big-p) (linum-mode -1))
+  (when (buffer-too-big-p)
+    ;; Turn off `linum-mode' when there are more than 5000 lines
+    (linum-mode -1)
+    (when (should-use-minimum-resource)
+      (font-lock-mode -1)))
 
   (unless (is-buffer-file-temp)
 
     ;; @see http://xugx2007.blogspot.com.au/2007/06/benjamin-rutts-emacs-c-development-tips.html
-    (setq compilation-window-height 8)
     (setq compilation-finish-functions
           '(compilation-finish-hide-buffer-on-success))
 
@@ -254,7 +237,7 @@
     (unless (derived-mode-p 'js2-mode)
       (subword-mode 1))
 
-    (setq-default electric-pair-inhibit-predicate 'electric-pair-conservative-inhibit)
+    (setq-default electric-pair-inhibit-predicate 'my-electric-pair-inhibit)
     (electric-pair-mode 1)
 
     ;; eldoc, show API doc in minibuffer echo area
@@ -312,7 +295,7 @@
 
 (defalias 'list-buffers 'ibuffer)
 
-;effective emacs item 7; no scrollbar, no menubar, no toolbar
+                                        ;effective emacs item 7; no scrollbar, no menubar, no toolbar
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 
@@ -320,42 +303,9 @@
   (interactive)
   (shell-command "periscope.py -l en *.mkv *.mp4 *.avi &"))
 
-
-;; {{ @see http://emacsredux.com/blog/2013/04/21/edit-files-as-root/
-(defun sudo-edit (&optional arg)
-  "Edit currently visited file as root.
-With a prefix ARG prompt for a file to visit.
-Will also prompt for a file to visit if current
-buffer is not visiting a file.
-You may insert below line into ~/.authinfo.gpg to type less:
-machine 127.0.0.1 login root password ****** port sudo
-See \"Reusing passwords for several connections\" from INFO.
-"
-  (interactive "P")
-  (if (or arg (not buffer-file-name))
-      (find-file (concat "/sudo:root@127.0.0.1:"
-                         (read-file-name "Find file(as root): ")))
-    (find-alternate-file (concat "/sudo:@127.0.0.1:"
-                                 buffer-file-name))))
-
-(defadvice ido-find-file (after find-file-sudo activate)
-  "Find file as root if necessary."
-  (if (and (not (and buffer-file-name
-                     (file-writable-p buffer-file-name)))
-           ;; sudo edit only physical file
-           buffer-file-name
-           ;; sudo edit only /etc/**/*
-           (string-match-p "^/etc/" buffer-file-name))
-      (find-alternate-file (concat "/sudo:root@127.0.0.1:"
-                                   buffer-file-name))))
-;; }}
-
-;; edit confluence wiki
-(add-to-list 'auto-mode-alist '("\\.wiki\\'" . confluence-edit-mode))
-
 (defun erase-specific-buffer (num buf-name)
-  (let ((message-buffer (get-buffer buf-name))
-        (old-buffer (current-buffer)))
+  (let* ((message-buffer (get-buffer buf-name))
+         (old-buffer (current-buffer)))
     (save-excursion
       (if (buffer-live-p message-buffer)
           (progn
@@ -378,11 +328,11 @@ See \"Reusing passwords for several connections\" from INFO.
 ;; {{ message buffer things
 (defun erase-message-buffer (&optional num)
   "Erase the content of the *Messages* buffer in emacs.
-    Keep the last num lines if argument num if given."
+Keep the last num lines if argument num if given."
   (interactive "p")
-  (let ((buf (cond
-              ((eq 'ruby-mode major-mode) "*server*")
-              (t "*Messages*"))))
+  (let* ((buf (cond
+               ((eq 'ruby-mode major-mode) "*server*")
+               (t "*Messages*"))))
     (erase-specific-buffer num buf)))
 
 ;; turn off read-only-mode in *Message* buffer, a "feature" in v24.4
@@ -399,7 +349,7 @@ See \"Reusing passwords for several connections\" from INFO.
 ;; {{ show email sent by `git send-email' in gnus
 (eval-after-load 'gnus
   '(progn
-     (require 'gnus-article-treat-patch)
+     (local-require 'gnus-article-treat-patch)
      (setq gnus-article-patch-conditions
            '( "^@@ -[0-9]+,[0-9]+ \\+[0-9]+,[0-9]+ @@" ))
      ))
@@ -417,13 +367,10 @@ See \"Reusing passwords for several connections\" from INFO.
 (defun add-pwd-into-load-path ()
   "add current directory into load-path, useful for elisp developers"
   (interactive)
-  (let ((dir (expand-file-name default-directory)))
+  (let* ((dir (expand-file-name default-directory)))
     (if (not (memq dir load-path))
-        (add-to-list 'load-path dir)
-      )
-    (message "Directory added into load-path:%s" dir)
-    )
-  )
+        (add-to-list 'load-path dir))
+    (message "Directory added into load-path:%s" dir)))
 
 (setq system-time-locale "C")
 
@@ -474,7 +421,7 @@ See \"Reusing passwords for several connections\" from INFO.
 
 (defun popup-which-function ()
   (interactive)
-  (let ((msg (my-which-function)))
+  (let* ((msg (my-which-function)))
     (popup-tip msg)
     (copy-yank-str msg)))
 ;; }}
@@ -482,18 +429,20 @@ See \"Reusing passwords for several connections\" from INFO.
 ;; {{ music
 (defun mpc-which-song ()
   (interactive)
-  (let ((msg (car (split-string (shell-command-to-string "mpc") "\n+"))))
+  (let* ((msg (car (nonempty-lines (shell-command-to-string "mpc")))))
     (message msg)
     (copy-yank-str msg)))
 
 (defun mpc-next-prev-song (&optional prev)
   (interactive)
-  (message (car (split-string (shell-command-to-string
-                               (concat "mpc " (if prev "prev" "next"))) "\n+"))))
+  (message (car (nonempty-lines (shell-command-to-string
+                                 (concat "mpc "
+                                         (if prev "prev" "next")))))))
+
 (defun lyrics()
   "Prints the lyrics for the current song"
   (interactive)
-  (let ((song (shell-command-to-string "lyrics")))
+  (let* ((song (shell-command-to-string "lyrics")))
     (if (equal song "")
         (message "No lyrics - Opening browser.")
       (switch-to-buffer (create-file-buffer "Lyrics"))
@@ -501,24 +450,17 @@ See \"Reusing passwords for several connections\" from INFO.
       (goto-line 0))))
 ;; }}
 
-;; @see http://www.emacswiki.org/emacs/EasyPG#toc4
-;; besides, use gnupg 1.4.9 instead of 2.0
-(defadvice epg--start (around advice-epg-disable-agent disable)
-  "Make epg--start not able to find a gpg-agent"
-  (let ((agent (getenv "GPG_AGENT_INFO")))
-    (setenv "GPG_AGENT_INFO" nil)
-    ad-do-it
-    (setenv "GPG_AGENT_INFO" agent)))
-
 ;; https://github.com/abo-abo/ace-window
 ;; `M-x ace-window ENTER m` to swap window
 (global-set-key (kbd "C-x o") 'ace-window)
 
 ;; {{ move focus between sub-windows
-(require 'window-numbering)
+(local-require 'window-numbering)
 (custom-set-faces '(window-numbering-face ((t (:foreground "DeepPink" :underline "DeepPink" :weight bold)))))
 (window-numbering-mode 1)
 ;; }}
+
+(ace-pinyin-global-mode +1)
 
 ;; {{ avy, jump between texts, like easymotion in vim
 ;; @see http://emacsredux.com/blog/2015/07/19/ace-jump-mode-is-dead-long-live-avy/ for more tips
@@ -526,6 +468,18 @@ See \"Reusing passwords for several connections\" from INFO.
 (eval-after-load "dired"
   '(progn
      (define-key dired-mode-map (kbd ";") 'avy-goto-subword-1)))
+;; }}
+
+;; {{start dictionary lookup
+;; use below commands to create dicitonary
+;; mkdir -p ~/.stardict/dic
+;; # wordnet English => English
+;; curl http://abloz.com/huzheng/stardict-dic/dict.org/stardict-dictd_www.dict.org_wn-2.4.2.tar.bz2 | tar jx -C ~/.stardict/dic
+;; # Langdao Chinese => English
+;; curl http://abloz.com/huzheng/stardict-dic/zh_CN/stardict-langdao-ec-gb-2.4.2.tar.bz2 | tar jx -C ~/.stardict/dic
+;;
+(setq sdcv-dictionary-simple-list '("朗道英汉字典5.0"))
+(setq sdcv-dictionary-complete-list '("WordNet"))
 ;; }}
 
 ;; ANSI-escape coloring in compilation-mode
@@ -540,7 +494,7 @@ See \"Reusing passwords for several connections\" from INFO.
 
 ;; @see http://emacs.stackexchange.com/questions/14129/which-keyboard-shortcut-to-use-for-navigating-out-of-a-string
 (defun font-face-is-similar (f1 f2)
-  (let (rlt)
+  (let* (rlt)
     ;; (message "f1=%s f2=%s" f1 f2)
     ;; in emacs-lisp-mode, the '^' from "^abde" has list of faces:
     ;;   (font-lock-negation-char-face font-lock-string-face)
@@ -557,14 +511,14 @@ See \"Reusing passwords for several connections\" from INFO.
 
 ;; {{
 (defun goto-edge-by-comparing-font-face (&optional step)
-"Goto either the begin or end of string/comment/whatever.
+  "Goto either the begin or end of string/comment/whatever.
 If step is -1, go backward."
   (interactive "P")
-  (let ((cf (get-text-property (point) 'face))
-        (p (point))
-        rlt
-        found
-        end)
+  (let* ((cf (get-text-property (point) 'face))
+         (p (point))
+         rlt
+         found
+         end)
     (unless step (setq step 1)) ;default value
     (setq end (if (> step 0) (point-max) (point-min)))
     (while (and (not found) (not (= end p)))
@@ -590,29 +544,13 @@ If step is -1, go backward."
 (add-hook 'minibuffer-setup-hook #'my-minibuffer-setup-hook)
 (add-hook 'minibuffer-exit-hook #'my-minibuffer-exit-hook)
 
-;; {{ string-edit-mode
-(defun string-edit-at-point-hook-setup ()
-  (let ((major-mode-list (remove major-mode '(web-mode js2-mode js-mode css-mode emacs-lisp-mode)))
-        (str (my-buffer-str)))
-    ;; (ivy-read "directories:" collection :action 'dired)
-    ;; (message "original=%s" (se/find-original))
-    ;; (message "major-mode-list=%s major-mode=%s" major-mode-list major-mode)
-    (save-excursion
-      (cond
-       ((string-match-p "<[a-zA-Z]" str)
-        (web-mode))
-       ((string-match-p "function(\\| var \\|" str)
-        (js-mode))))))
-(add-hook 'string-edit-at-point-hook 'string-edit-at-point-hook-setup)
-;; }}
-
 ;; {{ Diff two regions
 ;; Step 1: Select a region and `M-x diff-region-tag-selected-as-a'
 ;; Step 2: Select another region and `M-x diff-region-compare-with-b'
 ;; Press "q" in evil-mode or "C-c C-c" to exit the diff output buffer
 (defun diff-region-format-region-boundary (b e)
   "Make sure lines are selected and B is less than E"
-  (let (tmp rlt)
+  (let* (tmp rlt)
     ;; swap b e, make sure b < e
     (when (> b e)
       (setq tmp b)
@@ -640,7 +578,7 @@ If step is -1, go backward."
   "Select a region to compare."
   (interactive)
   (when (region-active-p)
-    (let (tmp buf)
+    (let* (tmp buf)
       ;; select lines
       (setq tmp (diff-region-format-region-boundary (region-beginning) (region-end)))
       (setq buf (get-buffer-create "*Diff-regionA*"))
@@ -673,14 +611,12 @@ If no region is selected. You will be asked to use `kill-ring' or clipboard inst
         (write-region (car tmp) (cadr tmp) fb))
        (t
         ;; text from `kill-ring' or clipboard
-        (unless (featurep 'ido) (require 'ido))
-        (let* ((choice (ido-completing-read "Since no region selected, compare text in:"
-                                            '("kill-ring" "clipboard")))
+        (let* ((choice (completing-read "Since no region selected, compare text in:"
+                                        '("kill-ring" "clipboard")))
                (txt (cond
                      ((string= choice "kill-ring")
                       (car kill-ring))
                      ((string= choice "clipboard")
-                      (unless (featurep 'simpleclip) (require 'simpleclip))
                       (my-gclip)))))
           (with-temp-file fb
             (insert txt)))))
@@ -744,7 +680,8 @@ If no region is selected. You will be asked to use `kill-ring' or clipboard inst
   (message "indent-tabs-mode=%s" indent-tabs-mode))
 
 ;; {{ auto-save.el
-(require 'auto-save)
+(local-require 'auto-save)
+(add-to-list 'auto-save-exclude 'file-too-big-p t)
 (auto-save-enable)
 (setq auto-save-slient t)
 ;; }}
@@ -773,7 +710,7 @@ If no region is selected. You will be asked to use `kill-ring' or clipboard inst
   (let* ((str (if (region-active-p) (my-selected-str)
                 (my-buffer-str)))
          (total-hours 0)
-         (lines (split-string str "\n")))
+         (lines (nonempty-lines str)))
     (dolist (l lines)
       (if (string-match " \\([0-9][0-9.]*\\)h[ \t]*$" l)
           (setq total-hours (+ total-hours (string-to-number (match-string 1 l))))))
@@ -803,7 +740,9 @@ If no region is selected. You will be asked to use `kill-ring' or clipboard inst
 ;; }}
 
 ;; flymake
-(setq flymake-gui-warnings-enabled nil)
+(eval-after-load 'flymake
+  '(progn
+     (setq flymake-gui-warnings-enabled nil)))
 
 ;; {{ check attachments
 (defun my-message-current-line-cited-p ()
@@ -817,7 +756,7 @@ If no region is selected. You will be asked to use `kill-ring' or clipboard inst
   (save-excursion
     (goto-char (point-min))
     (save-match-data
-      (let (search-result)
+      (let* (search-result)
         (while
             (and (setq search-result (re-search-forward "\\(attach\\|pdf\\|file\\|screen ?shot\\)" nil t))
                  (my-message-current-line-cited-p)))
@@ -843,11 +782,11 @@ If no region is selected. You will be asked to use `kill-ring' or clipboard inst
 ;; @see https://stackoverflow.com/questions/3417438/closing-all-other-buffers-in-emacs
 (defun kill-all-but-current-buffer ()
   (interactive)
-    (mapc 'kill-buffer (cdr (buffer-list (current-buffer)))))
+  (mapc 'kill-buffer (cdr (buffer-list (current-buffer)))))
 
 (defun minibuffer-inactive-mode-hook-setup ()
-  ;; make `try-expand-dabbrev' from `hippie-expand' work in mini-buffer
-  ;; @see `he-dabbrev-beg', so we need re-define syntax for '/'
+  ;; Make `try-expand-dabbrev' from `hippie-expand' work in mini-buffer.
+  ;; @see `he-dabbrev-beg', so we need re-define syntax for '/'.
   (set-syntax-table (let* ((table (make-syntax-table)))
                       (modify-syntax-entry ?/ "." table)
                       table)))
@@ -865,27 +804,445 @@ If no region is selected. You will be asked to use `kill-ring' or clipboard inst
 (add-hook 'vc-msg-hook 'vc-msg-hook-setup)
 
 (defun vc-msg-show-code-setup ()
-  ;; use `ffip-diff-mode' from package find-file-in-project instead of `diff-mode'
+  "Use `ffip-diff-mode' instead of `diff-mode'."
   (unless (featurep 'find-file-in-project)
     (require 'find-file-in-project))
   (ffip-diff-mode))
 
-  (add-hook 'vc-msg-show-code-hook 'vc-msg-show-code-setup)
+(add-hook 'vc-msg-show-code-hook 'vc-msg-show-code-setup)
 ;; }}
 
 ;; {{ eacl - emacs auto complete line(s)
 (global-set-key (kbd "C-x C-l") 'eacl-complete-line)
-(global-set-key (kbd "C-x ;") 'eacl-complete-statement)
-(global-set-key (kbd "C-x C-]") 'eacl-complete-snippet)
-(global-set-key (kbd "C-x C-t") 'eacl-complete-tag)
+(global-set-key (kbd "C-c ;") 'eacl-complete-statement)
+(global-set-key (kbd "C-c C-]") 'eacl-complete-snippet)
+(global-set-key (kbd "C-c .") 'eacl-complete-tag)
 ;; }}
 
-;; {{ wgrep and rgrep, inspired by http://oremacs.com/2015/01/27/my-refactoring-workflow/
+;; {{
+(local-require 'typewriter-mode)
+(defun toggle-typewriter ()
+  "Turn on/off typewriter."
+  (interactive)
+  (if (bound-and-true-p typewriter-mode)
+      (typewriter-mode -1)
+    (typewriter-mode 1)))
+;; }}
+
+;; @see https://github.com/szermatt/emacs-bash-completion
+(bash-completion-setup)
+
 (eval-after-load 'grep
-  '(define-key grep-mode-map
-     (kbd "C-x C-q") 'wgrep-change-to-wgrep-mode))
+  '(progn
+     ;; eacl and other general grep (rgrep, grep ...) setup
+     (dolist (v '("auto"
+                  "target"
+                  "node_modules"
+                  "bower_components"
+                  "*dist"
+                  ".sass_cache"
+                  ".cache"
+                  ".npm"
+                  "elpa"))
+       (add-to-list 'grep-find-ignored-directories v))
+     (dolist (v '("*.min.js"
+                  "*.map"
+                  "*.bundle.js"
+                  "*.min.css"
+                  "tags"
+                  "TAGS"
+                  "GTAGS"
+                  "GRTAGS"
+                  "GPATH"
+                  "cscope.files"
+                  "*.json"
+                  "*.log"))
+       (add-to-list 'grep-find-ignored-files v))
+
+     ;; wgrep and rgrep, inspired by http://oremacs.com/2015/01/27/my-refactoring-workflow/
+     (define-key grep-mode-map
+       (kbd "C-x C-q") 'wgrep-change-to-wgrep-mode)))
+
+;; wgrep and rgrep, inspired by http://oremacs.com/2015/01/27/my-refactoring-workflow/
 (eval-after-load 'wgrep
   '(define-key grep-mode-map
      (kbd "C-c C-c") 'wgrep-finish-edit))
+
+;; {{ https://www.emacswiki.org/emacs/EmacsSession better than "desktop.el" or "savehist".
+;; Any global variable matching `session-globals-regexp' is saved *automatically*.
+(setq session-save-file (expand-file-name "~/.emacs.d/.session"))
+(setq session-globals-max-size 2048)
+;; can store 8Mb string
+(setq session-globals-max-string (* 8 1024 1024))
+(setq session-globals-include '(kill-ring
+                                (session-file-alist 100 t)
+                                file-name-history
+                                search-ring
+                                regexp-search-ring))
+(add-hook 'after-init-hook 'session-initialize)
 ;; }}
+
+;; {{
+(add-to-list 'auto-mode-alist '("\\.adoc\\'" . adoc-mode))
+(defun adoc-imenu-index ()
+  (let* ((patterns '((nil "^=\\([= ]*[^=\n\r]+\\)" 1))))
+    (save-excursion
+      (imenu--generic-function patterns))))
+
+(defun adoc-mode-hook-setup ()
+  ;; Don't wrap lines because there is table in `adoc-mode'.
+  (setq truncate-lines t)
+  (setq imenu-create-index-function 'adoc-imenu-index))
+(add-hook 'adoc-mode-hook 'adoc-mode-hook-setup)
+;; }}
+
+(eval-after-load 'compile
+  '(progn
+     (add-to-list 'compilation-error-regexp-alist-alist
+                  (list 'mocha "at [^()]+ (\\([^:]+\\):\\([^:]+\\):\\([^:]+\\))" 1 2 3))
+     (add-to-list 'compilation-error-regexp-alist 'mocha)))
+
+(defun pickup-random-color-theme (themes)
+  "Pickup random color theme from themes."
+  (unless (featurep 'counsel) (require 'counsel))
+  (let* ((available-themes (mapcar 'symbol-name themes))
+         (theme (nth (random (length available-themes)) available-themes)))
+    (counsel-load-theme-action theme)
+    (message "Color theme [%s] loaded." theme)))
+
+;; ;; useless and hard to debug
+;; (defun optimize-emacs-startup ()
+;;   "Speedup emacs startup by compiling."
+;;   (interactive)
+;;   (let* ((dir (file-truename "~/.emacs.d/lisp/"))
+;;          (files (directory-files dir)))
+;;     (load (file-truename "~/.emacs.d/init.el"))
+;;     (dolist (f files)
+;;       (when (string-match-p ".*\.el$" f)
+;;         (let* ((default-directory dir))
+;;           (byte-compile-file (file-truename f) t))))))
+
+;; random color theme
+(defun random-color-theme ()
+  "Random color theme."
+  (interactive)
+  (pickup-random-color-theme (custom-available-themes)))
+
+(defun switch-to-ansi-term ()
+  (interactive)
+  (let* ((buf-name (if *win64* "*shell*" "*ansi-term"))
+         (buf (get-buffer buf-name))
+         (wins (window-list))
+         current-frame-p)
+    (cond
+     ((buffer-live-p buf)
+      (dolist (win wins)
+        (when (string= (buffer-name (window-buffer win)) buf-name)
+          (when (window-live-p win)
+            (setq current-frame-p t)
+            (select-window win))))
+      (unless current-frame-p
+        (switch-to-buffer buf)))
+     (*win64*
+      (shell))
+     (t
+      (ansi-term my-term-program)))))
+
+(defun switch-to-shell-or-ansi-term ()
+  (interactive)
+  (if (display-graphic-p) (switch-to-ansi-term)
+    (suspend-frame)))
+
+;; {{ emms
+(eval-after-load 'emms
+  '(progn
+     (emms-all)
+     (setq emms-player-list '(emms-player-mplayer-playlist
+                              emms-player-mplayer
+                              emms-player-mpg321
+                              emms-player-ogg123
+                              lemms-player-vlc
+                              emms-player-vlc-playlist))))
+;; }}
+
+;; @see https://www.reddit.com/r/emacs/comments/988paa/emacs_on_windows_seems_lagging/
+(unless *no-memory*
+  ;; speed up font rendering for special characters
+  (setq inhibit-compacting-font-caches t))
+
+(setq auto-mode-alist
+      (cons '("\\.textile\\'" . textile-mode) auto-mode-alist))
+
+(transient-mark-mode t)
+
+(global-auto-revert-mode)
+(setq global-auto-revert-non-file-buffers t
+      auto-revert-verbose nil)
+
+(add-to-list 'auto-mode-alist '("\\.[Cc][Ss][Vv]\\'" . csv-mode))
+
+;;----------------------------------------------------------------------------
+;; Don't disable narrowing commands
+;;----------------------------------------------------------------------------
+(put 'narrow-to-region 'disabled nil)
+(put 'narrow-to-page 'disabled nil)
+(put 'narrow-to-defun 'disabled nil)
+
+;; But don't show trailing whitespace in SQLi, inf-ruby etc.
+(add-hook 'comint-mode-hook
+          (lambda () (setq show-trailing-whitespace nil)))
+
+;; my screen is tiny, so I use minimum eshell prompt
+(eval-after-load 'eshell
+  '(progn
+     (setq eshell-prompt-function
+           (lambda ()
+             (concat (getenv "USER") " $ ")))))
+
+;; I'm in Australia now, so I set the locale to "en_AU"
+(defun insert-date (prefix)
+  "Insert the current date. With prefix-argument, use ISO format. With
+   two prefix arguments, write out the day and month name."
+  (interactive "P")
+  (let* ((format (cond
+                  ((not prefix) "%d.%m.%Y")
+                  ((equal prefix '(4)) "%Y-%m-%d")
+                  ((equal prefix '(16)) "%d %B %Y"))))
+    (insert (format-time-string format))))
+
+;;compute the length of the marked region
+(defun region-length ()
+  "Length of a selected region."
+  (interactive)
+  (message (format "%d" (- (region-end) (region-beginning)))))
+
+;; {{ imenu tweakment
+(defvar rimenu-position-pair nil "positions before and after imenu jump")
+(add-hook 'imenu-after-jump-hook
+          (lambda ()
+            (let* ((start-point (marker-position (car mark-ring)))
+                   (end-point (point)))
+              (setq rimenu-position-pair (list start-point end-point)))))
+
+(defun rimenu-jump ()
+  "Jump to the closest before/after position of latest imenu jump."
+  (interactive)
+  (when rimenu-position-pair
+    (let* ((p1 (car rimenu-position-pair))
+           (p2 (cadr rimenu-position-pair)))
+
+      ;; jump to the far way point of the rimenu-position-pair
+      (if (< (abs (- (point) p1))
+             (abs (- (point) p2)))
+          (goto-char p2)
+        (goto-char p1)))))
+;; }}
+
+;; {{ my blog tools
+(defun open-blog-on-current-month ()
+  (interactive)
+  (find-file (file-truename (concat "~/blog/" (format-time-string "%Y-%m") ".org"))))
+
+(defun insert-blog-version ()
+  "Insert version of my blog post."
+  (interactive)
+  (insert (format-time-string "%Y%m%d")))
+;; }}
+
+;; show ascii table
+(defun ascii-table ()
+  "Print the ascii table."
+  (interactive)
+  (switch-to-buffer "*ASCII*")
+  (erase-buffer)
+  (insert (format "ASCII characters up to number %d.\n" 254))
+  (let* ((i 0))
+    (while (< i 254)
+      (setq i (+ i 1))
+      (insert (format "%4d %c\n" i i))))
+  (beginning-of-buffer))
+
+;; {{ unique lines
+(defun uniquify-all-lines-region (start end)
+  "Find duplicate lines in region START to END keeping first occurrence."
+  (interactive "*r")
+  )
+
+(defun uniq-lines ()
+  "Delete duplicate lines in region or buffer."
+  (interactive)
+  (let* ((a (region-active-p))
+         (start (if a (region-beginning) (point-min)))
+         (end (if a (region-end) (point-max))))
+    (save-excursion
+      (while
+          (progn
+            (goto-char start)
+            (re-search-forward "^\\(.*\\)\n\\(\\(.*\n\\)*\\)\\1\n" end t))
+        (replace-match "\\1\n\\2")))))
+;; }}
+
+(defun insert-file-link-from-clipboard ()
+  "Make sure the full path of file exist in clipboard.
+This command will convert full path into relative path.
+Then insert it as a local file link in `org-mode'."
+  (interactive)
+  (insert (format "[[file:%s]]" (file-relative-name (my-gclip)))))
+
+(defun font-file-to-base64 (file)
+  "Convert font file into base64 encoded string."
+  (let* ((str "")
+         (file-base (file-name-sans-extension file))
+         (file-ext (file-name-extension file)))
+    (when (file-exists-p file)
+        (with-temp-buffer
+          (shell-command (concat "cat " file "|base64") 1)
+          (setq str (replace-regexp-in-string "\n" "" (buffer-string)))))
+    str))
+
+(defun current-thing-at-point ()
+  "Print current thing at point."
+  (interactive)
+  (message "thing = %s" (thing-at-point 'symbol)))
+
+;; {{ copy the file-name/full-path in dired buffer into clipboard
+;; `w` => copy file name
+;; `C-u 0 w` => copy full path
+(defadvice dired-copy-filename-as-kill (after dired-filename-to-clipboard activate)
+  (let* ((str (current-kill 0)))
+    (my-pclip str)
+    (message "%s => clipboard" str)))
+;; }}
+
+;; from http://emacsredux.com/blog/2013/05/04/rename-file-and-buffer/
+(defun vc-rename-file-and-buffer ()
+  "Rename the current buffer and file it is visiting."
+  (interactive)
+  (let* ((filename (buffer-file-name)))
+    (cond
+     ((not (and filename (file-exists-p filename)))
+      (message "Buffer is not visiting a file!"))
+     (t
+      (let* ((new-name (read-file-name "New name: " filename)))
+        (cond
+         ((vc-backend filename) (vc-rename-file filename new-name))
+         (t
+          (rename-file filename new-name t)
+          (rename-buffer new-name)
+          (set-visited-file-name new-name)
+          (set-buffer-modified-p nil))))))))
+
+(defun vc-copy-file-and-rename-buffer ()
+  "Copy the current buffer and file it is visiting.
+If the old file is under version control, the new file is added into
+version control automatically."
+  (interactive)
+  (let* ((filename (buffer-file-name)))
+    (cond
+     ((not (and filename (file-exists-p filename)))
+      (message "Buffer is not visiting a file!"))
+     (t
+      (let* ((new-name (read-file-name "New name: " filename)))
+        (copy-file filename new-name t)
+        (rename-buffer new-name)
+        (set-visited-file-name new-name)
+        (set-buffer-modified-p nil)
+        (when (vc-backend filename)
+          (vc-register)))))))
+
+(defun toggle-env-http-proxy ()
+  "Set/unset the environment variable http_proxy used by w3m."
+  (interactive)
+  (let* ((proxy "http://127.0.0.1:8000"))
+    (cond
+     ((string= (getenv "http_proxy") proxy)
+      (setenv "http_proxy" "")
+      (message "env http_proxy is empty now"))
+     (t
+      (setenv "http_proxy" proxy)
+      (message "env http_proxy is %s now" proxy)))))
+
+;; Don't disable narrowing commands
+(put 'narrow-to-region 'disabled nil)
+(put 'narrow-to-page 'disabled nil)
+(put 'narrow-to-defun 'disabled nil)
+
+;; Ctrl-X, u/l  to upper/lowercase regions without confirm
+(put 'downcase-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
+
+;; midnight mode purges buffers which haven't been displayed in 3 days
+(require 'midnight)
+(setq midnight-mode t)
+
+(add-auto-mode 'tcl-mode "Portfile\\'")
+
+;; someone mentioned that blink cursor could slow Emacs24.4
+;; I couldn't care less about cursor, so turn it off explicitly
+;; https://github.com/redguardtoo/emacs.d/issues/208
+;; but somebody mentioned that blink cursor is needed in dark theme
+;; so it should not be turned off by default
+;; (blink-cursor-mode -1)
+
+(defun create-scratch-buffer ()
+  "Create a new scratch buffer."
+  (interactive)
+  (let* ((n 0) bufname)
+    (while (progn
+             (setq bufname (concat "*scratch"
+                                   (if (= n 0) "" (int-to-string n))
+                                   "*"))
+             (setq n (1+ n))
+             (get-buffer bufname)))
+    (switch-to-buffer (get-buffer-create bufname))
+    (emacs-lisp-mode)))
+
+(defun cleanup-buffer-safe ()
+  "Perform a bunch of safe operations on the whitespace content of a buffer.
+Does not indent buffer, because it is used for a before-save-hook, and that
+might be bad."
+  (interactive)
+  (untabify (point-min) (point-max))
+  (delete-trailing-whitespace))
+
+(defun cleanup-buffer ()
+  "Perform a bunch of operations on the whitespace content of a buffer.
+Including indent-buffer, which should not be called automatically on save."
+  (interactive)
+  (cleanup-buffer-safe)
+  (indent-region (point-min) (point-max)))
+
+;; {{ easygpg setup
+;; @see http://www.emacswiki.org/emacs/EasyPG#toc4
+(defadvice epg--start (around advice-epg-disable-agent disable)
+  "Make `epg--start' not able to find a gpg-agent."
+  (let ((agent (getenv "GPG_AGENT_INFO")))
+    (setenv "GPG_AGENT_INFO" nil)
+    ad-do-it
+    (setenv "GPG_AGENT_INFO" agent)))
+
+(unless (string-match-p "^gpg (GnuPG) 1.4"
+                        (shell-command-to-string (format "%s --version" epg-gpg-program)))
+
+  ;; `apt-get install pinentry-tty` if using emacs-nox
+  ;; Create `~/.gnupg/gpg-agent.conf' container one line `pinentry-program /usr/bin/pinentry-curses`
+  (setq epa-pinentry-mode 'loopback))
+;; }}
+
+;; {{ show current function name in `mode-line'
+(eval-after-load "which-function"
+  '(progn
+     (add-to-list 'which-func-modes 'org-mode)))
+(which-function-mode 1)
+;; }}
+
+(eval-after-load 'pomodoro
+  '(progn
+     (setq pomodoro-break-time 2)
+     (setq pomodoro-long-break-time 5)
+     (setq pomodoro-work-time 15)
+     (setq-default mode-line-format
+              (cons '(pomodoro-mode-line-string pomodoro-mode-line-string)
+                    mode-line-format))))
+
 (provide 'init-misc)

@@ -1,9 +1,14 @@
+;; -*- coding: utf-8; lexical-binding: t; -*-
+
 ;; Use the system clipboard
+;; @see https://www.emacswiki.org/emacs/CopyAndPaste
+;; So `C-y' could paste from clipbord if you are NOT using emacs-nox
+;; I only use `paste-from-x-clipboard', not `C-y'.
 (setq x-select-enable-clipboard t
       x-select-enable-primary t)
 
 ;; kill-ring and clipboard are same? No, it's annoying!
-;; (setq save-interprogram-paste-before-kill t)
+(setq save-interprogram-paste-before-kill nil)
 
 ;; you need install xsel under Linux
 ;; xclip has some problem when copying under Linux
@@ -11,12 +16,15 @@
   (unless clipboard-only (kill-new msg))
   (my-pclip msg))
 
-(defun cp-filename-of-current-buffer () "Copy file name (NOT full path) into the yank ring and OS clipboard."
-  (interactive)
+(defun cp-filename-of-current-buffer (&optional n)
+  "Copy file name (NOT full path) into the yank ring and OS clipboard.
+If N is not nil, copy file name and line number."
+  (interactive "P")
   (when buffer-file-name
-    (let* ((filename (file-name-nondirectory buffer-file-name)))
-      (copy-yank-str filename)
-      (message "filename %s => clipboard & yank ring" filename))))
+    (let* ((filename (file-name-nondirectory buffer-file-name))
+           (s (if n (format "%s:%s" filename (line-number-at-pos)) filename)))
+      (copy-yank-str s)
+      (message "%s => clipboard&kill-ring" s))))
 
 (defun cp-ffip-ivy-last ()
   "Copy visible keys of `ivy-last' into `kill-ring' and clipboard."
@@ -31,26 +39,19 @@
                 "\n"))
     (message "%d items from ivy-last => clipboard & yank ring" (length ivy-last))))
 
-(defun cp-filename-line-number-of-current-buffer ()
-  "Copy file:line into the yank ring and clipboard"
-  (interactive)
-  (when buffer-file-name
-    (let* ((filename (file-name-nondirectory buffer-file-name))
-           (linenum (save-restriction
-                      (widen)
-                      (save-excursion
-                        (beginning-of-line)
-                        (1+ (count-lines 1 (point))))))
-           (rlt (format "%s:%d" filename linenum)))
-      (copy-yank-str rlt)
-      (message "%s => clipboard & yank ring" rlt))))
-
 (defun cp-fullpath-of-current-buffer ()
   "Copy full path into the yank ring and OS clipboard"
   (interactive)
   (when buffer-file-name
     (copy-yank-str (file-truename buffer-file-name))
     (message "file full path => clipboard & yank ring")))
+
+(defun clipboard-to-kill-ring ()
+  "Copy from clipboard to `kill-ring'."
+  (interactive)
+  (let* ((warning-minimum-level :emergency))
+    (kill-new (my-gclip)))
+  (message "clipboard => kill-ring"))
 
 (defun kill-ring-to-clipboard ()
   "Copy from `kill-ring' to clipboard."
