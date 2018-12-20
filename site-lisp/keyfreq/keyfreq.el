@@ -59,7 +59,7 @@
 ;;   Michal Nazarewicz in 2007.
 ;;
 ;; Version 0.1 - 2006
-;; - First version by Ryan Yeske. A quick hack of about 40 lines.
+; - First version by Ryan Yeske. A quick hack of about 40 lines.
 ;;
 
 ;;; Commentary:

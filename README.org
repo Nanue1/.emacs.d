@@ -10,7 +10,6 @@
 - Original setup (key bindings, directories ...) are respected
 - Usable in [[https://packages.debian.org/emacs-nox][emacs-nox]]. Works when ssh to server with [[http://www.putty.org/][PuTTY]]
 
-
 * Table of Content                                                              :noexport:TOC:
 - [[#features][Features]]
 - [[#checklist][Checklist]]

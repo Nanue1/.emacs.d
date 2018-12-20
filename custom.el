@@ -5,15 +5,14 @@
     (find-file "~/github/org-pages/index.org")
 )
 (global-set-key (kbd "<f1>") 'manue1/open-gtd-file)
-(global-set-key (kbd "C-c a") 'org-agenda)
 
 (setq org-agenda-files (quote ("~/github/org-pages/index.org")))
-(define-key global-map (kbd "<f2>") 'org-capture)
+(define-key global-map "\C-c c" 'org-capture)
 
 (setq org-capture-templates
       '(
         ("r" "Read" entry (file+olp"~/github/org-pages/read.org" "Reading List")
-         "* TODO %^{书名} %t\n%i\n"
+         "* TODO %^{book:} %t\n%i\n"
          :clock-in t
          :clock-resume t
          :prepend t)
@@ -30,7 +29,7 @@
          "* TODO %?\n  %i\n"
          :prepend t)
         ("h" "Habit" entry (file "~/github/org-pages/habit.org")
-        "* NEXT %?\nSCHEDULED: <%<%Y-%m-%d %a .+1d>>\n:PROPERTIES:\n:CREATED: %U\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:LOGGING: DONE(!)\n:ARCHIVE: %%s_archive::* Habits\n:END:\n%U\n")
+        "* NEXT %?\nSCHEDULED: <%<%Y-%m-%d %a .+1d>>\n:PROPETIES:\n:CREATED: %U\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:LOGGING: DONE(!)\n:ARCHIVE: %%s_archive::* Habits\n:END:\n%U\n")
         )
 )
 
@@ -127,16 +126,54 @@
 
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; emms mpd config 
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(add-to-list 'exec-path "/usr/local/bin/mpd") 
+(setq emms-player-list '(emms-player-mpd))
+(setq emms-player-mpd-server-name "localhost")
+(setq emms-player-mpd-server-port "6600")
+(setq emms-info-functions '(emms-info-mpd))
+(setq emms-volume-change-function 'emms-volume-mpd-change)
 
 ;;;emms快捷键设置
+(global-set-key (kbd "C-c e b") 'emms-smart-browse)
+(global-set-key (kbd "C-c e c") 'emms-player-mpd-update-all-reset-cache)
 (global-set-key (kbd "C-c e l") 'emms-playlist-mode-go)
-(global-set-key (kbd "C-c e s") 'emms-start)
-(global-set-key (kbd "C-c e e") 'emms-stop)
 (global-set-key (kbd "C-c e n") 'emms-next)
-(global-set-key (kbd "C-c e p") 'emms-pause)
-(global-set-key (kbd "C-c e f") 'emms-play-playlist)
-(global-set-key (kbd "C-c e o") 'emms-play-file)
-(global-set-key (kbd "C-c e d") 'emms-play-directory-tree)
-(global-set-key (kbd "C-c e a") 'emms-add-directory-tree)
+(global-set-key (kbd "C-c e p") 'emms-previous)
+(global-set-key (kbd "C-c e s") 'emms-pause)
 
+(global-set-key (kbd "C-c e r")   'emms-toggle-repeat-track)
+(global-set-key (kbd "C-c e R")   'emms-toggle-repeat-playlist)
 
+(define-key emms-playlist-mode-map (kbd "<right>")
+  (lambda () (interactive) (emms-seek +600)))
+
+(defun mpd/start-music-daemon ()
+  "Start MPD, connects to it and syncs the metadata cache."
+  (interactive)
+  (shell-command "mpd")
+  (mpd/update-database)
+  (emms-player-mpd-connect)
+  (emms-cache-set-from-mpd-all)
+  (message "MPD Started!"))
+(global-set-key (kbd "C-c m c") 'mpd/start-music-daemon)
+
+(defun mpd/kill-music-daemon ()
+  "Stops playback and kill the music daemon."
+  (interactive)
+  (emms-stop)
+  (call-process "killall" nil nil nil "mpd")
+  (message "MPD Killed!"))
+(global-set-key (kbd "C-c m k") 'mpd/kill-music-daemon)
+
+(defun mpd/update-database ()
+  "Updates the MPD database synchronously."
+  (interactive)
+  (call-process "mpc" nil nil nil "update")
+  (message "MPD Database Updated!"))
+(global-set-key (kbd "C-c m u") 'mpd/update-database)

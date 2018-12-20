@@ -961,7 +961,7 @@ If no region is selected. You will be asked to use `kill-ring' or clipboard inst
                               emms-player-mplayer
                               emms-player-mpg321
                               emms-player-ogg123
-                              lemms-player-vlc
+                              emms-player-vlc
                               emms-player-vlc-playlist))))
 ;; }}
 
