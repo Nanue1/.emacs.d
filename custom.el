@@ -177,3 +177,15 @@
   (call-process "mpc" nil nil nil "update")
   (message "MPD Database Updated!"))
 (global-set-key (kbd "C-c m u") 'mpd/update-database)
+
+;; edit src
+(global-set-key (kbd "C-c '") 'org-edit-src-code)
+
+;;orgmode
+(setq org-ellipsis " ")
+(setq org-src-fontify-natively t)
+(setq org-src-tab-acts-natively t)
+(setq org-confirm-babel-evaluate nil)
+(setq org-export-with-smart-quotes t)
+(setq org-src-window-setup 'current-window)
+(add-hook 'org-mode-hook 'org-indent-mode)
