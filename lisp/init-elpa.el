@@ -318,6 +318,7 @@
 (require-package 'magit) ; Magit 2.12 is the last feature release to support Emacs 24.4.
 (require-package 'shackle)
 (require-package 'toc-org)
+(require-package 'org-publish)
 (require-package 'artbollocks-mode)
 (require-package 'elpa-mirror)
 ;; {{ @see https://pawelbx.github.io/emacs-theme-gallery/

@@ -66,9 +66,14 @@
 
 
 ;; blog
+(setq org-export-with-section-numbers nil) ;this set the section with no number
+(setq org-html-validation-link nil) ;makes no validation below.
+(setq org-export-copy-to-kill-ring nil)
+(setq org-export-with-sub-superscripts nil)
+(setq org-html-postamble nil)
+
 (setq org-publish-project-alist
        '(
-
          ("org-html"
           :base-directory "~/github/org-pages"
           :base-extension "org"
@@ -93,9 +98,6 @@
          ("org-pages" :components ("org-html" "org-static"))
          ))
 
-(setq org-export-copy-to-kill-ring nil)
-(setq org-export-with-sub-superscripts nil)
-(setq org-html-postamble nil)
 ;; TODO
 (setq org-html-preamble "<a href=\"https://www.manue1.site/index.html\">Home</a>")
 
