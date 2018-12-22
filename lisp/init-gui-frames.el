@@ -19,4 +19,14 @@
 (if (fboundp 'menu-bar-mode)
   (menu-bar-mode -1))
 
+;;高亮显示当前行
+(global-hl-line-mode t)
+
+;; 最大化
+;;(setq initial-frame-alist (quote ((fullscreen . maximized))))
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+
+;;鼠标选中后高亮括号
+(show-paren-mode 1)
+
 (provide 'init-gui-frames)

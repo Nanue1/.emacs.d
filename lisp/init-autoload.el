@@ -17,8 +17,6 @@
 (autoload 'sdcv-search-pointer "sdcv" "show word explanation in buffer" t)
 (autoload 'sdcv-search-input+ "sdcv" "show word explanation in tooltip" t)
 (autoload 'elpamr-create-mirror-for-installed "elpa-mirror" "" t)
-(autoload 'org2nikola-export-subtree "org2nikola" "" t)
-(autoload 'org2nikola-rerender-published-posts "org2nikola" "" t)
 (autoload 'dictionary-new-search "dictionary" "" t nil)
 (autoload 'legalese "legalese" "" t)
 (autoload 'buf-move-left "buffer-move" "move buffer" t)

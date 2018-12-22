@@ -5,7 +5,6 @@
 ;; if it's not visible after  `list-packages'.
 (defvar melpa-include-packages
   '(ace-mc
-    color-theme ; emacs24 need this package
     ace-window ; lastest stable is released on year 2014
     artbollocks-mode
     auto-package-update
@@ -26,8 +25,8 @@
     jss ; remote debugger of browser
     ;; {{ since stable v0.9.1 released, we go back to stable version
     ivy ; stable counsel dependent unstable ivy
-    ;; counsel
-    ;; swiper
+    ;;counsel
+    ;;swiper
     ;; }}
     moe-theme
     ample-theme
@@ -55,7 +54,6 @@
     slime
     groovy-mode
     inf-ruby
-    ;; company ; I won't wait another 2 years for stable
     simple-httpd
     dsvn
     findr
@@ -80,13 +78,15 @@
     pomodoro
     auto-compile
     packed
-    keyfreq
+    ;;keyfreq
     gitconfig-mode
     textile-mode
     w3m
-    erlang
+    ;;erlang
     workgroups2
     zoutline
+    ;;hungry-delete
+    ;;company ; I won't wait another 2 years for stable
     company-c-headers
     company-statistics)
   "Packages to install from melpa-unstable.")
@@ -187,6 +187,7 @@
 (require-package 'async)
 ; color-theme 6.6.1 in elpa is buggy
 (require-package 'auto-compile)
+;; M-x 提示包
 (require-package 'smex)
 (require-package 'avy)
 (require-package 'auto-yasnippet)
@@ -225,7 +226,7 @@
 (require-package 'textile-mode)
 (require-package 'dsvn)
 (require-package 'git-timemachine)
-(require-package 'exec-path-from-shell)
+(require-package 'exec-path-from-shell) ;; mac requires
 (require-package 'flymake-css)
 (require-package 'flymake-jslint)
 (require-package 'flymake-ruby)
@@ -262,6 +263,8 @@
 (require-package 'js2-refactor)
 (require-package 'rjsx-mode)
 (require-package 's)
+;;运行js
+(require-package 'nodejs-repl)
 ;; js2-refactor requires js2, dash, s, multiple-cursors, yasnippet
 ;; I don't use multiple-cursors, but js2-refactor requires it
 (require-package 'multiple-cursors)
@@ -271,6 +274,7 @@
 (require-package 'cliphist)
 (require-package 'yasnippet)
 (require-package 'yasnippet-snippets)
+;;自动补全
 (require-package 'company)
 (require-package 'company-c-headers)
 (require-package 'company-statistics)
@@ -287,6 +291,7 @@
 (require-package 'emms)
 (require-package 'package-lint) ; lint package before submit it to MELPA
 (require-package 'iedit)
+;;(require-package 'hungry-delete)
 (require-package 'ace-pinyin)
 (require-package 'bash-completion)
 (require-package 'websocket) ; for debug debugging of browsers
@@ -308,7 +313,7 @@
 (require-package 'slime)
 (require-package 'counsel-css)
 (require-package 'auto-package-update)
-(require-package 'keyfreq)
+;(require-package 'keyfreq)
 (require-package 'adoc-mode) ; asciidoc files
 (require-package 'magit) ; Magit 2.12 is the last feature release to support Emacs 24.4.
 (require-package 'shackle)

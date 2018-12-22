@@ -11,9 +11,6 @@
 (package-initialize)
 (push (expand-file-name "~/.emacs.d/lisp") load-path)
 
-(let* ((minver "24.4"))
-  (when (version< emacs-version minver)
-    (error "Emacs v%s or higher is required." minver)))
 
 (defvar best-gc-cons-threshold
   4000000
@@ -95,13 +92,13 @@
   (require 'init-hippie-expand)
   (require 'init-windows)
   (require 'init-markdown)
-  (require 'init-erlang)
+  ;;(require 'init-erlang)
   (require 'init-javascript)
   (require 'init-org)
   (require 'init-css)
   (require 'init-python)
   (require 'init-haskell)
-  (require 'init-ruby-mode)
+  ;;(require 'init-ruby-mode)
   (require 'init-lisp)
   (require 'init-elisp)
   (require 'init-yasnippet)
@@ -127,7 +124,7 @@
   (require 'init-company)
   (require 'init-chinese) ;; cannot be idle-required
   ;; need statistics of keyfreq asap
-  (require 'init-keyfreq)
+  ;;(require 'init-keyfreq)
   (require 'init-httpd)
 
   ;; projectile costs 7% startup time
@@ -150,7 +147,7 @@
 
   ;; my personal setup, other major-mode specific setup need it.
   ;; It's dependent on "~/.emacs.d/site-lisp/*.el"
-  (load (expand-file-name "custom.el") t nil)
+  (load (expand-file-name "~/.emacs.d/custom.el") t nil)
 
   ;; @see https://www.reddit.com/r/emacs/comments/4q4ixw/how_to_forbid_emacs_to_touch_configuration_files/
   ;; See `custom-file' for details.
