@@ -137,6 +137,7 @@
   (require 'init-shackle)
   (require 'init-dired)
   (require 'init-artbollocks-mode)
+  (require 'popwin)
 
   ;; @see https://github.com/hlissner/doom-emacs/wiki/FAQ
   ;; Adding directories under "site-lisp/" to `load-path' slows

@@ -85,7 +85,6 @@
     ;;erlang
     workgroups2
     zoutline
-    ;;hungry-delete
     ;;company ; I won't wait another 2 years for stable
     company-c-headers
     company-statistics)
@@ -99,10 +98,11 @@
 (setq package-archives
       '(("localelpa" . "~/.emacs.d/localelpa/")
         ;; uncomment below line if you need use GNU ELPA
-        ;; ("gnu" . "https://elpa.gnu.org/packages/")
+        ;;("gnu" . "https://elpa.gnu.org/packages/")
         ("melpa" . "https://melpa.org/packages/")
         ("melpa-stable" . "https://stable.melpa.org/packages/")
-
+        ;; remove emacs itself org 
+        ("org" . "https://orgmode.org/elpa/")
         ;; Use either 163 or tsinghua mirror repository when official melpa
         ;; is too slow or shutdown.
 
@@ -206,7 +206,7 @@
 (require-package 'workgroups2)
 (require-package 'yaml-mode)
 (require-package 'paredit)
-(require-package 'erlang)
+;;(require-package 'erlang)
 (require-package 'findr)
 (require-package 'pinyinlib)
 (require-package 'find-by-pinyin-dired)
@@ -292,6 +292,8 @@
 (require-package 'package-lint) ; lint package before submit it to MELPA
 (require-package 'iedit)
 ;;(require-package 'hungry-delete)
+(require-package 'org)
+(require-package 'org-plus-contrib)
 (require-package 'ace-pinyin)
 (require-package 'bash-completion)
 (require-package 'websocket) ; for debug debugging of browsers
@@ -318,7 +320,7 @@
 (require-package 'magit) ; Magit 2.12 is the last feature release to support Emacs 24.4.
 (require-package 'shackle)
 (require-package 'toc-org)
-(require-package 'org-publish)
+(require-package 'popwin)
 (require-package 'artbollocks-mode)
 (require-package 'elpa-mirror)
 ;; {{ @see https://pawelbx.github.io/emacs-theme-gallery/
@@ -358,6 +360,7 @@
   (require-package 'hemisu-theme)
   (require-package 'badger-theme)
   (require-package 'distinguished-theme)
+  (require-package 'challenger-deep-theme)
   (require-package 'challenger-deep-theme)
   (require-package 'tao-theme))
 ;; }}

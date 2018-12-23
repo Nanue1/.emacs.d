@@ -1,3 +1,21 @@
+;; close warn sound
+;;(setq ring-bell-function 'ignore)
+
+;;定义缩写  space
+(abbrev-mode t)
+(define-abbrev-table 'global-abbrev-table '(
+                                            ;;manue1
+                                            ("6m" "manue1")
+                                            ;; Macrosoft
+                                            ("8ms" "Macrosoft")
+                                            ))
+
+;; close auto-save-list
+(setq auto-save-default nil)
+
+;;优化查看帮助信息窗口弹出 q & c-g exit
+(popwin-mode t)
+
 ;;快速学习emacs
 (global-set-key (kbd "C-h C-f") 'find-function)
 (global-set-key (kbd "C-h C-v") 'find-variable)
@@ -16,7 +34,7 @@
 (global-set-key (kbd "C-x C-r" ) 'recentf-open-files)
 
 ;; org mode 个人配置
-(setq org-agenda-files (quote ("~/github/org-pages/q&a.org")))
+(setq org-agenda-files '("~/github/org-pages"))
 (global-set-key (kbd "C-c a") 'org-agenda)
 (global-set-key (kbd "C-c c") 'org-capture)
 (setq org-capture-templates

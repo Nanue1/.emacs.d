@@ -1,4 +1,4 @@
-;; -*- coding: utf-8; lexical-binding: t; -*-
+; -*- coding: utf-8; lexical-binding: t; -*-
 
 (setq wg-use-default-session-file nil)
 ;; don't open last workgroup automatically in `wg-open-session',
