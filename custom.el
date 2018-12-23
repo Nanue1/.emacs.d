@@ -1,3 +1,9 @@
+;; iedit 批量修改
+(global-set-key (kbd "M-s e") 'iedit-mode)
+
+;;快速选中
+(global-set-key (kbd "C-=") 'er/expand-region)
+
 ;; occur 默认查找当前选中字段
 (defun occur-dwim ()
   "Call occur with a sane default"
