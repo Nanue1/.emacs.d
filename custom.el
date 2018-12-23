@@ -1,7 +1,10 @@
-;; close warn sound
-;;(setq ring-bell-function 'ignore)
 
-;;定义缩写  space
+;; counsel-git 查找当前文件所在的版本控制系统内的其他文件 , g f
+
+;; close warn sound
+(setq ring-bell-function 'ignore)
+
+;;定义缩写  space + esc
 (abbrev-mode t)
 (define-abbrev-table 'global-abbrev-table '(
                                             ;;manue1
@@ -9,6 +12,7 @@
                                             ;; Macrosoft
                                             ("8ms" "Macrosoft")
                                             ))
+
 
 ;; close auto-save-list
 (setq auto-save-default nil)
@@ -182,9 +186,9 @@
    (emms-player-mpd-connect)
    (emms-cache-set-from-mpd-all)
    (message "MPD Started!"))
- (global-set-key (kbd "C-c m c") 'mpd/start-music-daemon)
+(global-set-key (kbd "C-c m c") 'mpd/start-music-daemon)
 
- (defun mpd/kill-music-daemon ()
+(defun mpd/kill-music-daemon ()
    "Stops playback and kill the music daemon."
    (interactive)
    (emms-stop)
@@ -192,12 +196,12 @@
    (message "MPD Killed!"))
  (global-set-key (kbd "C-c m k") 'mpd/kill-music-daemon)
 
- (defun mpd/update-database ()
+(defun mpd/update-database ()
    "Updates the MPD database synchronously."
    (interactive)
    (call-process "mpc" nil nil nil "update")
    (message "MPD Database Updated!"))
- (global-set-key (kbd "C-c m u") 'mpd/update-database)
+(global-set-key (kbd "C-c m u") 'mpd/update-database)
 
  ;; edit src
 (global-set-key (kbd "C-c '") 'org-edit-src-code)
