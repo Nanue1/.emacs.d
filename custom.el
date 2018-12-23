@@ -1,3 +1,25 @@
+;; occur 默认查找当前选中字段
+(defun occur-dwim ()
+  "Call occur with a sane default"
+  (interactive)
+  (push (if (region-active-p)
+            (buffer-substring-no-properties
+             (region-beginning)
+             (regin-end))
+          (let ((sym (thing-at-point 'symbol)))
+            (when (stringp sym)
+              (regexp-quote sym))))
+        regexp-history)
+  (call-interactively 'occur))
+(global-set-key (kbd "M-s o" ) 'occur-dwim)
+
+
+;; remove ^M
+(defun remove-dos-eol ()
+  "Replace Dos eolns CR LF with Unix eolns CR"
+  (interactive)
+  (goto-char (point-min))
+  (while (search-forward "\r" nil t) (replace-match "")))
 
 ;;dird mode set
 (fset 'yes-or-no-p 'y-or-n-p)
@@ -55,8 +77,9 @@
                                             ("8ms" "Macrosoft")
                                             ))
 
-;;优化删除
-(global-hungry-delete-mode t)
+;;优化删除 cc-mode : c-<delete>
+;;(require 'hungry-delete)
+;;(global-hungry-delete-mode t)
 
 
 ;; close auto-save-list

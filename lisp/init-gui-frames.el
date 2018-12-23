@@ -26,7 +26,13 @@
 ;;(setq initial-frame-alist (quote ((fullscreen . maximized))))
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
-;;鼠标选中后高亮括号
-(show-paren-mode 1)
+;;高亮括号
+;;(show-paren-mode 1)
+(define-advice show-paren-function (:around (fn) fix-show-paren-function)
+  "Highlight enclosing parens."
+  (cond ((looking-at-p "\\s(") (funcall fn))
+        (t (save-excursion
+             (ignore-errors (backward-up-list))
+             (funcall fn)))))
 
 (provide 'init-gui-frames)
