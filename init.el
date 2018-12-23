@@ -9,6 +9,7 @@
 ;;   "Reset `load-path'."
 ;;   (push (expand-file-name "~/.emacs.d/lisp") load-path))
 (package-initialize)
+
 (push (expand-file-name "~/.emacs.d/lisp") load-path)
 
 
@@ -137,7 +138,6 @@
   (require 'init-shackle)
   (require 'init-dired)
   (require 'init-artbollocks-mode)
-  (require 'popwin)
 
   ;; @see https://github.com/hlissner/doom-emacs/wiki/FAQ
   ;; Adding directories under "site-lisp/" to `load-path' slows

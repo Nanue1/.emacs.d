@@ -1,4 +1,25 @@
 
+;;dird mode set
+(fset 'yes-or-no-p 'y-or-n-p)
+(setq dired-recursive-deletes 'alawys)
+(setq dired-recursive-copies 'alawys)
+;;复用buffer
+(put 'dired-find-alternate-file 'disabled nil)
+(require 'dired) ;; 定义dired-mode下的快捷键需要开启diredmode
+(define-key dired-mode-map (kbd "RET") 'dired-find-alternate-file)
+
+;;补充company补全功能
+(setq hippie-expand-try-functions-list '(try-expand-dabbrev
+                                         try-expand-all-abbrevs
+                                         try-expand-dabbrev-from-kill
+                                         try-complete-file-name
+                                         try-complete-file-name-partially
+                                         try-expand-dabbrev-all-buffers
+                                         try-expand-list
+                                         try-expand-line
+                                         try-complete-lisp-symbol-partially
+                                         try-complete-lisp-symbol))
+(global-set-key (kbd "s-/") 'hippie-expand)
 ;;格式化缩进
 (defun indent-buffer ()
   "Indent the currently visited buffer"
@@ -38,6 +59,7 @@
 (setq auto-save-default nil)
 
 ;;优化查看帮助信息窗口弹出 q & c-g exit
+(require 'popwin)
 (popwin-mode t)
 
 ;;快速学习emacs
@@ -108,6 +130,7 @@
 
 
 ;; blog
+(require 'ox-publish)
 (setq org-export-with-section-numbers nil) ;this set the section with no number
 (setq org-html-validation-link nil) ;makes no validation below.
 (setq org-export-copy-to-kill-ring nil)
@@ -176,7 +199,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
-;; emms mpd config
+;; emms mpd config 使用前需要c-c m c 同步mpd服务器状态
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (setq exec-path (append exec-path '("/usr/local/bin")))
@@ -207,7 +230,6 @@
   (emms-cache-set-from-mpd-all)
   (message "MPD Started!"))
 (global-set-key (kbd "C-c m c") 'mpd/start-music-daemon)
-
 (defun mpd/kill-music-daemon ()
   "Stops playback and kill the music daemon."
   (interactive)
@@ -215,7 +237,6 @@
   (call-process "killall" nil nil nil "mpd")
   (message "MPD Killed!"))
 (global-set-key (kbd "C-c m k") 'mpd/kill-music-daemon)
-
 (defun mpd/update-database ()
   "Updates the MPD database synchronously."
   (interactive)
