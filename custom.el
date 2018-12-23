@@ -5,8 +5,12 @@
 (setq dired-recursive-copies 'alawys)
 ;;复用buffer
 (put 'dired-find-alternate-file 'disabled nil)
-(require 'dired) ;; 定义dired-mode下的快捷键需要开启diredmode
-(define-key dired-mode-map (kbd "RET") 'dired-find-alternate-file)
+;;(require 'dired) ;; 定义dired-mode下的快捷键需要开启diredmode
+(with-eval-after-load 'dired
+  (define-key dired-mode-map (kbd "RET") 'dired-find-alternate-file))
+(require 'dired-x) ;; c-x c-j 快速打开当前文件所在目录
+(setq dired-dwim-target t) ;;打开两个dired 快速复制文件到另一个目录
+(global-set-key (kbd "s-f") 'reveal-in-osx-finder) ;; mac 快速调用finder查看文件所在目录
 
 ;;补充company补全功能
 (setq hippie-expand-try-functions-list '(try-expand-dabbrev

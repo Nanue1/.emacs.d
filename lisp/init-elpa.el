@@ -330,6 +330,7 @@
 (require-package 'stripe-buffer)
 (require-package 'visual-regexp) ;; Press "M-x vr-*"
 (require-package 'vimrc-mode)
+(require-package 'reveal-in-osx-finder)
 
 (when *emacs25*
   (require-package 'zenburn-theme)
@@ -360,7 +361,6 @@
   (require-package 'hemisu-theme)
   (require-package 'badger-theme)
   (require-package 'distinguished-theme)
-  (require-package 'challenger-deep-theme)
   (require-package 'challenger-deep-theme)
   (require-package 'tao-theme))
 ;; }}
