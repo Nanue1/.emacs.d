@@ -1,5 +1,22 @@
 
-;; counsel-git 查找当前文件所在的版本控制系统内的其他文件 , g f
+;;格式化缩进
+(defun indent-buffer ()
+  "Indent the currently visited buffer"
+  (interactive)
+  (indent-region (point-min) (point-max)))
+(defun indent-region-or-buffer ()
+  "Indent a region if selected , otherwise the whose buffer."
+  (interactive)
+  (save-excursion
+    (if (region-active-p)
+        (progn
+          (indent-region (region-beginning) (region-end))
+          (message "Indent selected region."))
+      (progn
+        (indent-buffer)
+        (message "Indent buffer.")))))
+(global-set-key (kbd "C-M-\\") 'indent-region-or-buffer)
+
 
 ;; close warn sound
 (setq ring-bell-function 'ignore)
@@ -12,6 +29,9 @@
                                             ;; Macrosoft
                                             ("8ms" "Macrosoft")
                                             ))
+
+;;优化删除
+(global-hungry-delete-mode t)
 
 
 ;; close auto-save-list
@@ -27,9 +47,9 @@
 
 ;;快速打开配置文件
 (defun open-init-file()
-    (interactive)
-    (find-file "~/github/.emacs.d/custom.el")
-)
+  (interactive)
+  (find-file "~/github/.emacs.d/custom.el")
+  )
 (global-set-key (kbd "<f1>") 'open-init-file)
 
 ;; 最近使用文件
@@ -42,47 +62,47 @@
 (global-set-key (kbd "C-c a") 'org-agenda)
 (global-set-key (kbd "C-c c") 'org-capture)
 (setq org-capture-templates
-       '(
-         ("r" "Read" entry (file+olp"~/github/org-pages/read.org" "Reading List")
-          "* TODO %^{book:} %t\n%i\n"
-          :clock-in t
-          :clock-resume t
-          :prepend t)
-         ("w" "Write" entry (file+headline "~/github/org-pages/write.org" "Writing List")
-          "* TODO  %?\n  %i\n"
-          :prepend )
-         ("c" "Code" entry (file+headline "~/github/org-pages/code.org" "Coding List")
-          "* TODO %?\n  %i\n"
-          :prepend t)
-         ("a" "Q&A" entry (file+headline "~/github/org-pages/q&a.org" "Question & Answer")
-          "* TODO %?\n  %i\n"
-          :prepend t)
-         ("b" "Body" entry (file+headline "~/github/org-pages/body.org" "Body Building")
-          "* TODO %?\n  %i\n"
-          :prepend t)
-         ("h" "Habit" entry (file "~/github/org-pages/habit.org")
-          "* NEXT %?\nSCHEDULED: <%<%Y-%m-%d %a .+1d>>\n:PROPETIES:\n:CREATED: %U\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:LOGGING: DONE(!)\n:ARCHIVE: %%s_archive::* Habits\n:END:\n%U\n")
-         )
-)
- ;; (defun capture-report-date-file (path)
- ;;   (interactive
- ;;        (setq name (read-string "Name:" nil))
- ;;        (expend-find-name(format "%s-%s.org" (format-time-string "%Y-%m-%d") name) path))
- ;;    )
+      '(
+        ("r" "Read" entry (file+olp"~/github/org-pages/read.org" "Reading List")
+         "* TODO %^{book:} %t\n%i\n"
+         :clock-in t
+         :clock-resume t
+         :prepend t)
+        ("w" "Write" entry (file+headline "~/github/org-pages/write.org" "Writing List")
+         "* TODO  %?\n  %i\n"
+         :prepend )
+        ("c" "Code" entry (file+headline "~/github/org-pages/code.org" "Coding List")
+         "* TODO %?\n  %i\n"
+         :prepend t)
+        ("a" "Q&A" entry (file+headline "~/github/org-pages/q&a.org" "Question & Answer")
+         "* TODO %?\n  %i\n"
+         :prepend t)
+        ("b" "Body" entry (file+headline "~/github/org-pages/body.org" "Body Building")
+         "* TODO %?\n  %i\n"
+         :prepend t)
+        ("h" "Habit" entry (file "~/github/org-pages/habit.org")
+         "* NEXT %?\nSCHEDULED: <%<%Y-%m-%d %a .+1d>>\n:PROPETIES:\n:CREATED: %U\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:LOGGING: DONE(!)\n:ARCHIVE: %%s_archive::* Habits\n:END:\n%U\n")
+        )
+      )
+;; (defun capture-report-date-file (path)
+;;   (interactive
+;;        (setq name (read-string "Name:" nil))
+;;        (expend-find-name(format "%s-%s.org" (format-time-string "%Y-%m-%d") name) path))
+;;    )
 
- ;; (add-to-list 'org-capture-templates
- ;;              `("n" "note" plain (file,(capture-report-data-file "~/github/org-pages/note/"))
- ;;               ,(concat "#+startup: showall\n"
- ;;                         "#+options: toc:nil\n"
- ;;                         "#+begin_export html\n"
- ;;                         "---\n"
- ;;                         "layout     : post\n"
- ;;                         "title      : %^{标题}\n"
- ;;                         "categories : %^{类别}\n"
- ;;                         "tags       : %^{标签}\n"
- ;;                         "---\n"
- ;;                         "+end_export\n"
- ;;                         "#+TOC: headlines 2\n")))
+;; (add-to-list 'org-capture-templates
+;;              `("n" "note" plain (file,(capture-report-data-file "~/github/org-pages/note/"))
+;;               ,(concat "#+startup: showall\n"
+;;                         "#+options: toc:nil\n"
+;;                         "#+begin_export html\n"
+;;                         "---\n"
+;;                         "layout     : post\n"
+;;                         "title      : %^{标题}\n"
+;;                         "categories : %^{类别}\n"
+;;                         "tags       : %^{标签}\n"
+;;                         "---\n"
+;;                         "+end_export\n"
+;;                         "#+TOC: headlines 2\n")))
                                         ; Task state settings
 (setq org-todo-keywords '((sequence "TODO(t!)" "SOMEDAY(s)" "|" "DONE(d@/!)" "UNDO(u@/!)" "ABORT(a@/!)")))
 
@@ -95,36 +115,36 @@
 (setq org-html-postamble nil)
 
 (setq org-publish-project-alist
-       '(
-         ("org-html"
-          :base-directory "~/github/org-pages"
-          :base-extension "org"
-          :publishing-directory "~/github/html-pages"
-          :section-numbers nil
-          :recursive t
-          :publishing-function org-html-publish-to-html
-          :headline-levels 4
-          :auto-sitemap t
-          :sitemap-filename "sitemap.org"
-          :sitemap-title "Sitemap"
-          :auto-preamble t
-          :author nil
-          :creator-info nil
-          :auto-postamble nil)
-         ("org-static"
-          :base-directory "~/github/org-pages"
-          :base-extension "html\\|css\\|js\\|ico\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|java\\|py\\|zip\\|arff\\|dat\\|cpp\\|xls\\|otf\\|woff"
-          :publishing-directory "~/github/html-pages"
-          :recursive t
-          :publishing-function org-publish-attachment)
-         ("org-pages" :components ("org-html" "org-static"))
-         ))
+      '(
+        ("org-html"
+         :base-directory "~/github/org-pages"
+         :base-extension "org"
+         :publishing-directory "~/github/html-pages"
+         :section-numbers nil
+         :recursive t
+         :publishing-function org-html-publish-to-html
+         :headline-levels 4
+         :auto-sitemap t
+         :sitemap-filename "sitemap.org"
+         :sitemap-title "Sitemap"
+         :auto-preamble t
+         :author nil
+         :creator-info nil
+         :auto-postamble nil)
+        ("org-static"
+         :base-directory "~/github/org-pages"
+         :base-extension "html\\|css\\|js\\|ico\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|java\\|py\\|zip\\|arff\\|dat\\|cpp\\|xls\\|otf\\|woff"
+         :publishing-directory "~/github/html-pages"
+         :recursive t
+         :publishing-function org-publish-attachment)
+        ("org-pages" :components ("org-html" "org-static"))
+        ))
 
 ;; TODO
 (setq org-html-preamble "<a href=\"https://www.manue1.site/index.html\">Home</a>")
 
 ;; 等宽
-;(set-face-attribute 'org-table nil :family "")
+                                        ;(set-face-attribute 'org-table nil :family "")
 
 ;; Org table font
 (custom-set-faces
@@ -179,29 +199,29 @@
 
 
 (defun mpd/start-music-daemon ()
-   "Start MPD, connects to it and syncs the metadata cache."
-   (interactive)
-   (shell-command "mpd")
-   (mpd/update-database)
-   (emms-player-mpd-connect)
-   (emms-cache-set-from-mpd-all)
-   (message "MPD Started!"))
+  "Start MPD, connects to it and syncs the metadata cache."
+  (interactive)
+  (shell-command "mpd")
+  (mpd/update-database)
+  (emms-player-mpd-connect)
+  (emms-cache-set-from-mpd-all)
+  (message "MPD Started!"))
 (global-set-key (kbd "C-c m c") 'mpd/start-music-daemon)
 
 (defun mpd/kill-music-daemon ()
-   "Stops playback and kill the music daemon."
-   (interactive)
-   (emms-stop)
-   (call-process "killall" nil nil nil "mpd")
-   (message "MPD Killed!"))
- (global-set-key (kbd "C-c m k") 'mpd/kill-music-daemon)
+  "Stops playback and kill the music daemon."
+  (interactive)
+  (emms-stop)
+  (call-process "killall" nil nil nil "mpd")
+  (message "MPD Killed!"))
+(global-set-key (kbd "C-c m k") 'mpd/kill-music-daemon)
 
 (defun mpd/update-database ()
-   "Updates the MPD database synchronously."
-   (interactive)
-   (call-process "mpc" nil nil nil "update")
-   (message "MPD Database Updated!"))
+  "Updates the MPD database synchronously."
+  (interactive)
+  (call-process "mpc" nil nil nil "update")
+  (message "MPD Database Updated!"))
 (global-set-key (kbd "C-c m u") 'mpd/update-database)
 
- ;; edit src
+;; edit src
 (global-set-key (kbd "C-c '") 'org-edit-src-code)
