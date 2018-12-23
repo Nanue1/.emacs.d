@@ -161,7 +161,7 @@
 (setq emms-player-mpd-server-name "localhost")
 (setq emms-player-mpd-server-port "6600")
 (setq emms-info-functions '(emms-info-mpd))
-(setq emms-volume-change-function 'emms-volume--change)
+(setq emms-volume-change-function 'emms-volume-mpd-change)
 ;;;emms快捷键设置
 (global-set-key (kbd "C-c e b") 'emms-smart-browse)
 (global-set-key (kbd "C-c e c") 'emms-player-mpd-update-all-reset-cache)
