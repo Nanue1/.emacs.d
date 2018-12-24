@@ -27,12 +27,19 @@
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 ;;高亮括号
-;;(show-paren-mode 1)
-(define-advice show-paren-function (:around (fn) fix-show-paren-function)
-  "Highlight enclosing parens."
-  (cond ((looking-at-p "\\s(") (funcall fn))
-        (t (save-excursion
-             (ignore-errors (backward-up-list))
-             (funcall fn)))))
+(show-paren-mode 1)
+;; (define-advice show-paren-function (:around (fn) fix-show-paren-function)
+;;   "Highlight enclosing parens."
+;;   (cond ((looking-at-p "\\s(") (funcall fn))
+;;         (t (save-excursion
+;;              (ignore-errors (backward-up-list))
+;;              (funcall fn)))))
 
-(provide 'init-gui-frames)
+(defadvice show-paren-function (around fix-show-paren-function activate)
+  (cond ((looking-at-p "\\s(") ad-do-it)
+	(t (save-excursion
+	     (ignore-errors (backward-up-list))
+	     ad-do-it)))
+  )
+
+ (provide 'init-gui-frames)

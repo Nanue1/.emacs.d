@@ -1,3 +1,9 @@
+;; ag quick search word
+(global-set-key (kbd "C-c s") 'helm-do-ag-project-root)
+
+;; utf-8 支持中文
+(set-language-environment "UTF-8")
+
 ;; iedit 批量修改
 (global-set-key (kbd "M-s e") 'iedit-mode)
 
@@ -52,6 +58,13 @@
                                          try-complete-lisp-symbol-partially
                                          try-complete-lisp-symbol))
 (global-set-key (kbd "s-/") 'hippie-expand)
+;;统一切换体验c-n c-p
+(with-eval-after-load 'company
+  (define-key company-active-map (kbd "M-n") nil)
+  (define-key company-active-map (kbd "M-p") nil)
+  (define-key company-active-map (kbd "C-n") #'company-select-next)
+  (define-key company-active-map (kbd "C-p") #'company-select-previous))
+
 ;;格式化缩进
 (defun indent-buffer ()
   "Indent the currently visited buffer"
@@ -112,7 +125,33 @@
 (setq recentf-max-menu-items 25)
 (global-set-key (kbd "C-x C-r" ) 'recentf-open-files)
 
+
+
 ;; org mode 个人配置
+
+
+;; 添加chrome link
+(defun zilongshanren/insert-chrome-current-tab-url()
+  "Get the URL of the active tab of the first window"
+  (interactive)
+  (insert (zilongshanren/retrieve-chrome-current-tab-url)))
+
+(defun zilongshanren/retrieve-chrome-current-tab-url()
+  "Get the URL of the active tab of the first window"
+  (interactive)
+  (let ((result (do-applescript
+		 (concat
+		  "set frontmostApplication to path to frontmost application\n"
+		  "tell application \"Google Chrome\"\n"
+		  "	set theUrl to get URL of active tab of first window\n"
+		  "	set theResult to (get theUrl) \n"
+		  "end tell\n"
+		  "activate application (frontmostApplication as text)\n"
+		  "set links to {}\n"
+		  "copy theResult to the end of links\n"
+		  "return links as string\n"))))
+    (format "%s" (s-chop-suffix "\"" (s-chop-prefix "\"" result)))))
+
 (setq org-agenda-files '("~/github/org-pages"))
 (global-set-key (kbd "C-c a") 'org-agenda)
 (global-set-key (kbd "C-c c") 'org-capture)
@@ -134,6 +173,10 @@
          :prepend t)
         ("b" "Body" entry (file+headline "~/github/org-pages/body.org" "Body Building")
          "* TODO %?\n  %i\n"
+         :prepend t)
+        ("l" "Chrome" entry (file+headline "~/github/org-pages/link.org" "Link notes")
+         "* TODO %?\n %(zilongshanren/retrieve-chrome-current-tab-url)\n %i\n %U"
+         :empty-lines 1
          :prepend t)
         ("h" "Habit" entry (file "~/github/org-pages/habit.org")
          "* NEXT %?\nSCHEDULED: <%<%Y-%m-%d %a .+1d>>\n:PROPETIES:\n:CREATED: %U\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:LOGGING: DONE(!)\n:ARCHIVE: %%s_archive::* Habits\n:END:\n%U\n")

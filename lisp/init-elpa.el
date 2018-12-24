@@ -291,6 +291,7 @@
 (require-package 'emms)
 (require-package 'package-lint) ; lint package before submit it to MELPA
 (require-package 'iedit)
+(require-package 'helm-ag)
 (require-package 'hungry-delete)
 (require-package 'org)
 (require-package 'org-plus-contrib)
