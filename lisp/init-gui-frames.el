@@ -39,7 +39,6 @@
   (cond ((looking-at-p "\\s(") ad-do-it)
 	(t (save-excursion
 	     (ignore-errors (backward-up-list))
-	     ad-do-it)))
-  )
+	     ad-do-it))))
 
  (provide 'init-gui-frames)

@@ -276,6 +276,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;; emms mpd config 使用前需要c-c m c 同步mpd服务器状态
+;; mpc search any 天空 | mpc add 添加新的专辑
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (setq exec-path (append exec-path '("/usr/local/bin")))
@@ -285,6 +286,7 @@
 (setq emms-player-mpd-server-port "6600")
 (setq emms-info-functions '(emms-info-mpd))
 (setq emms-volume-change-function 'emms-volume-mpd-change)
+
 ;;;emms快捷键设置
 (global-set-key (kbd "C-c e b") 'emms-smart-browse)
 (global-set-key (kbd "C-c e c") 'emms-player-mpd-update-all-reset-cache)
@@ -292,9 +294,8 @@
 (global-set-key (kbd "C-c e n") 'emms-next)
 (global-set-key (kbd "C-c e p") 'emms-previous)
 (global-set-key (kbd "C-c e P") 'emms-pause)
-
-(global-set-key (kbd "C-c e r")   'emms-toggle-repeat-track)
-(global-set-key (kbd "C-c e R")   'emms-toggle-repeat-playlist)
+(global-set-key (kbd "C-c e r") 'emms-toggle-random-playlist)
+(global-set-key (kbd "C-c e R") 'emms-toggle-repeat-playlist)
 
 
 (defun mpd/start-music-daemon ()
