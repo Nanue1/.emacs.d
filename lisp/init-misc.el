@@ -1156,7 +1156,7 @@ version control automatically."
   (let* ((proxy "http://127.0.0.1:8000"))
     (cond
      ((string= (getenv "http_proxy") proxy)
-      (setenv "http_proxy" "")
+     (setenv "http_proxy" "")
       (message "env http_proxy is empty now"))
      (t
       (setenv "http_proxy" proxy)
@@ -1240,7 +1240,8 @@ Including indent-buffer, which should not be called automatically on save."
   '(progn
      (setq pomodoro-break-time 2)
      (setq pomodoro-long-break-time 5)
-     (setq pomodoro-work-time 15)
+     (setq pomodoro-work-time 25)
+     (pomodoro-add-to-mode-line)
      (setq-default mode-line-format
               (cons '(pomodoro-mode-line-string pomodoro-mode-line-string)
                     mode-line-format))))

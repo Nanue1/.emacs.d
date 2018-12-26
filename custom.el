@@ -1,3 +1,4 @@
+
 ;; ag quick search word
 (global-set-key (kbd "C-c s") 'helm-do-ag-project-root)
 
@@ -62,8 +63,8 @@
 (with-eval-after-load 'company
   (define-key company-active-map (kbd "M-n") nil)
   (define-key company-active-map (kbd "M-p") nil)
-  (define-key company-active-map (kbd "C-n") #'company-select-next)
-  (define-key company-active-map (kbd "C-p") #'company-select-previous))
+  (define-key company-active-map (kbd "C-n") 'company-select-next)
+  (define-key company-active-map (kbd "C-p") 'company-select-previous))
 
 ;;格式化缩进
 (defun indent-buffer ()
@@ -178,9 +179,9 @@
          "* TODO %?\n %(zilongshanren/retrieve-chrome-current-tab-url)\n %i\n %U"
          :empty-lines 1
          :prepend t)
-        ("h" "Habit" entry (file "~/github/org-pages/habit.org")
-         "* NEXT %?\nSCHEDULED: <%<%Y-%m-%d %a .+1d>>\n:PROPETIES:\n:CREATED: %U\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:LOGGING: DONE(!)\n:ARCHIVE: %%s_archive::* Habits\n:END:\n%U\n")
-        )
+        ;; ("h" "Habit" entry (file "~/github/org-pages/habit.org")
+        ;;  "* NEXT %?\nSCHEDULED: <%<%Y-%m-%d %a .+1d>>\n:PROPETIES:\n:CREATED: %U\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:LOGGING: DONE(!)\n:ARCHIVE: %%s_archive::* Habits\n:END:\n%U\n")
+       )
       )
 ;; (defun capture-report-date-file (path)
 ;;   (interactive
@@ -323,3 +324,10 @@
 
 ;; edit src
 (global-set-key (kbd "C-c '") 'org-edit-src-code)
+
+
+;; (require 'pomodoro)
+;; (pomodoro-start)
+;; (pomodoro-add-to-mode-line)
+;; (play-pomodoro-sound "~/.emacs.d/game_win.wav")
+;; (play-pomodoro-work-sound)
