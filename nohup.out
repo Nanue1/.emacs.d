@@ -1,0 +1,5 @@
+/Users/manue1/.poliporc:6: parse error.
+Couldn't bind: Address already in use
+Couldn't establish listening socket: Address already in use
+/Users/manue1/.poliporc:6: parse error.
+Established listening socket on port 8888.

@@ -1153,7 +1153,7 @@ version control automatically."
 (defun toggle-env-http-proxy ()
   "Set/unset the environment variable http_proxy used by w3m."
   (interactive)
-  (let* ((proxy "http://127.0.0.1:8000"))
+  (let* ((proxy "http://127.0.0.1:1087"))
     (cond
      ((string= (getenv "http_proxy") proxy)
      (setenv "http_proxy" "")
