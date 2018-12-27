@@ -1,3 +1,7 @@
+;; init enable proxy
+;;(toggle-env-http-proxy)
+
+
 
 ;; ag quick search word
 (global-set-key (kbd "C-c s") 'helm-do-ag-project-root)
@@ -6,25 +10,25 @@
 (set-language-environment "UTF-8")
 
 ;; iedit 批量修改
-(global-set-key (kbd "M-s e") 'iedit-mode)
+;(global-set-key (kbd "M-s e") 'iedit-mode)
 
 ;;快速选中
-(global-set-key (kbd "C-=") 'er/expand-region)
+(global-set-key (kbd "C-;") 'er/expand-region)
 
 ;; occur 默认查找当前选中字段
-(defun occur-dwim ()
-  "Call occur with a sane default"
-  (interactive)
-  (push (if (region-active-p)
-            (buffer-substring-no-properties
-             (region-beginning)
-             (regin-end))
-          (let ((sym (thing-at-point 'symbol)))
-            (when (stringp sym)
-              (regexp-quote sym))))
-        regexp-history)
-  (call-interactively 'occur))
-(global-set-key (kbd "M-s o" ) 'occur-dwim)
+;; (defun occur-dwim ()
+;;   "Call occur with a sane default"
+;;   (interactive)
+;;   (push (if (region-active-p)
+;;             (buffer-substring-no-properties
+;;              (region-beginning)
+;;              (regin-end))
+;;           (let ((sym (thing-at-point 'symbol)))
+;;             (when (stringp sym)
+;;               (regexp-quote sym))))
+;;         regexp-history)
+;;   (call-interactively 'occur))
+;; (global-set-key (kbd "M-s o" ) 'occur-dwim)
 
 
 ;; remove ^M
@@ -47,7 +51,14 @@
 (setq dired-dwim-target t) ;;打开两个dired 快速复制文件到另一个目录
 (global-set-key (kbd "s-f") 'reveal-in-osx-finder) ;; mac 快速调用finder查看文件所在目录
 
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
 ;;补充company补全功能
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (setq hippie-expand-try-functions-list '(try-expand-dabbrev
                                          try-expand-all-abbrevs
                                          try-expand-dabbrev-from-kill
@@ -58,7 +69,7 @@
                                          try-expand-line
                                          try-complete-lisp-symbol-partially
                                          try-complete-lisp-symbol))
-(global-set-key (kbd "s-/") 'hippie-expand)
+;;(global-set-key (kbd "s-/") 'hippie-expand)
 ;;统一切换体验c-n c-p
 (with-eval-after-load 'company
   (define-key company-active-map (kbd "M-n") nil)
@@ -124,136 +135,9 @@
 ;; 最近使用文件
 (recentf-mode 1)
 (setq recentf-max-menu-items 25)
-(global-set-key (kbd "C-x C-r" ) 'recentf-open-files)
 
 
 
-;; org mode 个人配置
-
-
-;; 添加chrome link
-(defun zilongshanren/insert-chrome-current-tab-url()
-  "Get the URL of the active tab of the first window"
-  (interactive)
-  (insert (zilongshanren/retrieve-chrome-current-tab-url)))
-
-(defun zilongshanren/retrieve-chrome-current-tab-url()
-  "Get the URL of the active tab of the first window"
-  (interactive)
-  (let ((result (do-applescript
-		 (concat
-		  "set frontmostApplication to path to frontmost application\n"
-		  "tell application \"Google Chrome\"\n"
-		  "	set theUrl to get URL of active tab of first window\n"
-		  "	set theResult to (get theUrl) \n"
-		  "end tell\n"
-		  "activate application (frontmostApplication as text)\n"
-		  "set links to {}\n"
-		  "copy theResult to the end of links\n"
-		  "return links as string\n"))))
-    (format "%s" (s-chop-suffix "\"" (s-chop-prefix "\"" result)))))
-
-(setq org-agenda-files '("~/github/org-pages"))
-(global-set-key (kbd "C-c a") 'org-agenda)
-(global-set-key (kbd "C-c c") 'org-capture)
-(setq org-capture-templates
-      '(
-        ("r" "Read" entry (file+olp"~/github/org-pages/read.org" "Reading List")
-         "* TODO %^{book:} %t\n%i\n"
-         :clock-in t
-         :clock-resume t
-         :prepend t)
-        ("w" "Write" entry (file+headline "~/github/org-pages/write.org" "Writing List")
-         "* TODO  %?\n  %i\n"
-         :prepend )
-        ("c" "Code" entry (file+headline "~/github/org-pages/code.org" "Coding List")
-         "* TODO %?\n  %i\n"
-         :prepend t)
-        ("a" "Q&A" entry (file+headline "~/github/org-pages/q&a.org" "Question & Answer")
-         "* TODO %?\n  %i\n"
-         :prepend t)
-        ("b" "Body" entry (file+headline "~/github/org-pages/body.org" "Body Building")
-         "* TODO %?\n  %i\n"
-         :prepend t)
-        ("l" "Chrome" entry (file+headline "~/github/org-pages/link.org" "Link notes")
-         "* TODO %?\n %(zilongshanren/retrieve-chrome-current-tab-url)\n %i\n %U"
-         :empty-lines 1
-         :prepend t)
-        ;; ("h" "Habit" entry (file "~/github/org-pages/habit.org")
-        ;;  "* NEXT %?\nSCHEDULED: <%<%Y-%m-%d %a .+1d>>\n:PROPETIES:\n:CREATED: %U\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:LOGGING: DONE(!)\n:ARCHIVE: %%s_archive::* Habits\n:END:\n%U\n")
-       )
-      )
-;; (defun capture-report-date-file (path)
-;;   (interactive
-;;        (setq name (read-string "Name:" nil))
-;;        (expend-find-name(format "%s-%s.org" (format-time-string "%Y-%m-%d") name) path))
-;;    )
-
-;; (add-to-list 'org-capture-templates
-;;              `("n" "note" plain (file,(capture-report-data-file "~/github/org-pages/note/"))
-;;               ,(concat "#+startup: showall\n"
-;;                         "#+options: toc:nil\n"
-;;                         "#+begin_export html\n"
-;;                         "---\n"
-;;                         "layout     : post\n"
-;;                         "title      : %^{标题}\n"
-;;                         "categories : %^{类别}\n"
-;;                         "tags       : %^{标签}\n"
-;;                         "---\n"
-;;                         "+end_export\n"
-;;                         "#+TOC: headlines 2\n")))
-                                        ; Task state settings
-(setq org-todo-keywords '((sequence "TODO(t!)" "SOMEDAY(s)" "|" "DONE(d@/!)" "UNDO(u@/!)" "ABORT(a@/!)")))
-
-
-;; blog
-(require 'ox-publish)
-(setq org-export-with-section-numbers nil) ;this set the section with no number
-(setq org-html-validation-link nil) ;makes no validation below.
-(setq org-export-copy-to-kill-ring nil)
-(setq org-export-with-sub-superscripts nil)
-(setq org-html-postamble nil)
-
-(setq org-publish-project-alist
-      '(
-        ("org-html"
-         :base-directory "~/github/org-pages"
-         :base-extension "org"
-         :publishing-directory "~/github/html-pages"
-         :section-numbers nil
-         :recursive t
-         :publishing-function org-html-publish-to-html
-         :headline-levels 4
-         :auto-sitemap t
-         :sitemap-filename "sitemap.org"
-         :sitemap-title "Sitemap"
-         :auto-preamble t
-         :author nil
-         :creator-info nil
-         :auto-postamble nil)
-        ("org-static"
-         :base-directory "~/github/org-pages"
-         :base-extension "html\\|css\\|js\\|ico\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|java\\|py\\|zip\\|arff\\|dat\\|cpp\\|xls\\|otf\\|woff"
-         :publishing-directory "~/github/html-pages"
-         :recursive t
-         :publishing-function org-publish-attachment)
-        ("org-pages" :components ("org-html" "org-static"))
-        ))
-
-;; TODO
-(setq org-html-preamble "<a href=\"https://www.manue1.site/index.html\">Home</a>")
-
-;; 等宽
-                                        ;(set-face-attribute 'org-table nil :family "")
-
-;; Org table font
-(custom-set-faces
- '(org-table ((t (:family "Ubuntu Mono derivative Powerline")))))
-
-
-;;emacs orgmode 默认开启图片显示
-(setq org-toggle-inline-images t)
-(setq org-image-actual-width 300)
 
 
 ;; c-x c-o 使用chrome访问url
@@ -268,8 +152,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (add-to-list 'exec-path "/home/manue1/opt/w3m/bin")
-;; 设置w3m主页
-(setq w3m-home-page "http://www.baidu.com")
 ;; 默认显示图片
 (setq w3m-default-display-inline-images t)
 (setq w3m-default-toggle-inline-images t)
@@ -297,6 +179,8 @@
 (global-set-key (kbd "C-c e P") 'emms-pause)
 (global-set-key (kbd "C-c e r") 'emms-toggle-random-playlist)
 (global-set-key (kbd "C-c e R") 'emms-toggle-repeat-playlist)
+(global-set-key (kbd "C-=") 'emms-volume-mode-plus)
+(global-set-key (kbd "C--") 'emms-volume-mode-minus)
 
 
 (defun mpd/start-music-daemon ()
@@ -325,9 +209,3 @@
 ;; edit src
 (global-set-key (kbd "C-c '") 'org-edit-src-code)
 
-
-;; (require 'pomodoro)
-;; (pomodoro-start)
-;; (pomodoro-add-to-mode-line)
-;; (play-pomodoro-sound "~/.emacs.d/game_win.wav")
-;; (play-pomodoro-work-sound)

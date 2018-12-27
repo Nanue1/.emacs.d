@@ -11,7 +11,7 @@
       w3m-terminal-coding-system 'utf-8
       w3m-use-cookies t
       w3m-cookie-accept-bad-cookies t
-      w3m-home-page "http://www.google.com.au"
+      w3m-home-page "http://www.google.com.hk"
       w3m-command-arguments       '("-F" "-cookie")
       w3m-mailto-url-function     'compose-mail
       browse-url-browser-function 'w3m
@@ -40,21 +40,21 @@
 
 ;; C-u S g RET <search term> RET in w3m
 (setq w3m-search-engine-alist
-      '(("g" "http://www.google.com.au/search?q=%s" utf-8)
+      '(("g" "http://www.google.com.hk/search?q=%s" utf-8)
         ;; stackoverflow search
-        ("q" "http://www.google.com.au/search?q=%s+site:stackoverflow.com" utf-8)
+        ("q" "http://www.google.com.hk/search?q=%s+site:stackoverflow.com" utf-8)
         ;; elisp code search
-        ("s" "http://www.google.com.au/search?q=%s+filetype:el"  utf-8)
+        ("s" "http://www.google.com.hk/search?q=%s+filetype:el"  utf-8)
         ;; wikipedia
         ("w" "http://en.wikipedia.org/wiki/Special:Search?search=%s" utf-8)
         ;; online dictionary
         ("d" "http://dictionary.reference.com/search?q=%s" utf-8)
         ;; java google search
-        ("java" "https://www.google.com.au/search?q=java+%s" utf-8)
+        ("java" "https://www.google.com.hk/search?q=java+%s" utf-8)
         ;; financial dictionary
         ("f" "http://financial-dictionary.thefreedictionary.com/%s" utf-8)
         ;; javascript search on mozilla.org
-        ("j" "http://www.google.com.au/search?q=%s+site:developer.mozilla.org" utf-8)))
+        ("j" "http://www.google.com.hk/search?q=%s+site:developer.mozilla.org" utf-8)))
 
 (defun w3m-set-url-from-search-engine-alist (k l url)
     (if (listp l)
@@ -155,7 +155,7 @@
 									(concat "+filetype%3A" (file-name-extension buffer-file-name))
 									"")))
     ;; stackoverflow.com
-    (browse-url-generic (concat "http://www.google.com.au/search?hl=en&q="
+    (browse-url-generic (concat "http://www.google.com.hk/search?hl=en&q="
                                 keyword
                                 "+site:stackoverflow.com" ))
     ;; koders.com

@@ -231,6 +231,7 @@
 (require-package 'flymake-ruby)
 (require-package 'ivy)
 (require-package 'swiper)
+(require-package 'jedi)
 (require-package 'counsel) ; counsel => swiper => ivy
 (require-package 'find-file-in-project)
 (require-package 'counsel-bbdb)

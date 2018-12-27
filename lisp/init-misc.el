@@ -1243,7 +1243,7 @@ Including indent-buffer, which should not be called automatically on save."
      (setq pomodoro-work-time 25)
      (pomodoro-add-to-mode-line)
      (setq-default mode-line-format
-              (cons '(pomodoro-mode-line-string pomodoro-mode-line-string)
+              (cons '(pomodoro-mode-line-string)
                     mode-line-format))))
 
 (provide 'init-misc)

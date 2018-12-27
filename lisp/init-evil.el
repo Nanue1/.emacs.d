@@ -400,6 +400,7 @@ If the character before and after CH is space or tab, CH is NOT slash"
        "dj" 'dired-jump ;; open the dired from current file
        "xd" 'dired
        "xo" 'ace-window
+       "xr" 'recentf-open-files
        "ff" 'toggle-full-window ;; I use WIN+F in i3
        "ip" 'find-file-in-project
        "jj" 'find-file-in-project-at-point

@@ -200,6 +200,7 @@ Hunspell's default personal English dictionary is =$HOME/.hunspell_en_US=. The f
 **** xsel
 - Required by my clipboard command =copy-to-x-clipboard= and =paste-from-x-clipboard= under Linux
 - Install through OS package manager
+
 **** [[http://www.cmake.org][CMake]]
 - Required by =cpputils-cmake=
 - Install through OS package manager

@@ -255,4 +255,135 @@ If use-indirect-buffer is not nil, use `indirect-buffer' to hold the widen conte
   (interactive "P")
   (org-agenda arg "n"))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;
+;; org mode 个人配置
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;; 添加chrome link
+(defun zilongshanren/insert-chrome-current-tab-url()
+  "Get the URL of the active tab of the first window"
+  (interactive)
+  (insert (zilongshanren/retrieve-chrome-current-tab-url)))
+
+(defun zilongshanren/retrieve-chrome-current-tab-url()
+  "Get the URL of the active tab of the first window"
+  (interactive)
+  (let ((result (do-applescript
+		 (concat
+		  "set frontmostApplication to path to frontmost application\n"
+		  "tell application \"Google Chrome\"\n"
+		  "	set theUrl to get URL of active tab of first window\n"
+		  "	set theResult to (get theUrl) \n"
+		  "end tell\n"
+		  "activate application (frontmostApplication as text)\n"
+		  "set links to {}\n"
+		  "copy theResult to the end of links\n"
+		  "return links as string\n"))))
+    (format "%s" (s-chop-suffix "\"" (s-chop-prefix "\"" result)))))
+
+(setq org-agenda-files '("~/github/org-pages"))
+(global-set-key (kbd "C-c a") 'org-agenda)
+(global-set-key (kbd "C-c c") 'org-capture)
+(setq org-capture-templates
+      '(
+        ("a" "Q&A" entry (file+headline "~/github/org-pages/q&a.org" "Question & Answer")
+         "* TODO %?\n  #+BEGIN_QUOTE\n  DEADLINE: %^T\n %i\n  #+END_QUOTE\n"
+         :prepend t)
+        ("b" "Body" entry (file+headline "~/github/org-pages/body.org" "Body Building")
+         "* TODO %?\n  %i\n"
+         :prepend t)
+        ("c" "Code" entry (file+headline "~/github/org-pages/code.org" "Coding List")
+         "* TODO %?\n  %i\n"
+         :prepend t)
+        ("r" "Read" entry (file+olp"~/github/org-pages/read.org" "Reading List")
+         "* TODO %^{book:} %t\n%i\n"
+         :clock-in t
+         :clock-resume t
+         :prepend t)
+        ("w" "Write" entry (file+headline "~/github/org-pages/write.org" "Writing List")
+         "* TODO  %?\n  %i\n"
+         :prepend )
+        ("l" "Chrome" entry (file+headline "~/github/org-pages/link.org" "Link Notes")
+         "* TODO %?\n #+BEGIN_QUOTE\n %(zilongshanren/retrieve-chrome-current-tab-url)\n %i\n  DEADLINE:% ^T\n #+END_QUOTE\n"
+         :empty-lines 1
+         :prepend t)
+        ;; ("h" "Habit" entry (file "~/github/org-pages/habit.org")
+        ;;  "* NEXT %?\nSCHEDULED: <%<%Y-%m-%d %a .+1d>>\n:PROPETIES:\n:CREATED: %U\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:LOGGING: DONE(!)\n:ARCHIVE: %%s_archive::* Habits\n:END:\n%U\n")
+       )
+      )
+;; (defun capture-report-date-file (path)
+;;   (interactive
+;;        (setq name (read-string "Name:" nil))
+;;        (expend-find-name(format "%s-%s.org" (format-time-string "%Y-%m-%d") name) path))
+;;    )
+
+;; (add-to-list 'org-capture-templates
+;;              `("n" "note" plain (file,(capture-report-data-file "~/github/org-pages/note/"))
+;;               ,(concat "#+startup: showall\n"
+;;                         "#+options: toc:nil\n"
+;;                         "#+begin_export html\n"
+;;                         "---\n"
+;;                         "layout     : post\n"
+;;                         "title      : %^{标题}\n"
+;;                         "categories : %^{类别}\n"
+;;                         "tags       : %^{标签}\n"
+;;                         "---\n"
+;;                         "+end_export\n"
+;;                         "#+TOC: headlines 2\n")))
+                                        ; Task state settings
+(setq org-todo-keywords '((sequence "TODO(t!)" "SOMEDAY(s)" "|" "DONE(d@/!)" "UNDO(u@/!)" "ABORT(a@/!)")))
+
+
+;; blog
+(require 'ox-publish)
+(setq org-export-with-section-numbers nil) ;this set the section with no number
+(setq org-html-validation-link nil) ;makes no validation below.
+(setq org-export-copy-to-kill-ring nil)
+(setq org-export-with-sub-superscripts nil)
+(setq org-html-postamble nil)
+
+(setq org-publish-project-alist
+      '(
+        ("org-html"
+         :base-directory "~/github/org-pages"
+         :base-extension "org"
+         :publishing-directory "~/github/html-pages"
+         :section-numbers nil
+         :recursive t
+         :publishing-function org-html-publish-to-html
+         :headline-levels 4
+         :auto-sitemap t
+         :sitemap-filename "sitemap.org"
+         :sitemap-title "Sitemap"
+         :auto-preamble t
+         :author nil
+         :creator-info nil
+         :auto-postamble nil)
+        ("org-static"
+         :base-directory "~/github/org-pages"
+         :base-extension "html\\|css\\|js\\|ico\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|java\\|py\\|zip\\|arff\\|dat\\|cpp\\|xls\\|otf\\|woff"
+         :publishing-directory "~/github/html-pages"
+         :recursive t
+         :publishing-function org-publish-attachment)
+        ("org-pages" :components ("org-html" "org-static"))
+        ))
+
+;; TODO
+(setq org-html-preamble "<a href=\"https://www.manue1.site/index.html\">Home</a>")
+
+;; 等宽
+;(set-face-attribute 'org-table nil :family "")
+
+;; Org table font
+;; (custom-set-faces
+;;  '(org-table ((t (:family "Ubuntu Mono derivative Powerline")))))
+
+
+;;emacs orgmode 默认开启图片显示
+(setq org-toggle-inline-images t)
+(setq org-image-actual-width 300)
+
 (provide 'init-org)
