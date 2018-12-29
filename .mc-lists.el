@@ -3,6 +3,9 @@
 
 (setq mc/cmds-to-run-for-all
       '(
+        eval-buffer
+        evil-mouse-drag-region
+        evil-set-marker
         ))
 
 (setq mc/cmds-to-run-once

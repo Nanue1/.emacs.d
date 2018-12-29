@@ -298,16 +298,23 @@ If use-indirect-buffer is not nil, use `indirect-buffer' to hold the widen conte
         ("c" "Code" entry (file+headline "~/github/org-pages/code.org" "Coding List")
          "* TODO %?\n  %i\n"
          :prepend t)
+        ("g" "Bugs" entry (file+headline "~/github/org-pages/bug.org" "Bug List")
+         "* TODO %?\n  #+BEGIN_QUOTE\n  DEADLINE: %^T\n %i\n  #+END_QUOTE\n"
+         :prepend t)
+        ("p" "Python Promodoro" entry
+         (file+headline "~/github/org-pages/note/python.org" "Python Promodoro")
+         "* %^U %?\n  #+BEGIN_QUOTE\n  %i\n  #+END_QUOTE\n"
+         :prepend t)
         ("r" "Read" entry (file+olp"~/github/org-pages/read.org" "Reading List")
          "* TODO %^{book:} %t\n%i\n"
          :clock-in t
          :clock-resume t
          :prepend t)
         ("w" "Write" entry (file+headline "~/github/org-pages/write.org" "Writing List")
-         "* TODO  %?\n  %i\n"
-         :prepend )
+         "* TODO %^T %?\n  %i\n"
+         :prepend t)
         ("l" "Chrome" entry (file+headline "~/github/org-pages/link.org" "Link Notes")
-         "* TODO %?\n #+BEGIN_QUOTE\n %(zilongshanren/retrieve-chrome-current-tab-url)\n %i\n  DEADLINE:% ^T\n #+END_QUOTE\n"
+         "* TODO %?\n #+BEGIN_QUOTE\n %(zilongshanren/retrieve-chrome-current-tab-url)\n  DEADLINE:%^T\n  %i\n #+END_QUOTE\n"
          :empty-lines 1
          :prepend t)
         ;; ("h" "Habit" entry (file "~/github/org-pages/habit.org")

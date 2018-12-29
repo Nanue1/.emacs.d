@@ -1,10 +1,10 @@
+
 ;; init enable proxy
 ;;(toggle-env-http-proxy)
 
 
-
 ;; ag quick search word
-(global-set-key (kbd "C-c s") 'helm-do-ag-project-root)
+;;(global-set-key (kbd "C-c s") 'helm-do-ag-project-root)
 
 ;; utf-8 支持中文
 (set-language-environment "UTF-8")
@@ -13,7 +13,7 @@
 ;(global-set-key (kbd "M-s e") 'iedit-mode)
 
 ;;快速选中
-(global-set-key (kbd "C-;") 'er/expand-region)
+;;(global-set-key (kbd "C-;") 'er/expand-region)
 
 ;; occur 默认查找当前选中字段
 ;; (defun occur-dwim ()
@@ -171,16 +171,16 @@
 (setq emms-volume-change-function 'emms-volume-mpd-change)
 
 ;;;emms快捷键设置
-(global-set-key (kbd "C-c e b") 'emms-smart-browse)
-(global-set-key (kbd "C-c e c") 'emms-player-mpd-update-all-reset-cache)
-(global-set-key (kbd "C-c e l") 'emms-playlist-mode-go)
-(global-set-key (kbd "C-c e n") 'emms-next)
-(global-set-key (kbd "C-c e p") 'emms-previous)
-(global-set-key (kbd "C-c e P") 'emms-pause)
-(global-set-key (kbd "C-c e r") 'emms-toggle-random-playlist)
-(global-set-key (kbd "C-c e R") 'emms-toggle-repeat-playlist)
-(global-set-key (kbd "C-=") 'emms-volume-mode-plus)
-(global-set-key (kbd "C--") 'emms-volume-mode-minus)
+;; (global-set-key (kbd "C-c e b") 'emms-smart-browse)
+;; (global-set-key (kbd "C-c e c") 'emms-player-mpd-update-all-reset-cache)
+;; (global-set-key (kbd "C-c e l") 'emms-playlist-mode-go)
+;; (global-set-key (kbd "C-c e n") 'emms-next)
+;; (global-set-key (kbd "C-c e p") 'emms-previous)
+;; (global-set-key (kbd "C-c e P") 'emms-pause)
+;; (global-set-key (kbd "C-c e r") 'emms-toggle-random-playlist)
+;; (global-set-key (kbd "C-c e R") 'emms-toggle-repeat-playlist)
+;; (global-set-key (kbd "C-=") 'emms-volume-mode-plus)
+;; (global-set-key (kbd "C--") 'emms-volume-mode-minus)
 
 
 (defun mpd/start-music-daemon ()
@@ -207,5 +207,6 @@
 (global-set-key (kbd "C-c m u") 'mpd/update-database)
 
 ;; edit src
-(global-set-key (kbd "C-c '") 'org-edit-src-code)
+(global-set-key (kbd "C-c '") 'org-edit-sr)
 
+(workgroups-mode 1)

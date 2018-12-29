@@ -401,6 +401,7 @@ If the character before and after CH is space or tab, CH is NOT slash"
        "xd" 'dired
        "xo" 'ace-window
        "xr" 'recentf-open-files
+       "rf" 'elpy-format-code
        "ff" 'toggle-full-window ;; I use WIN+F in i3
        "ip" 'find-file-in-project
        "jj" 'find-file-in-project-at-point
@@ -544,6 +545,7 @@ If the character before and after CH is space or tab, CH is NOT slash"
        "ne" 'flymake-goto-next-error
        "bc" '(lambda () (interactive) (wxhelp-browse-class-or-api (thing-at-point 'symbol)))
        "og" 'org-agenda
+       "oc" 'org-capture
        "otl" 'org-toggle-link-display
        "oa" '(lambda ()
                (interactive)
@@ -604,14 +606,30 @@ If the character before and after CH is space or tab, CH is NOT slash"
 ;; {{ Use `SPC` as leader key
 ;; all keywords arguments are still supported
 (nvmap :prefix "SPC"
+       ";" 'er/expand-region ;;快速选中
        "ee" 'my-swap-sexps
+       "eb" 'emms-smart-browse ;;emms
+       "ec" 'emms-player-mpd-update-all-reset-cache
+       "el" 'emms-playlist-mode-go
+       "en" 'emms-next
+       "ep" 'emms-previous
+       "es" 'emms-pause
+       "ew" 'mpc-which-song
+       "era" 'emms-toggle-random-playlist
+       "ere" 'emms-toggle-repeat-playlist
+       "=" 'emms-volume-mode-plus
+       "-" 'emms-volume-mode-minus
+       "mc" 'mpd/start-music-daemon
+       "mk" 'mpd/kill-music-daemon
+       "mu" 'mpd/update-database
+       ;; "mn" 'mpc-next-prev-song
+       ;; "mp" '(lambda () (interactive) (mpc-next-prev-song t))
        "pc" 'my-dired-redo-from-commands-history
        "pw" 'pwd
        "cc" 'my-dired-redo-last-command
-       "ss" 'wg-create-workgroup ; save windows layout
+       "cs" 'helm-do-ag-project-root
        "se" 'evil-iedit-state/iedit-mode ; start iedit in emacs
        "sc" 'shell-command
-       "ll" 'my-wg-switch-workgroup ; load windows layout
        "kk" 'scroll-other-window
        "jj" 'scroll-other-window-up
        "rt" 'random-color-theme
@@ -648,12 +666,10 @@ If the character before and after CH is space or tab, CH is NOT slash"
        "ui" 'gud-stepi
        "uc" 'gud-cont
        "uf" 'gud-finish
-       "ma" 'mc/mark-all-like-this-dwim
-       "md" 'mc/mark-all-like-this-in-defun
-       "mm" 'ace-mc-add-multiple-cursors
-       "mn" 'mc/mark-next-like-this
-       "ms" 'mc/skip-to-next-like-this
-       "me" 'mc/edit-lines)
+       "wc" 'wg-create-workgroup ; save windows layout
+       "wl" 'my-wg-switch-workgroup ; load windows layout
+       "wk" 'wg-kill-workgroup-and-buffers
+       )
 
 ;; per-major-mode setup
 (general-define-key :states '(normal motion insert emacs)
@@ -727,9 +743,13 @@ If the character before and after CH is space or tab, CH is NOT slash"
        "ga" 'w3m-java-search
        "gh" 'w3mext-hacker-search ; code search in all engines with firefox
        "gq" 'w3m-stackoverflow-search
-       "mw" 'mpc-which-song
-       "mn" 'mpc-next-prev-song
-       "mp" '(lambda () (interactive) (mpc-next-prev-song t)))
+       "ma" 'mc/mark-all-like-this-dwim
+       "md" 'mc/mark-all-like-this-in-defun
+       "mm" 'ace-mc-add-multiple-cursors
+       "mn" 'mc/mark-next-like-this
+       "ms" 'mc/skip-to-next-like-this
+       "me" 'mc/edit-lines
+)
 ;; }}
 
 ;; {{ remember what we searched

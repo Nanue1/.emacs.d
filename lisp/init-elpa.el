@@ -101,7 +101,10 @@
         ;;("melpa" . "https://melpa.org/packages/")
         ;;("melpa-stable" . "https://stable.melpa.org/packages/")
         ;; remove emacs itself org 
-        ("org" . "https://orgmode.org/elpa/")
+        ;;("org" . "https://orgmode.org/elpa/")
+        ("org" . "http://elpa.emacs-china.org/org/")
+	("gnu"   . "http://elpa.emacs-china.org/gnu/")
+        ("melpa" . "http://elpa.emacs-china.org/melpa/")
         ;; Use either 163 or tsinghua mirror repository when official melpa
         ;; is too slow or shutdown.
 
@@ -231,7 +234,7 @@
 (require-package 'flymake-ruby)
 (require-package 'ivy)
 (require-package 'swiper)
-(require-package 'jedi)
+;;(require-package 'jedi)
 (require-package 'counsel) ; counsel => swiper => ivy
 (require-package 'find-file-in-project)
 (require-package 'counsel-bbdb)
