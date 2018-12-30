@@ -290,7 +290,7 @@ If use-indirect-buffer is not nil, use `indirect-buffer' to hold the widen conte
 (setq org-capture-templates
       '(
         ("a" "Q&A" entry (file+headline "~/github/org-pages/q&a.org" "Question & Answer")
-         "* TODO %?\n  #+BEGIN_QUOTE\n  DEADLINE: %^T\n %i\n  #+END_QUOTE\n"
+         "* TODO %?\n  #+BEGIN_QUOTE\n  SCHEDULED: %^T\n %i\n  #+END_QUOTE\n"
          :prepend t)
         ("b" "Body" entry (file+headline "~/github/org-pages/body.org" "Body Building")
          "* TODO %?\n  %i\n"
@@ -299,7 +299,7 @@ If use-indirect-buffer is not nil, use `indirect-buffer' to hold the widen conte
          "* TODO %?\n  %i\n"
          :prepend t)
         ("g" "Bugs" entry (file+headline "~/github/org-pages/bug.org" "Bug List")
-         "* TODO %?\n  #+BEGIN_QUOTE\n  DEADLINE: %^T\n %i\n  #+END_QUOTE\n"
+         "* TODO %?\n  #+BEGIN_QUOTE\n  SCHEDULED: %^T\n %i\n  #+END_QUOTE\n"
          :prepend t)
         ("p" "Python Promodoro" entry
          (file+headline "~/github/org-pages/note/python.org" "Python Promodoro")
@@ -314,7 +314,7 @@ If use-indirect-buffer is not nil, use `indirect-buffer' to hold the widen conte
          "* TODO %^T %?\n  %i\n"
          :prepend t)
         ("l" "Chrome" entry (file+headline "~/github/org-pages/link.org" "Link Notes")
-         "* TODO %?\n #+BEGIN_QUOTE\n %(zilongshanren/retrieve-chrome-current-tab-url)\n  DEADLINE:%^T\n  %i\n #+END_QUOTE\n"
+         "* TODO %?\n #+BEGIN_QUOTE\n %(zilongshanren/retrieve-chrome-current-tab-url) \n\n SCHEDULED:%^T\n  %i\n #+END_QUOTE\n"
          :empty-lines 1
          :prepend t)
         ;; ("h" "Habit" entry (file "~/github/org-pages/habit.org")
