@@ -527,10 +527,6 @@ If the character before and after CH is space or tab, CH is NOT slash"
        "fr" 'ffip-ivy-resume
        "fc" 'cp-ffip-ivy-last
        "ss" 'swiper-the-thing ; http://oremacs.com/2015/03/25/swiper-0.2.0/ for guide
-       "hst" 'hs-toggle-fold
-       "hsa" 'hs-toggle-fold-all
-       "hsh" 'hs-hide-block
-       "hss" 'hs-show-block
        "hd" 'describe-function
        "hf" 'find-function
        "hk" 'describe-key
@@ -544,8 +540,6 @@ If the character before and after CH is space or tab, CH is NOT slash"
        "pe" 'flymake-goto-prev-error
        "ne" 'flymake-goto-next-error
        "bc" '(lambda () (interactive) (wxhelp-browse-class-or-api (thing-at-point 'symbol)))
-       "og" 'org-agenda
-       "oc" 'org-capture
        "otl" 'org-toggle-link-display
        "oa" '(lambda ()
                (interactive)
@@ -622,19 +616,21 @@ If the character before and after CH is space or tab, CH is NOT slash"
        "mc" 'mpd/start-music-daemon
        "mk" 'mpd/kill-music-daemon
        "mu" 'mpd/update-database
-       ;; "mn" 'mpc-next-prev-song
-       ;; "mp" '(lambda () (interactive) (mpc-next-prev-song t))
        "pc" 'my-dired-redo-from-commands-history
        "pw" 'pwd
        "cc" 'my-dired-redo-last-command
-       "cs" 'helm-do-ag-project-root
        "se" 'evil-iedit-state/iedit-mode ; start iedit in emacs
        "sc" 'shell-command
        "kk" 'scroll-other-window
        "jj" 'scroll-other-window-up
        "rt" 'random-color-theme
        "yy" 'hydra-launcher/body
+       "ha" 'helm-do-ag-project-root
        "hh" 'multiple-cursors-hydra/body
+       "hs" 'hs-toggle-hiding
+       "hi" 'helm-imenu
+       "oa" 'org-agenda
+       "oc" 'org-capture
        "gi" 'gist-region ; only workable on my computer
        "tt" 'my-toggle-indentation
        "gg" 'magit-status
@@ -667,6 +663,7 @@ If the character before and after CH is space or tab, CH is NOT slash"
        "uc" 'gud-cont
        "uf" 'gud-finish
        "wc" 'wg-create-workgroup ; save windows layout
+       "ws" 'wg-save-session
        "wl" 'my-wg-switch-workgroup ; load windows layout
        "wk" 'wg-kill-workgroup-and-buffers
        )

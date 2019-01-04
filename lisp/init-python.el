@@ -8,7 +8,6 @@
      ;; run command `pip install jedi flake8 importmagic` in shell,
      ;; or just check https://github.com/jorgenschaefer/elpy
      (elpy-enable)
-
      ;; http://emacs.stackexchange.com/questions/3322/python-auto-indent-problem/3338#3338
      ;; emacs 24.4 only
      (setq electric-indent-chars (delq ?: electric-indent-chars))))
@@ -17,7 +16,7 @@
 (when (require 'elpy nil t)
   (elpy-enable)
   (pyvenv-activate "~/opt/virtualenvs/emacs-python")
-  ;;(setq elpy-rpc-backend "jedi")
+  (setq elpy-rpc-backend "jedi")
 )
 
 (defun goto-def-or-rgrep ()
@@ -27,8 +26,6 @@
     (error (elpy-rgrep-symbol (thing-at-point 'symbol)))))
 
 
-;; (add-hook 'python-mode-hook 'jedi:setup)
-;; (setq jedi:complete-on-dot t)                 ; optional
 
 (define-key elpy-mode-map (kbd "M-.") 'goto-def-or-rgrep)
 

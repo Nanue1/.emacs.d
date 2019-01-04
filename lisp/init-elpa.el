@@ -334,6 +334,7 @@
 (require-package 'stripe-buffer)
 (require-package 'visual-regexp) ;; Press "M-x vr-*"
 (require-package 'vimrc-mode)
+;;(require-package 'flycheck)
 (require-package 'reveal-in-osx-finder)
 
 (when *emacs25*
