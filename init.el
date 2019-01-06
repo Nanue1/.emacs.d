@@ -137,6 +137,7 @@
   (require 'init-hydra)
   (require 'init-shackle)
   (require 'init-dired)
+  (require 'init-alpha)
   (require 'init-artbollocks-mode)
 
   ;; @see https://github.com/hlissner/doom-emacs/wiki/FAQ
@@ -164,3 +165,4 @@
 ;;; no-byte-compile: t
 ;;; End:
 (put 'erase-buffer 'disabled nil)
+(put 'emms-browser-delete-files 'disabled nil)

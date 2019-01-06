@@ -1,4 +1,3 @@
-
 ;; init enable proxy
 ;;(toggle-env-http-proxy)
 
@@ -157,25 +156,14 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (setq exec-path (append exec-path '("/usr/local/bin")))
-(emms-default-players)
+(emms-all)
 (setq emms-player-list '(emms-player-mpd))
+(add-to-list 'emms-player-list 'emms-player-mpv)
 (setq emms-player-mpd-server-name "localhost")
 (setq emms-player-mpd-server-port "6600")
+(setq emms-player-mpd-music-directory "~/Music")
 (setq emms-info-functions '(emms-info-mpd))
 (setq emms-volume-change-function 'emms-volume-mpd-change)
-
-;;;emms快捷键设置
-;; (global-set-key (kbd "C-c e b") 'emms-smart-browse)
-;; (global-set-key (kbd "C-c e c") 'emms-player-mpd-update-all-reset-cache)
-;; (global-set-key (kbd "C-c e l") 'emms-playlist-mode-go)
-;; (global-set-key (kbd "C-c e n") 'emms-next)
-;; (global-set-key (kbd "C-c e p") 'emms-previous)
-;; (global-set-key (kbd "C-c e P") 'emms-pause)
-;; (global-set-key (kbd "C-c e r") 'emms-toggle-random-playlist)
-;; (global-set-key (kbd "C-c e R") 'emms-toggle-repeat-playlist)
-;; (global-set-key (kbd "C-=") 'emms-volume-mode-plus)
-;; (global-set-key (kbd "C--") 'emms-volume-mode-minus)
-
 
 (defun mpd/start-music-daemon ()
   "Start MPD, connects to it and syncs the metadata cache."
@@ -203,4 +191,4 @@
 ;; edit src
 (global-set-key (kbd "C-c '") 'org-edit-sr)
 
-(workgroups-mode 1)
+

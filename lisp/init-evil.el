@@ -603,7 +603,6 @@ If the character before and after CH is space or tab, CH is NOT slash"
        ";" 'er/expand-region ;;快速选中
        "ee" 'my-swap-sexps
        "eb" 'emms-smart-browse ;;emms
-       "ec" 'emms-player-mpd-update-all-reset-cache
        "el" 'emms-playlist-mode-go
        "en" 'emms-next
        "ep" 'emms-previous
@@ -611,13 +610,16 @@ If the character before and after CH is space or tab, CH is NOT slash"
        "ew" 'mpc-which-song
        "era" 'emms-toggle-random-playlist
        "ere" 'emms-toggle-repeat-playlist
-       "=" 'emms-volume-mode-plus
+       "=" 'emms-volume-mode-plus;; only control mpc
        "-" 'emms-volume-mode-minus
        "mc" 'mpd/start-music-daemon
        "mk" 'mpd/kill-music-daemon
        "mu" 'mpd/update-database
        "pc" 'my-dired-redo-from-commands-history
        "pw" 'pwd
+       "pp" 'perspective
+       ;; "ps" 'profiler-start
+       ;; "pr" 'profiler-report
        "cc" 'my-dired-redo-last-command
        "se" 'evil-iedit-state/iedit-mode ; start iedit in emacs
        "sc" 'shell-command
@@ -648,8 +650,6 @@ If the character before and after CH is space or tab, CH is NOT slash"
        "gv" 'git-gutter:set-start-revision
        "gh" 'git-gutter-reset-to-head-parent
        "gr" 'git-gutter-reset-to-default
-       "ps" 'profiler-start
-       "pr" 'profiler-report
        "ud" 'my-gud-gdb
        "uk" 'gud-kill-yes
        "ur" 'gud-remove

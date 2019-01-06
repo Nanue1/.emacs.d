@@ -1087,6 +1087,7 @@ If no region is selected. You will be asked to use `kill-ring' or clipboard inst
 This command will convert full path into relative path.
 Then insert it as a local file link in `org-mode'."
   (interactive)
+  (insert "#+ATTR_HTML: :width 30% :height 30% \n")
   (insert (format "[[file:%s]]" (file-relative-name (my-gclip)))))
 
 (defun font-file-to-base64 (file)
