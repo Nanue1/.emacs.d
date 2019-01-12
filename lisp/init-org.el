@@ -290,23 +290,27 @@ If use-indirect-buffer is not nil, use `indirect-buffer' to hold the widen conte
 (setq org-capture-templates
       '(
         ("a" "Q&A" entry (file+headline "~/github/org-pages/q&a.org" "Question & Answer")
-         "* TODO %?\n  #+BEGIN_QUOTE\n  SCHEDULED: %^T\n %i\n  #+END_QUOTE\n"
+         "* TODO %^u %?\n  #+BEGIN_QUOTE\n  SCHEDULED: %^T\n %i\n  #+END_QUOTE\n"
          :prepend t)
         ("b" "Body" entry (file+headline "~/github/org-pages/body.org" "Body Building")
-         "* TODO %?\n  %i\n"
+         "* TODO %^u %?\n  %i\n"
          :prepend t)
         ("c" "Code" entry (file+headline "~/github/org-pages/code.org" "Coding List")
-         "* TODO %?\n  %i\n"
+         "* TODO %^u %?\n  %i\n"
          :prepend t)
         ("g" "Bugs" entry (file+headline "~/github/org-pages/bug.org" "Bug List")
-         "* TODO %?\n  #+BEGIN_QUOTE\n  SCHEDULED: %^T\n %i\n  #+END_QUOTE\n"
+         "* TODO %^u %?\n  #+BEGIN_QUOTE\n  SCHEDULED: %^T\n %i\n  #+END_QUOTE\n"
+         :prepend t)
+        ("k" "Knowledge Fragment" plain
+         (file+headline "~/github/org-pages/fragment.org" "Knowledge Fragment")
+         "- %^u \n  #+BEGIN_QUOTE\n  %? \n  #+END_QUOTE\n"
          :prepend t)
         ("p" "Python Promodoro" entry
          (file+headline "~/github/org-pages/note/python.org" "Python Promodoro")
-         "* %^U %?\n  #+BEGIN_QUOTE\n  %i\n  #+END_QUOTE\n"
+         "* %^u %?\n  #+BEGIN_QUOTE\n  %i\n  #+END_QUOTE\n"
          :prepend t)
         ("r" "Read" entry (file+olp"~/github/org-pages/read.org" "Reading List")
-         "* TODO %^{book:} %t\n%i\n"
+         "* TODO %^u %? \n  #+BEGIN_QUOTE\n  SCHEDULED: <%<%Y-%m-%d %a .+1d>>\n  %i\n  #+END_QUOTE\n"
          :clock-in t
          :clock-resume t
          :prepend t)
@@ -314,13 +318,14 @@ If use-indirect-buffer is not nil, use `indirect-buffer' to hold the widen conte
          "* TODO %^T %?\n  %i\n"
          :prepend t)
         ("l" "Chrome" entry (file+headline "~/github/org-pages/link.org" "Link Notes")
-         "* TODO %?\n #+BEGIN_QUOTE\n %(zilongshanren/retrieve-chrome-current-tab-url) \n\n SCHEDULED:%^T\n  %i\n #+END_QUOTE\n"
+         "* TODO %^u %?\n #+BEGIN_QUOTE\n %(zilongshanren/retrieve-chrome-current-tab-url) \n\n SCHEDULED:%^T\n  %i\n #+END_QUOTE\n"
          :empty-lines 1
          :prepend t)
-        ;; ("h" "Habit" entry (file "~/github/org-pages/habit.org")
-        ;;  "* NEXT %?\nSCHEDULED: <%<%Y-%m-%d %a .+1d>>\n:PROPETIES:\n:CREATED: %U\n:STYLE: habit\n:REPEAT_TO_STATE: NEXT\n:LOGGING: DONE(!)\n:ARCHIVE: %%s_archive::* Habits\n:END:\n%U\n")
-       )
-      )
+        ("h" "Habit" entry (file "~/github/org-pages/habit.org")
+         "* TODO %^u %?\nSCHEDULED: <%<%Y-%m-%d %a .+1d>>\n:PROPETIES:\n:CREATED: %U\n:STYLE: habit\n:REPEAT_TO_STATE: TODO\n:LOGGING: DONE(!)\n:ARCHIVE: %%s_archive::* Habits\n:END:\n%U\n"
+         :empty-lines 1
+         :prepend t)
+      ))
 ;; (defun capture-report-date-file (path)
 ;;   (interactive
 ;;        (setq name (read-string "Name:" nil))

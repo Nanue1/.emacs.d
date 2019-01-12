@@ -1,3 +1,8 @@
+
+(when (or (display-graphic-p)
+          (string-match-p "256color"(getenv "TERM")))
+  (load-theme 'gruvbox-light-soft t))
+
 ;; init enable proxy
 ;;(toggle-env-http-proxy)
 
@@ -22,7 +27,6 @@
 ;;         regexp-history)
 ;;   (call-interactively 'occur))
 ;; (global-set-key (kbd "M-s o" ) 'occur-dwim)
-
 
 ;; remove ^M
 (defun remove-dos-eol ()
