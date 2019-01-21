@@ -138,6 +138,7 @@
   (require 'init-shackle)
   (require 'init-dired)
   (require 'init-alpha)
+  (require 'init-erc)
   (require 'init-artbollocks-mode)
 
   ;; @see https://github.com/hlissner/doom-emacs/wiki/FAQ
