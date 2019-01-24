@@ -1,4 +1,4 @@
-
+;; 主题配置需要
 (when (or (display-graphic-p)
           (string-match-p "256color"(getenv "TERM")))
   (load-theme 'gruvbox-light-soft t))
@@ -6,9 +6,6 @@
 ;; init enable proxy
 ;;(toggle-env-http-proxy)
 
-
-;; ag quick search word
-;;(global-set-key (kbd "C-c s") 'helm-do-ag-project-root)
 
 ;; utf-8 支持中文
 (set-language-environment "UTF-8")

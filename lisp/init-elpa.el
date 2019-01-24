@@ -282,6 +282,7 @@
 (require-package 'company-c-headers)
 (require-package 'company-statistics)
 (require-package 'elpy)
+(require-package 'anaconda-mode)
 (require-package 'legalese)
 (require-package 'simple-httpd)
 ;; (require-package 'git-gutter) ; use my patched version

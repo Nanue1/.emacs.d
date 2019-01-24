@@ -322,7 +322,7 @@ If use-indirect-buffer is not nil, use `indirect-buffer' to hold the widen conte
          :empty-lines 1
          :prepend t)
         ("h" "Habit" entry (file "~/github/org-pages/habit.org")
-         "* TODO %^u %?\nSCHEDULED: <%<%Y-%m-%d %a .+1d>>\n:PROPETIES:\n:CREATED: %U\n:STYLE: habit\n:REPEAT_TO_STATE: TODO\n:LOGGING: DONE(!)\n:ARCHIVE: %%s_archive::* Habits\n:END:\n%U\n"
+         "* TODO %^u %?\nSCHEDULED: <%<%Y-%m-%d %a .+1d>>\n:PROPETIES:\n:CREATED: %U\n\n:STYLE: habit\n\n:REPEAT_TO_STATE: TODO\n\n:LOGGING: DONE(!)\n\n:ARCHIVE: %%s_archive::* Habits\n\n:END:\n%U\n"
          :empty-lines 1
          :prepend t)
       ))

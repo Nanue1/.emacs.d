@@ -3,6 +3,8 @@
 (setq interpreter-mode-alist
       (cons '("python" . python-mode) interpreter-mode-alist))
 
+;; jedi
+
 (eval-after-load 'python
   '(progn
      ;; run command `pip install jedi flake8 importmagic` in shell,
@@ -19,14 +21,15 @@
   (setq elpy-rpc-backend "jedi")
 )
 
-(defun goto-def-or-rgrep ()
-  "Go to definition of thing at point or do an rgrep in project if that fails"
-  (interactive)
-  (condition-case nil (elpy-goto-definition)
-    (error (elpy-rgrep-symbol (thing-at-point 'symbol)))))
+(add-hook 'after-init-hook 'global-company-mode)
+(add-hook 'python-mode-hook 'anaconda-mode)
+(add-hook 'python-mode-hook 'anaconda-eldoc-mode)
 
-
-
-(define-key elpy-mode-map (kbd "M-.") 'goto-def-or-rgrep)
+;; (defun goto-def-or-rgrep ()
+;;   "Go to definition of thing at point or do an rgrep in project if that fails"
+;;   (interactive)
+;;   (condition-case nil (elpy-goto-definition)
+;;     (error (elpy-rgrep-symbol (thing-at-point 'symbol)))))
+;; (define-key elpy-mode-map (kbd "M-.") 'goto-def-or-rgrep)
 
 (provide 'init-python)
