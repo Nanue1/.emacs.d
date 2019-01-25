@@ -221,7 +221,6 @@
 (require-package 'link)
 (require-package 'connection)
 (require-package 'dictionary) ; dictionary requires 'link and 'connection
-(require-package 'htmlize)
 (require-package 'diminish)
 (require-package 'scratch)
 (require-package 'rainbow-delimiters)
@@ -299,6 +298,8 @@
 (require-package 'hungry-delete)
 (require-package 'org)
 (require-package 'org-plus-contrib)
+(require-package 'htmlize)
+
 (require-package 'ace-pinyin)
 (require-package 'bash-completion)
 (require-package 'websocket) ; for debug debugging of browsers

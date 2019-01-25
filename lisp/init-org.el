@@ -351,11 +351,23 @@ If use-indirect-buffer is not nil, use `indirect-buffer' to hold the widen conte
 
 ;; blog
 (require 'ox-publish)
-(setq org-export-with-section-numbers nil) ;this set the section with no number
-(setq org-html-validation-link nil) ;makes no validation below.
-(setq org-export-copy-to-kill-ring nil)
-(setq org-export-with-sub-superscripts nil)
-(setq org-html-postamble nil)
+
+(setq org-export-with-entities t)   ;; 导出时是否进行转义。查看转义字符命令：M-x org-entities-help。例如：将 org 文档中的 \vbar 转义成 html 中的 |
+
+;; HTML模板目录
+(defvar *site-template-directory* "~/github/org-pages/templates")
+
+(defun read-html-template (template-file)
+  (with-temp-buffer
+    (insert-file-contents (concat *site-template-directory* "/" template-file))
+    (buffer-string)))
+
+
+;; (setq org-export-with-section-numbers nil) ;this set the section with no number
+;; (setq org-html-validation-link nil) ;makes no validation below.
+;; (setq org-export-copy-to-kill-ring nil)
+;; (setq org-export-with-sub-superscripts nil)
+;; (setq org-html-postamble nil)
 
 (setq org-publish-project-alist
       '(
@@ -363,17 +375,20 @@ If use-indirect-buffer is not nil, use `indirect-buffer' to hold the widen conte
          :base-directory "~/github/org-pages"
          :base-extension "org"
          :publishing-directory "~/github/html-pages"
-         :section-numbers nil
+         ;; :language "zh-CN"              ;; 设置为 zh-CN 会影响一些东西。比如：目录会显示为汉字
+         ;; :section-numbers t             ;; 是否为标题编号
+         ;; :with-toc t                    ;; 是否创建 table of contents
+         ;; :with-latex t                  ;; 是否可以使用 latex
+         ;; :html-doctype "html5"          ;; 导出 h5
          :recursive t
          :publishing-function org-html-publish-to-html
          :headline-levels 4
+         :auto-preamble t
+         :author "manue1"
          :auto-sitemap t
          :sitemap-filename "sitemap.org"
          :sitemap-title "Sitemap"
-         :auto-preamble t
-         :author nil
-         :creator-info nil
-         :auto-postamble nil)
+         )
         ("org-static"
          :base-directory "~/github/org-pages"
          :base-extension "html\\|css\\|js\\|ico\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|java\\|py\\|zip\\|arff\\|dat\\|cpp\\|xls\\|otf\\|woff"
@@ -383,19 +398,12 @@ If use-indirect-buffer is not nil, use `indirect-buffer' to hold the widen conte
         ("org-pages" :components ("org-html" "org-static"))
         ))
 
-;; TODO
-(setq org-html-preamble "<a href=\"https://www.manue1.site/index.html\">Home</a>")
-
-;; 等宽
-;(set-face-attribute 'org-table nil :family "")
-
-;; Org table font
-;; (custom-set-faces
-;;  '(org-table ((t (:family "Ubuntu Mono derivative Powerline")))))
-
-
-;;emacs orgmode 默认开启图片显示
-(setq org-toggle-inline-images t)
-(setq org-image-actual-width 300)
+;; css 文件如果修改了，就需要重新加载该 el 文件，这样才能看到 html 样式的变化
+;; html-head.html 文件用来设置 html 的 <head> 部分。该文件中引入了 CSS 文件
+;; preamble.html 文件包含导航栏 html、谷歌搜索
+;; postamble.html 文件包含了网站声明、引入了 js 文件
+(setq org-html-head (read-html-template "html-head.html"))
+(setq org-html-preamble (read-html-template "preamble.html"))
+(setq org-html-postamble (read-html-template "postamble.html"))
 
 (provide 'init-org)
