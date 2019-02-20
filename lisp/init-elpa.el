@@ -278,8 +278,10 @@
 (require-package 'yasnippet-snippets)
 ;;自动补全
 (require-package 'company)
+(require-package 'company-go)
 (require-package 'company-c-headers)
 (require-package 'company-statistics)
+(require-package 'auto-complete)
 (require-package 'elpy)
 (require-package 'anaconda-mode)
 (require-package 'legalese)
@@ -336,7 +338,8 @@
 (require-package 'stripe-buffer)
 (require-package 'visual-regexp) ;; Press "M-x vr-*"
 (require-package 'vimrc-mode)
-;;(require-package 'flycheck)
+(require-package 'flycheck)
+(require-package 'go-mode)
 (require-package 'reveal-in-osx-finder)
 
 (when *emacs25*

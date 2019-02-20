@@ -139,6 +139,11 @@
   (require 'init-dired)
   (require 'init-alpha)
   (require 'init-erc)
+  (require 'init-go)
+  (require 'go-autocomplete)
+  (require 'go-flymake)
+  ;; (require 'ob-go)
+  ;; (require 'go-flycheck)
   (require 'init-artbollocks-mode)
 
   ;; @see https://github.com/hlissner/doom-emacs/wiki/FAQ

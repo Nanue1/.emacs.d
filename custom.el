@@ -1,3 +1,12 @@
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((python . t)
+   (C . t)
+   (go . t)
+   (emacs-lisp . t)
+   (shell . t)))
+
+
 ;; 主题配置需要
 (when (or (display-graphic-p)
           (string-match-p "256color"(getenv "TERM")))
