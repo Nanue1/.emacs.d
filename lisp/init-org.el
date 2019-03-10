@@ -309,6 +309,14 @@ If use-indirect-buffer is not nil, use `indirect-buffer' to hold the widen conte
          (file+headline "~/github/org-pages/note/python.org" "Python Promodoro")
          "* %^u %?\n  #+BEGIN_QUOTE\n  %i\n  #+END_QUOTE\n"
          :prepend t)
+        ("g" "GO Promodoro" entry
+         (file+headline "~/github/org-pages/note/go-promodoro.org" "GO Promodoro")
+         "* %^u %?\n  #+BEGIN_QUOTE\n  %i\n  #+END_QUOTE\n"
+         :prepend t)
+        ("s" "Algorithms Promodoro" entry
+         (file+headline "~/github/org-pages/algorithms/algorithms-promodoro.org" "Algorithms Promodoro")
+         "* %^u %?\n  #+BEGIN_QUOTE\n  %i\n  #+END_QUOTE\n"
+         :prepend t)
         ("r" "Read" entry (file+olp"~/github/org-pages/read.org" "Reading List")
          "* TODO %^u %? \n  #+BEGIN_QUOTE\n  SCHEDULED: <%<%Y-%m-%d %a .+1d>>\n  %i\n  #+END_QUOTE\n"
          :clock-in t

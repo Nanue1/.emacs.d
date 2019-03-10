@@ -3,6 +3,7 @@
  '((python . t)
    (C . t)
    (go . t)
+   (java . t)
    (emacs-lisp . t)
    (shell . t)))
 
@@ -156,8 +157,8 @@
 
 (add-to-list 'exec-path "/home/manue1/opt/w3m/bin")
 ;; 默认显示图片
-(setq w3m-default-display-inline-images t)
-(setq w3m-default-toggle-inline-images t)
+;;(setq w3m-default-display-inline-images t)
+;;(setq w3m-default-toggle-inline-images t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -200,5 +201,4 @@
 
 ;; edit src
 (global-set-key (kbd "C-c '") 'org-edit-sr)
-
 
