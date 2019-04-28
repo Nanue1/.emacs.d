@@ -1,4 +1,5 @@
 ;;; go-mode
+
 (autoload 'go-mode "go-mode" nil t)
 (add-to-list 'auto-mode-alist '("\\.go\\'" . go-mode))
 
@@ -28,16 +29,16 @@
 (setq ac-ignore-case t)
 
 ;; 上下选择联想项的快捷键
-(setq ac-use-menu-map t)
-(define-key ac-menu-map "\C-n" 'ac-next)
-(define-key ac-menu-map "\C-p" 'ac-previous)
+;; (setq ac-use-menu-map t)
+;; (define-key ac-menu-map "\C-n" 'ac-next)
+;; (define-key ac-menu-map "\C-p" 'ac-previous)
 
-(defadvice auto-complete-mode (around disable-auto-complete-for-python)
-  (unless (eq major-mode 'python-mode) ad-do-it))
+;; (defadvice auto-complete-mode (around disable-auto-complete-for-python)
+;;   (unless (eq major-mode 'python-mode) ad-do-it))
 
-(ad-activate 'auto-complete-mode)
+;; (ad-activate 'auto-complete-mode)
 
 ;; 保存前格式化代码
-(add-hook 'before-save-hook 'gofmt-before-save)
+;; (add-hook 'before-save-hook 'gofmt-before-save)
 
 (provide 'init-go)

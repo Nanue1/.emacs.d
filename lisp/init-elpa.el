@@ -339,7 +339,9 @@
 (require-package 'visual-regexp) ;; Press "M-x vr-*"
 (require-package 'vimrc-mode)
 (require-package 'flycheck)
+(require-package 'json-mode)
 (require-package 'go-mode)
+(require-package 'protobuf-mode)
 (require-package 'reveal-in-osx-finder)
 
 (when *emacs25*
