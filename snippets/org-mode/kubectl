@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: kc
+# key: kc
+# --
+
+#+begin_src  kubectl :action apply :context ${1:lxc-ns}
+
+#+end_src
+
+

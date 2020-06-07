@@ -1,198 +1,386 @@
-((("iocs" .
-   [2 0 0 0])
-  ("userFileGroup" .
-   [0 0 0 0 0 1 0 0 0 0 0 0 0])
-  ("common" .
-   [1 0 0 0 0 0])
-  ("com" .
+((("GetResourceStatusRequest" .
+   [0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("use-package binding" .
+   [0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("require-package" .
+   [0 0 0 0 0 0 0 0 0 1 0 0 0 0 0])
+  ("cfg" .
    [1 0 0])
-  ("state" .
-   [1 0 0 0 0])
-  ("State" .
-   [3 0 0 0 0])
-  ("extend_value" .
-   [0 0 0 1 0 0 0 0 0 0 0 0])
-  ("ExtendValue" .
-   [0 0 0 0 0 0 0 1 0 0 0])
-  ("make" .
+  ("Parse" .
+   [0 0 0 1 0])
+  ("KubeconfigDir" .
+   [0 0 1 0 0 0 0 0 0 0 0 0 0])
+  ("k" .
+   [2])
+  ("_" .
+   [1])
+  ("Kubernetes" .
+   [0 0 1 0 0 0 0 0 0 0])
+  ("Cfg" .
+   [1 0 0])
+  ("initConfig" .
+   [0 0 0 0 0 0 1 0 0 0])
+  ("Init" .
    [1 0 0 0])
-  ("fileGroupPb" .
-   [1 0 0 0 0 0 0 0 0 0 0])
-  ("file_group" .
-   [1 0 0 1 0 0 0 0 0 0])
-  ("file" .
+  ("kconfDir" .
+   [1 0 3 1 0 0 0 0])
+  ("cfgFile" .
+   [1 0 1 0 1 0 0])
+  ("conf" .
+   [2 0 0 0])
+  ("config" .
+   [1 0 0 0 0 0])
+  ("org-image-actual-width" .
+   [0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0])
+  ("org" .
+   [6 0 0])
+  ("org-toggle-inline-images" .
+   [0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0])
+  ("setq" .
+   [4 0 0 0])
+  ("lib" .
+   [3 0 0])
+  ("cdll" .
+   [1 0 0 0])
+  ("c_char_p" .
+   [0 0 1 0 0 0 0 0])
+  ("headA" .
+   [1 0 0 0 0])
+  ("Val" .
+   [1 0 0])
+  ("Next" .
+   [0 0 1 0])
+  ("head" .
+   [5 0 0 0])
+  ("PrintfList" .
+   [1 0 0 0 0 0 0 1 0 0])
+  ("Println" .
+   [1 0 0 0 0 0 0])
+  ("Printl" .
+   [1 0 0 0 0 0])
+  ("Print" .
+   [1 0 0 0 0])
+  ("Prin" .
+   [1 0 0 0])
+  ("Pi" .
+   [1 0])
+  ("strings" .
+   [0 0 0 0 0 1 0])
+  ("const" .
+   [0 0 0 0 1])
+  ("type" .
+   [0 0 1 0])
+  ("typeName" .
+   [1 0 1 0 0 0 0 0])
+  ("typ" .
+   [2 0 0])
+  ("indexName" .
+   [1 0 0 0 1 0 0 0 0])
+  ("Index" .
+   [2 0 0 0 0])
+  ("Fscan" .
+   [1 0 0 0 0])
+  ("DetectContentType" .
+   [1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("CloseNotifier" .
+   [1 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("net" .
+   [1 0 0])
+  ("map" .
+   [0 0 2])
+  ("main" .
+   [2 0 0 1])
+  ("CanonicalHeaderKey" .
+   [1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("http" .
+   [2 1 2 0])
+  ("defer" .
+   [0 0 0 1 0])
+  ("GoStringer" .
+   [1 0 0 0 0 0 0 0 0 0])
+  ("func" .
+   [0 0 0 1])
+  ("Printf" .
+   [0 0 1 0 0 0])
+  ("fmt" .
+   [0 0 4])
+  ("dump" .
+   [2 0 0 0])
+  ("dumps" .
+   [4 0 0 0 0])
+  ("choice" .
+   [1 0 0 0 0 0])
+  ("path" .
+   [2 0 0 0])
+  ("repr" .
+   [0 1 0 0])
+  ("randrange" .
+   [1 0 0 0 0 0 0 0 0])
+  ("go-autocomplete" .
+   [0 0 0 0 0 1 0 0 0 0 0 0 0 0 0])
+  ("go-flymake.el" .
+   [0 0 0 0 0 0 1 0 0 0 0 0 0])
+  ("go-flycheck.el" .
+   [0 0 0 0 0 0 0 1 0 0 0 0 0 0])
+  ("t" .
+   [3])
+  ("RegisterGetMongoIniServer" .
+   [0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("nil" .
+   [3 0 3])
+  ("real" .
+   [2 0 2 0])
+  ("return" .
+   [0 0 0 0 2 0])
+  ("B" .
+   [3])
+  ("Bet" .
+   [1 0 0])
+  ("Betch" .
+   [1 0 0 0 0])
+  ("BetchG" .
+   [1 0 0 0 0 0])
+  ("BetchGe" .
+   [1 0 0 0 0 0 0])
+  ("BetchGet" .
+   [1 0 0 0 0 0 0 0])
+  ("BetchGetF" .
+   [1 0 0 0 0 0 0 0 0])
+  ("File" .
+   [7 0 0 0])
+  ("ctx" .
+   [3 0 0])
+  ("context" .
+   [0 0 0 0 2 1 0])
+  ("C" .
+   [1])
+  ("req" .
+   [4 0 0])
+  ("api" .
+   [3 0 0])
+  ("CreateUserFileGroup" .
+   [1 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("Canceled" .
+   [0 1 0 0 0 0 0 0])
+  ("Context" .
+   [0 0 0 2 0 0 0])
+  ("apipb" .
+   [1 0 0 1 0])
+  ("userFileGroupPb" .
+   [2 0 0 0 0 0 0 1 2 0 2 0 0 0 0])
+  ("user_file_group" .
+   [0 0 0 0 3 0 0 0 0 0 0 0 0 0 0])
+  ("error" .
+   [0 0 1 0 0])
+  ("GetUserFie" .
+   [1 0 0 0 0 0 0 0 0 0])
+  ("GetUserFileGrouop" .
+   [1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("GetUserFileGroup" .
+   [1 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0])
+  ("UpdateUserFileGroup" .
+   [1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("Update" .
+   [2 0 0 0 0 0])
+  ("DeleteFi" .
+   [1 0 0 0 0 0 0 0])
+  ("DeleteUserFileGroup" .
+   [1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("delete" .
+   [0 0 1 0 0 0])
+  ("uid" .
+   [3 0 0])
+  ("s" .
+   [3])
+  ("file_group_name" .
+   [1 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("fg" .
+   [4 0])
+  ("mark" .
+   [2 0 0 0])
+  ("G" .
+   [3])
+  ("user" .
+   [3 0 1 0])
+  ("get" .
+   [1 0 0])
+  ("Mark" .
+   [4 0 0 0])
+  ("userFileGroupObj" .
+   [0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0])
+  ("I" .
+   [6])
+  ("In" .
+   [1 0])
+  ("Insert" .
+   [1 0 0 0 0 0])
+  ("InsertUs" .
+   [1 0 0 0 0 0 0 0])
+  ("InsertUser" .
+   [1 0 0 0 0 0 0 0 0 0])
+  ("name" .
+   [1 0 0 0])
+  ("MUserFileGroup" .
+   [0 0 1 0 0 0 0 0 0 0 0 0 0 0])
+  ("UserId" .
+   [0 0 0 0 1 0])
+  ("util" .
+   [1 0 0 0])
+  ("log" .
+   [5 0 0])
+  ("infra" .
+   [0 0 0 1 0])
+  ("Infof" .
+   [1 0 0 1 1])
+  ("Inf" .
+   [1 0 0])
+  ("Name" .
+   [2 0 0 0])
+  ("User" .
    [2 0 0 0])
   ("FileGroupName" .
    [0 0 0 0 1 0 0 0 0 0 0 0 0])
-  ("User" .
-   [2 0 0 0])
-  ("Name" .
-   [2 0 0 0])
-  ("Inf" .
+  ("file" .
+   [13 0 0 0])
+  ("file_group" .
+   [1 0 0 1 0 0 0 0 0 0])
+  ("fileGroupPb" .
+   [1 0 0 0 0 0 0 0 0 0 0])
+  ("make" .
+   [1 0 0 0])
+  ("ExtendValue" .
+   [0 0 0 0 0 0 0 1 0 0 0])
+  ("extend_value" .
+   [0 0 0 1 0 0 0 0 0 0 0 0])
+  ("State" .
+   [3 0 0 0 0])
+  ("state" .
+   [1 0 0 0 0])
+  ("com" .
    [1 0 0])
-  ("Infof" .
-   [1 0 0 1 1])
-  ("infra" .
-   [0 0 0 1 0])
-  ("log" .
-   [4 0 0])
-  ("util" .
-   [1 0 0 0])
-  ("UserId" .
-   [0 0 0 0 1 0])
-  ("MUserFileGroup" .
-   [0 0 1 0 0 0 0 0 0 0 0 0 0 0])
-  ("name" .
-   [1 0 0 0])
-  ("InsertUser" .
-   [1 0 0 0 0 0 0 0 0 0])
-  ("InsertUs" .
-   [1 0 0 0 0 0 0 0])
-  ("Insert" .
+  ("common" .
    [1 0 0 0 0 0])
-  ("In" .
-   [1 0])
-  ("I" .
-   [6])
-  ("userFileGroupObj" .
-   [0 0 0 0 0 0 2 0 0 0 0 0 0 0 0 0])
-  ("Mark" .
-   [4 0 0 0])
-  ("get" .
-   [1 0 0])
-  ("user" .
-   [2 0 1 0])
-  ("G" .
-   [3])
-  ("mark" .
+  ("userFileGroup" .
+   [0 0 0 0 0 1 0 0 0 0 0 0 0])
+  ("iocs" .
    [2 0 0 0])
-  ("fg" .
-   [4 0])
-  ("file_group_name" .
-   [1 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
-  ("s" .
-   [1])
-  ("uid" .
-   [3 0 0])
-  ("delete" .
-   [0 0 1 0 0 0])
-  ("DeleteUserFileGroup" .
-   [1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
-  ("DeleteFi" .
-   [1 0 0 0 0 0 0 0])
-  ("Update" .
-   [2 0 0 0 0 0])
-  ("UpdateUserFileGroup" .
-   [1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
-  ("GetUserFileGroup" .
-   [1 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0])
-  ("GetUserFileGrouop" .
-   [1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
-  ("GetUserFie" .
-   [1 0 0 0 0 0 0 0 0 0])
-  ("error" .
-   [0 0 1 0 0])
-  ("user_file_group" .
-   [0 0 0 0 3 0 0 0 0 0 0 0 0 0 0])
-  ("userFileGroupPb" .
-   [2 0 0 0 0 0 0 1 2 0 2 0 0 0 0])
-  ("apipb" .
-   [1 0 0 1 0])
-  ("Context" .
-   [0 0 0 2 0 0 0])
-  ("Canceled" .
-   [0 1 0 0 0 0 0 0])
-  ("CreateUserFileGroup" .
-   [1 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0])
-  ("api" .
-   [3 0 0])
-  ("req" .
-   [4 0 0])
-  ("C" .
-   [1])
-  ("context" .
-   [0 0 0 0 2 1 0])
-  ("ctx" .
-   [3 0 0])
-  ("File" .
-   [4 0 0 0])
-  ("BetchGetF" .
-   [1 0 0 0 0 0 0 0 0])
-  ("BetchGet" .
-   [1 0 0 0 0 0 0 0])
-  ("BetchGe" .
+  ("widget-default-format-handler" .
+   [0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("sandbox" .
    [1 0 0 0 0 0 0])
-  ("BetchG" .
-   [1 0 0 0 0 0])
-  ("Betch" .
-   [1 0 0 0 0])
-  ("Bet" .
-   [1 0 0])
-  ("B" .
-   [3])
-  ("return" .
-   [0 0 0 0 2 0])
-  ("real" .
-   [2 0 2 0])
-  ("nil" .
-   [1 0 3])
-  ("RegisterGetMongoIniServer" .
-   [0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
-  ("t" .
-   [1])
-  ("go-flycheck.el" .
-   [0 0 0 0 0 0 0 1 0 0 0 0 0 0])
-  ("go-flymake.el" .
-   [0 0 0 0 0 0 1 0 0 0 0 0 0])
-  ("go-autocomplete" .
-   [0 0 0 0 0 1 0 0 0 0 0 0 0 0 0])
-  ("randrange" .
+  ("sandboxa" .
+   [1 0 0 0 0 0 0 0])
+  ("sandboxA" .
+   [1 0 0 0 0 0 0 0])
+  ("sandboxAd" .
    [1 0 0 0 0 0 0 0 0])
-  ("repr" .
-   [0 1 0 0])
-  ("path" .
-   [2 0 0 0])
-  ("choice" .
+  ("str" .
+   [6 0 0])
+  ("token" .
+   [2 0 0 0 0])
+  ("string" .
+   [1 0 8 0 0 0])
+  ("c" .
+   [4])
+  ("CreateTime" .
+   [0 0 0 0 1 0 0 0 0 0])
+  ("creat_file_req" .
+   [0 0 0 1 1 0 0 0 0 0 0 0 0 0])
+  ("filePath" .
+   [0 0 0 0 0 1 0 0])
+  ("filePb" .
    [1 0 0 0 0 0])
-  ("dumps" .
-   [4 0 0 0 0])
-  ("dump" .
-   [2 0 0 0])
-  ("fmt" .
-   [0 0 4])
-  ("Printf" .
-   [0 0 1 0 0 0])
-  ("func" .
+  ("CreateFile_Request" .
+   [0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0])
+  ("Uri" .
+   [1 0 0])
+  ("s1" .
+   [3 0])
+  ("Sha1" .
+   [4 0 0 0])
+  ("Size" .
+   [1 0 0 0])
+  ("false" .
+   [0 1 0 0 0])
+  ("file_size" .
+   [0 0 0 0 0 1 0 0 0])
+  ("resp" .
    [0 0 0 1])
-  ("GoStringer" .
-   [1 0 0 0 0 0 0 0 0 0])
-  ("defer" .
-   [0 0 0 1 0])
-  ("http" .
-   [2 1 2 0])
-  ("CanonicalHeaderKey" .
-   [1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
-  ("main" .
-   [2 0 0 0])
-  ("map" .
-   [0 0 2])
-  ("net" .
+  ("uint" .
+   [0 0 1 1])
+  ("Create" .
+   [1 0 0 0 0 0])
+  ("sha" .
    [1 0 0])
-  ("CloseNotifier" .
-   [1 0 0 0 0 0 0 0 0 0 0 0 0])
-  ("DetectContentType" .
-   [1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
-  ("Fscan" .
-   [1 0 0 0 0])
-  ("Index" .
-   [1 0 0 0 0])
-  ("indexName" .
-   [1 0 0 0 1 0 0 0 0])
-  ("typ" .
-   [1 0 0])
-  ("typeName" .
-   [1 0 1 0 0 0 0 0])
-  ("type" .
+  ("sha1" .
+   [1 0 0 0])
+  ("filesize" .
+   [0 0 0 0 0 0 1 0])
+  ("uint64" .
+   [1 0 0 0 0 0])
+  ("content" .
+   [1 0 0 0 0 0 0])
+  ("byte" .
    [0 0 1 0])
-  ("const" .
-   [0 0 0 0 1])))
+  ("FileInfo" .
+   [0 1 1 0 0 0 0 0])
+  ("fileI" .
+   [1 0 0 0 0])
+  ("panic" .
+   [0 0 1 0 0])
+  ("Filesize" .
+   [0 0 0 0 0 0 0 1])
+  ("_fi" .
+   [0 0 1])
+  ("Get" .
+   [1 0 0])
+  ("in" .
+   [1 0])
+  ("i" .
+   [1])
+  ("val" .
+   [1 0 0])
+  ("esData" .
+   [0 0 1 0 0 0])
+  ("NeedTrace" .
+   [1 0 0 0 0 0 0 0 0])
+  ("package" .
+   [0 0 0 1 0 0 0])
+  ("lru" .
+   [1 0 0])
+  ("import" .
+   [0 0 0 1 0 0])
+  ("Test_LRUCache" .
+   [1 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("testing" .
+   [0 0 0 0 0 0 1])
+  ("T" .
+   [1])
+  ("NewLRUCache" .
+   [1 0 0 1 0 0 0 0 0 0 0])
+  ("cache" .
+   [0 0 0 1 0])
+  ("Put" .
+   [0 1 0])
+  ("asset" .
+   [1 0 0 0 0])
+  ("assert" .
+   [1 0 0 0 0 0])
+  ("New" .
+   [0 0 1])
+  ("v" .
+   [1])
+  ("int" .
+   [5 0 0])
+  ("seq" .
+   [1 0 0])
+  ("set" .
+   [3 0 0])
+  ("org-redisplay-inline-images" .
+   [0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("lsp-mode" .
+   [1 0 0 0 0 0 0 0])
+  ("lsp-ui" .
+   [1 0 0 0 0 0])
+  ("company-lsp" .
+   [1 0 0 0 0 0 0 0 0 0 0])))

@@ -1,5 +1,12 @@
 ;; -*- coding: utf-8; lexical-binding: t; -*-
 
+(defmacro my-ensure (feature)
+  "Make sure FEATURE is required."
+  `(unless (featurep ,feature)
+     (condition-case nil
+         (require ,feature)
+       (error nil))))
+
 ;; elisp version of try...catch...finally
 (defmacro safe-wrap (fn &rest clean-up)
   `(unwind-protect

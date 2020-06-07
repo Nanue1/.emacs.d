@@ -97,23 +97,36 @@
 (setq package-archives
       '(("localelpa" . "~/.emacs.d/localelpa/")
         ;; uncomment below line if you need use GNU ELPA
-        ;;("gnu" . "https://elpa.gnu.org/packages/")
-        ;;("melpa" . "https://melpa.org/packages/")
-        ;;("melpa-stable" . "https://stable.melpa.org/packages/")
-        ;; remove emacs itself org 
-        ;;("org" . "https://orgmode.org/elpa/")
+        ;; remove emacs itself org
+        ;; ("org" . "https://orgmode.org/elpa/")
+        ;; ("gnu" . "https://elpa.gnu.org/packages/")
+        ;; ("melpa" . "https://melpa.org/packages/")
+        ;; ("melpa-stable" . "https://stable.melpa.org/packages/")
+        ;; emacs-china
         ("org" . "http://elpa.emacs-china.org/org/")
-	("gnu"   . "http://elpa.emacs-china.org/gnu/")
+        ("gnu"   . "http://elpa.emacs-china.org/gnu/")
         ("melpa" . "http://elpa.emacs-china.org/melpa/")
         ;; Use either 163 or tsinghua mirror repository when official melpa
         ;; is too slow or shutdown.
-
         ;; ;; {{ Option 1: 163 mirror repository:
-        ;; ;; ("gnu" . "https://mirrors.163.com/elpa/gnu/")
+        ("gnu" . "https://mirrors.163.com/elpa/gnu/")
         ("melpa" . "https://mirrors.163.com/elpa/melpa/")
         ("melpa-stable" . "https://mirrors.163.com/elpa/melpa-stable/")
         ;; ;; }}
 
+        ("melpa" . "https://www.mirrorservice.org/sites/melpa.org/packages/")
+
+
+        ("gnu" . "https://mirrors.ustc.edu.cn/elpa/gnu/")
+        ("melpa" . "https://mirrors.ustc.edu.cn/elpa/melpa/")
+
+
+        ("gnu" . "https://mirrors.cloud.tencent.com/elpa/gnu/")
+        ("melpa" . "https://mirrors.cloud.tencent.com/elpa/melpa/")
+
+
+        ("gnu" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
+        ("melpa" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
         ;; ;; {{ Option 2: tsinghua mirror repository
         ;; ;; @see https://mirror.tuna.tsinghua.edu.cn/help/elpa/ on usage:
         ;; ;; ("gnu"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
@@ -147,21 +160,21 @@
   ARCHIVE is the string name of the package archive."
   (let* (rlt)
     (cond
-      ((string= archive "melpa-stable")
-       (setq rlt (not (memq package melpa-stable-banned-packages))))
-      ((string= archive "melpa")
-       ;; We still need use some unstable packages
-       (setq rlt (or (string-match-p (format "%s" package)
-                                     (mapconcat (lambda (s) (format "%s" s)) melpa-include-packages " "))
-                      ;; color themes are welcomed
-                      (string-match-p "-theme" (format "%s" package)))))
-      (t
-        ;; I'm not picky on other repositories
-        (setq rlt t)))
+     ((string= archive "melpa-stable")
+      (setq rlt (not (memq package melpa-stable-banned-packages))))
+     ((string= archive "melpa")
+      ;; We still need use some unstable packages
+      (setq rlt (or (string-match-p (format "%s" package)
+                                    (mapconcat (lambda (s) (format "%s" s)) melpa-include-packages " "))
+                    ;; color themes are welcomed
+                    (string-match-p "-theme" (format "%s" package)))))
+     (t
+      ;; I'm not picky on other repositories
+      (setq rlt t)))
     rlt))
 
 (defadvice package--add-to-archive-contents
-  (around filter-packages (package archive) activate)
+    (around filter-packages (package archive) activate)
   "Add filtering of available packages using `package-filter-function'."
   (if (package-filter-function (car package)
                                (funcall (if (fboundp 'package-desc-version)
@@ -187,7 +200,7 @@
 ;;------------------------------------------------------------------------------
 
 (require-package 'async)
-; color-theme 6.6.1 in elpa is buggy
+                                        ; color-theme 6.6.1 in elpa is buggy
 (require-package 'auto-compile)
 ;; M-x 提示包
 (require-package 'smex)
@@ -254,7 +267,8 @@
 (require-package 'cpputils-cmake)
 (require-package 'flyspell-lazy)
 (require-package 'bbdb)
-(require-package 'pomodoro)
+(require-package 'ox-gfm)
+;; (require-package 'pomodoro)
 (require-package 'flymake-lua)
 ;; rvm-open-gem to get gem's code
 (require-package 'rvm)
@@ -265,7 +279,7 @@
 (require-package 'js2-refactor)
 (require-package 'rjsx-mode)
 (require-package 's)
-;;运行js
+;;运行 js
 (require-package 'nodejs-repl)
 ;; js2-refactor requires js2, dash, s, multiple-cursors, yasnippet
 ;; I don't use multiple-cursors, but js2-refactor requires it
@@ -278,7 +292,8 @@
 (require-package 'yasnippet-snippets)
 ;;自动补全
 (require-package 'company)
-(require-package 'company-go)
+(require-package 'company-lsp)
+                                        ;(require-package 'company-go)
 (require-package 'company-c-headers)
 (require-package 'company-statistics)
 (require-package 'auto-complete)
@@ -300,6 +315,7 @@
 (require-package 'hungry-delete)
 (require-package 'org)
 (require-package 'org-plus-contrib)
+(require-package 'org-bullets)
 (require-package 'htmlize)
 
 (require-package 'ace-pinyin)
@@ -323,7 +339,7 @@
 (require-package 'slime)
 (require-package 'counsel-css)
 (require-package 'auto-package-update)
-;(require-package 'keyfreq)
+                                        ;(require-package 'keyfreq)
 (require-package 'adoc-mode) ; asciidoc files
 (require-package 'magit) ; Magit 2.12 is the last feature release to support Emacs 24.4.
 (require-package 'shackle)
@@ -335,12 +351,17 @@
 (require-package 'color-theme)
 ;; emms v5.0 need seq
 (require-package 'seq)
+(require-package 'use-package)
+(require-package 'lsp-mode)
+(require-package 'lsp-ui)
 (require-package 'stripe-buffer)
 (require-package 'visual-regexp) ;; Press "M-x vr-*"
 (require-package 'vimrc-mode)
 (require-package 'flycheck)
 (require-package 'json-mode)
-(require-package 'go-mode)
+(require-package 'yaml-mode)
+(require-package 'pangu-spacing)
+                                        ;(require-package 'go-mode)
 (require-package 'protobuf-mode)
 (require-package 'reveal-in-osx-finder)
 

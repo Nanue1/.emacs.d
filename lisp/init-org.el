@@ -153,12 +153,17 @@ If use-indirect-buffer is not nil, use `indirect-buffer' to hold the widen conte
 ;; Removes clocked tasks with 0:00 duration
 (setq org-clock-out-remove-zero-time-clocks t)
 
+(setq org-clock-display t)
+
+
+
 ;; Show the clocked-in task - if any - in the header line
 (defun sanityinc/show-org-clock-in-header-line ()
   (setq-default header-line-format '((" " org-mode-line-string " "))))
 
 (defun sanityinc/hide-org-clock-from-header-line ()
   (setq-default header-line-format nil))
+
 
 (add-hook 'org-clock-in-hook 'sanityinc/show-org-clock-in-header-line)
 (add-hook 'org-clock-out-hook 'sanityinc/hide-org-clock-from-header-line)
@@ -171,10 +176,20 @@ If use-indirect-buffer is not nil, use `indirect-buffer' to hold the widen conte
 
 (eval-after-load 'org
   '(progn
-     (setq org-imenu-depth 9)
-     (require 'org-clock)
-     ;; @see http://irreal.org/blog/1
-     (setq org-src-fontify-natively t)))
+    (setq org-imenu-depth 9)
+    (setq org-image-actual-width 400)
+    (require 'org-clock)
+    ;; 开启 org-mode <s 功能
+    (require 'org-tempo)
+    ;; @see http://irreal.org/blog/1
+    (setq org-src-fontify-natively t)))
+
+;; (defun shk-fix-inline-images ()
+;;   (when org-inline-image-overlays
+;;     (org-redisplay-inline-images)))
+
+;; (with-eval-after-load 'org
+;;   (add-hook 'org-babel-after-execute-hook 'shk-fix-inline-images))
 
 (defun org-mode-hook-setup ()
   (unless (is-buffer-file-temp)
@@ -262,7 +277,7 @@ If use-indirect-buffer is not nil, use `indirect-buffer' to hold the widen conte
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
-;; 添加chrome link
+;; 添加 chrome link
 (defun zilongshanren/insert-chrome-current-tab-url()
   "Get the URL of the active tab of the first window"
   (interactive)
@@ -284,51 +299,87 @@ If use-indirect-buffer is not nil, use `indirect-buffer' to hold the widen conte
 		  "return links as string\n"))))
     (format "%s" (s-chop-suffix "\"" (s-chop-prefix "\"" result)))))
 
-(setq org-agenda-files '("~/github/org-pages"))
+;; ;; recursively find .org files in provided directory
+;; ;; modified from an Emacs Lisp Intro example
+;; (defun sa-find-org-file-recursively (&optional directory filext)
+;;   "Return .org and .org_archive files recursively from DIRECTORY.
+;; If FILEXT is provided, return files with extension FILEXT instead."
+;;   (interactive "DDirectory: ")
+;;   (let* (org-file-list
+;;          (case-fold-search t)         ; filesystems are case sensitive
+;;          (file-name-regex "^[^.#].*") ; exclude dot, autosave, and backupfiles
+;;          (filext (or filext "org$\\\|org_archive"))
+;;          (fileregex (format "%s\\.\\(%s$\\)" file-name-regex filext))
+;;          (cur-dir-list (directory-files directory t file-name-regex)))
+;;     ;; loop over directory listing
+;;     (dolist (file-or-dir cur-dir-list org-file-list) ; returns org-file-list
+;;       (cond
+;;        ((file-regular-p file-or-dir)             ; regular files
+;;         (if (string-match fileregex file-or-dir) ; org files
+;;             (add-to-list 'org-file-list file-or-dir)))
+;;        ((file-directory-p file-or-dir)
+;;         (dolist (org-file (sa-find-org-file-recursively file-or-dir filext)
+;;                           org-file-list) ; add files found to result
+;;           (add-to-list 'org-file-list org-file)))))))
+
+;; (setq org-agenda-text-search-extra-files
+;;       (append (sa-find-org-file-recursively "~/github/org-pages/note" "txt")
+;;               (sa-find-org-file-recursively "~/github/org-pages/workspace/17zuoye" "tex")))
+(setq org-agenda-files (directory-files-recursively "~/github/org-pages" "\.org$"))
+;; (setq org-agenda-files '(""))
 (global-set-key (kbd "C-c a") 'org-agenda)
-(global-set-key (kbd "C-c c") 'org-capture)
+(global-set-key (kbd "C-c o") 'org-capture)
 (setq org-capture-templates
       '(
-        ("a" "Q&A" entry (file+headline "~/github/org-pages/q&a.org" "Question & Answer")
+        ("q" "Q&A" entry (file+headline "~/github/org-pages/q&a.org" "Question & Answer")
          "* TODO %^u %?\n  #+BEGIN_QUOTE\n  SCHEDULED: %^T\n %i\n  #+END_QUOTE\n"
          :prepend t)
-        ("b" "Body" entry (file+headline "~/github/org-pages/body.org" "Body Building")
-         "* TODO %^u %?\n  %i\n"
-         :prepend t)
-        ("c" "Code" entry (file+headline "~/github/org-pages/code.org" "Coding List")
-         "* TODO %^u %?\n  %i\n"
-         :prepend t)
-        ("g" "Bugs" entry (file+headline "~/github/org-pages/bug.org" "Bug List")
-         "* TODO %^u %?\n  #+BEGIN_QUOTE\n  SCHEDULED: %^T\n %i\n  #+END_QUOTE\n"
-         :prepend t)
+
+        ;; ("b" "Body" entry (file+headline "~/github/org-pages/body.org" "Body Building")
+        ;;  "* TODO %^u %?\n  %i\n"
+         ;; :prepend t)
+
+        ;; ("g" "Bugs" entry (file+headline "~/github/org-pages/bug.org" "Bug List")
+        ;;  "* TODO %^u %?\n  #+BEGIN_QUOTE\n  SCHEDULED: %^T\n %i\n  #+END_QUOTE\n"
+        ;;  :prepend t)
+
         ("k" "Knowledge Fragment" plain
          (file+headline "~/github/org-pages/fragment.org" "Knowledge Fragment")
          "- %^u \n  #+BEGIN_QUOTE\n  %? \n  #+END_QUOTE\n"
          :prepend t)
-        ("p" "Python Promodoro" entry
-         (file+headline "~/github/org-pages/note/python.org" "Python Promodoro")
-         "* %^u %?\n  #+BEGIN_QUOTE\n  %i\n  #+END_QUOTE\n"
-         :prepend t)
+
+
+        ;; ("p" "Python Promodoro" entry
+        ;;  (file+headline "~/github/org-pages/note/python.org" "Python Promodoro")
+        ;;  "* %^u %?\n  #+BEGIN_QUOTE\n  %i\n  #+END_QUOTE\n"
+        ;;  :prepend t)
+
         ("g" "GO Promodoro" entry
          (file+headline "~/github/org-pages/note/go-promodoro.org" "GO Promodoro")
          "* %^u %?\n  #+BEGIN_QUOTE\n  %i\n  #+END_QUOTE\n"
          :prepend t)
-        ("s" "Algorithms Promodoro" entry
+
+
+        ("a" "Algorithms Promodoro" entry
          (file+headline "~/github/org-pages/algorithms/algorithms-promodoro.org" "Algorithms Promodoro")
          "* %^u %?\n  #+BEGIN_QUOTE\n  %i\n  #+END_QUOTE\n"
          :prepend t)
+
         ("r" "Read" entry (file+olp"~/github/org-pages/read.org" "Reading List")
          "* TODO %^u %? \n  #+BEGIN_QUOTE\n  SCHEDULED: <%<%Y-%m-%d %a .+1d>>\n  %i\n  #+END_QUOTE\n"
          :clock-in t
          :clock-resume t
          :prepend t)
-        ("w" "Write" entry (file+headline "~/github/org-pages/write.org" "Writing List")
-         "* TODO %^T %?\n  %i\n"
-         :prepend t)
+
+        ;; ("w" "Write" entry (file+headline "~/github/org-pages/write.org" "Writing List")
+        ;;  "* TODO %^T %?\n  %i\n"
+        ;;  :prepend t)
+
         ("l" "Chrome" entry (file+headline "~/github/org-pages/link.org" "Link Notes")
-         "* TODO %^u %?\n #+BEGIN_QUOTE\n %(zilongshanren/retrieve-chrome-current-tab-url) \n\n SCHEDULED:%^T\n  %i\n #+END_QUOTE\n"
+         "* %^u %?\n #+BEGIN_QUOTE\n %(zilongshanren/retrieve-chrome-current-tab-url) \n\n SCHEDULED:%^T\n  %i\n #+END_QUOTE\n"
          :empty-lines 1
          :prepend t)
+
         ("h" "Habit" entry (file "~/github/org-pages/habit.org")
          "* TODO %^u %?\nSCHEDULED: <%<%Y-%m-%d %a .+1d>>\n:PROPETIES:\n:CREATED: %U\n\n:STYLE: habit\n\n:REPEAT_TO_STATE: TODO\n\n:LOGGING: DONE(!)\n\n:ARCHIVE: %%s_archive::* Habits\n\n:END:\n%U\n"
          :empty-lines 1
@@ -354,15 +405,45 @@ If use-indirect-buffer is not nil, use `indirect-buffer' to hold the widen conte
 ;;                         "+end_export\n"
 ;;                         "#+TOC: headlines 2\n")))
                                         ; Task state settings
-(setq org-todo-keywords '((sequence "TODO(t!)" "SOMEDAY(s)" "|" "DONE(d@/!)" "UNDO(u@/!)" "ABORT(a@/!)")))
 
+;; 调试好久的颜色，效果超赞！todo keywords 增加背景色
+;; (setf org-todo-keyword-faces '(("TODO" . (:foreground "white" :background "#95A5A6"   :weight bold))
+;;                                 ("HAND" . (:foreground "white" :background "#2E8B57"  :weight bold))
+;;                                 ("DONE" . (:foreground "white" :background "#3498DB" :weight bold))))
+
+;; agenda 里面时间块彩色显示
+;; From: https://emacs-china.org/t/org-agenda/8679/3
+(defun ljg/org-agenda-time-grid-spacing ()
+  "Set different line spacing w.r.t. time duration."
+  (save-excursion
+    (let* ((background (alist-get 'background-mode (frame-parameters)))
+           (background-dark-p (string= background "dark"))
+           (colors (list "#1ABC9C" "#2ECC71" "#3498DB" "#9966ff"))
+           pos
+           duration)
+      (nconc colors colors)
+      (goto-char (point-min))
+      (while (setq pos (next-single-property-change (point) 'duration))
+        (goto-char pos)
+        (when (and (not (equal pos (point-at-eol)))
+                   (setq duration (org-get-at-bol 'duration)))
+          (let ((line-height (if (< duration 30) 1.0 (+ 0.5 (/ duration 60))))
+                (ov (make-overlay (point-at-bol) (1+ (point-at-eol)))))
+            (overlay-put ov 'face `(:background ,(car colors)
+                                                :foreground
+                                                ,(if background-dark-p "black" "white")))
+            (setq colors (cdr colors))
+            (overlay-put ov 'line-height line-height)
+            (overlay-put ov 'line-spacing (1- line-height))))))))
+
+(add-hook 'org-agenda-finalize-hook #'ljg/org-agenda-time-grid-spacing)
 
 ;; blog
 (require 'ox-publish)
 
 (setq org-export-with-entities t)   ;; 导出时是否进行转义。查看转义字符命令：M-x org-entities-help。例如：将 org 文档中的 \vbar 转义成 html 中的 |
 
-;; HTML模板目录
+;; HTML 模板目录
 (defvar *site-template-directory* "~/github/org-pages/templates")
 
 (defun read-html-template (template-file)
@@ -413,5 +494,24 @@ If use-indirect-buffer is not nil, use `indirect-buffer' to hold the widen conte
 (setq org-html-head (read-html-template "html-head.html"))
 (setq org-html-preamble (read-html-template "preamble.html"))
 (setq org-html-postamble (read-html-template "postamble.html"))
+
+(setq my-holidays '(
+;;公历节日
+(holiday-fixed 2 14 "情人节")
+(holiday-fixed 9 10 "教师节")
+(holiday-float 6 0 3 "父亲节")
+;; 农历节日
+(holiday-lunar 1 1 "春节" 0)
+(holiday-lunar 1 15 "元宵节" 0)
+(holiday-solar-term "清明" "清明节")
+(holiday-lunar 5 5 "端午节" 0)
+(holiday-lunar 7 7 "七夕情人节" 0)
+(holiday-lunar 8 15 "中秋节" 0)
+;;纪念日
+(holiday-fixed 7 3 "冰茹生日")
+(holiday-lunar 4 6 "生日" 0)
+(holiday-lunar 4 15 "纪念日" 0)
+(holiday-lunar 5 8 "生日" 0) ))
+;;(setq calendar-holidays my-holidays);只显示我定制的节假日
 
 (provide 'init-org)

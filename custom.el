@@ -20,21 +20,6 @@
 ;; utf-8 支持中文
 (set-language-environment "UTF-8")
 
-;; occur 默认查找当前选中字段
-;; (defun occur-dwim ()
-;;   "Call occur with a sane default"
-;;   (interactive)
-;;   (push (if (region-active-p)
-;;             (buffer-substring-no-properties
-;;              (region-beginning)
-;;              (regin-end))
-;;           (let ((sym (thing-at-point 'symbol)))
-;;             (when (stringp sym)
-;;               (regexp-quote sym))))
-;;         regexp-history)
-;;   (call-interactively 'occur))
-;; (global-set-key (kbd "M-s o" ) 'occur-dwim)
-
 ;; remove ^M
 (defun remove-dos-eol ()
   "Replace Dos eolns CR LF with Unix eolns CR"
@@ -43,43 +28,51 @@
   (while (search-forward "\r" nil t) (replace-match "")))
 
 ;;dird mode set
-(fset 'yes-or-no-p 'y-or-n-p)
-(setq dired-recursive-deletes 'alawys)
-(setq dired-recursive-copies 'alawys)
-;;复用buffer
-(put 'dired-find-alternate-file 'disabled nil)
-;;(require 'dired) ;; 定义dired-mode下的快捷键需要开启diredmode
-(with-eval-after-load 'dired
-  (define-key dired-mode-map (kbd "RET") 'dired-find-alternate-file))
+;; (fset 'yes-or-no-p 'y-or-n-p)
+;; (setq dired-recursive-deletes 'alawys)
+;; (setq dired-recursive-copies 'alawys)
+;;复用 buffer
+;; (put 'dired-find-alternate-file 'disabled nil)
+;; (require 'dired) ;; 定义 dired-mode 下的快捷键需要开启 diredmode
+;; (with-eval-after-load 'dired
+;;   (define-key dired-mode-map (kbd "RET") 'dired-find-alternate-file))
 (require 'dired-x) ;; c-x c-j 快速打开当前文件所在目录
-(setq dired-dwim-target t) ;;打开两个dired 快速复制文件到另一个目录
-(global-set-key (kbd "s-f") 'reveal-in-osx-finder) ;; mac 快速调用finder查看文件所在目录
+;; (setq dired-dwim-target t) ;;打开两个 dired 快速复制文件到另一个目录
+(global-set-key (kbd "s-f") 'reveal-in-osx-finder) ;; mac 快速调用 finder 查看文件所在目录
 
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
-;;补充company补全功能
+;;补充 company 补全功能
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(setq hippie-expand-try-functions-list '(try-expand-dabbrev
-                                         try-expand-all-abbrevs
-                                         try-expand-dabbrev-from-kill
-                                         try-complete-file-name
-                                         try-complete-file-name-partially
-                                         try-expand-dabbrev-all-buffers
-                                         try-expand-list
-                                         try-expand-line
-                                         try-complete-lisp-symbol-partially
-                                         try-complete-lisp-symbol))
-;;(global-set-key (kbd "s-/") 'hippie-expand)
-;;统一切换体验c-n c-p
-(with-eval-after-load 'company
-  (define-key company-active-map (kbd "M-n") nil)
-  (define-key company-active-map (kbd "M-p") nil)
-  (define-key company-active-map (kbd "C-n") 'company-select-next)
-  (define-key company-active-map (kbd "C-p") 'company-select-previous))
+;; (setq hippie-expand-try-functions-list '(try-expand-dabbrev
+;;                                          try-expand-all-abbrevs
+;;                                          try-expand-dabbrev-from-kill
+;;                                          try-complete-file-name
+;;                                          try-complete-file-name-partially
+;;                                          try-expand-dabbrev-all-buffers
+;;                                          try-expand-list
+;;                                          try-expand-line
+;;                                          try-complete-lisp-symbol-partially
+;;                                          try-complete-lisp-symbol))
+;; (global-set-key (kbd "s-/") 'hippie-expand)
+
+;;统一切换体验 c-n c-p
+;; (with-eval-after-load 'company
+;;   (define-key company-active-map (kbd "M-n") nil)
+;;   (define-key company-active-map (kbd "M-p") nil)
+;;   (define-key company-active-map (kbd "C-n") 'company-select-next)
+;;   (define-key company-active-map (kbd "C-p") 'company-select-previous))
+
+
+;; (ac-config-default);; 全局开启了 ac
+;; (setq ac-ignore-case t);; 联想忽略大小写
+;; (setq ac-use-menu-map t);; 上下选择联想项的快捷键
+;; (define-key ac-menu-map "\C-n" 'ac-next)
+;; (define-key ac-menu-map "\C-p" 'ac-previous)
 
 ;;格式化缩进
 (defun indent-buffer ()
@@ -104,13 +97,13 @@
 (setq ring-bell-function 'ignore)
 
 ;;定义缩写  space + esc
-(abbrev-mode t)
-(define-abbrev-table 'global-abbrev-table '(
-                                            ;;manue1
-                                            ("6m" "manue1")
-                                            ;; Macrosoft
-                                            ("8ms" "Macrosoft")
-                                            ))
+;; (abbrev-mode t)
+;; (define-abbrev-table 'global-abbrev-table '(
+;;                                             ;;manue1
+;;                                             ("6m" "manue1")
+;;                                             ;; Macrosoft
+;;                                             ("8ms" "Macrosoft")
+;;                                             ))
 
 ;;优化删除 cc-mode : c-<delete>
 ;;(require 'hungry-delete)
@@ -121,10 +114,10 @@
 (setq auto-save-default nil)
 
 ;;优化查看帮助信息窗口弹出 q & c-g exit
-(require 'popwin)
-(popwin-mode t)
+;; (require 'popwin)
+;; (popwin-mode t)
 
-;;快速学习emacs
+;;快速学习 emacs
 (global-set-key (kbd "C-h C-f") 'find-function)
 (global-set-key (kbd "C-h C-v") 'find-variable)
 (global-set-key (kbd "C-h C-k") 'find-function-on-key)
@@ -141,17 +134,15 @@
 (setq recentf-max-menu-items 25)
 
 
-
-
-
-;; c-x c-o 使用chrome访问url
-(add-to-list 'exec-path "/opt/google/chrome")
-(setq browse-url-browser-function 'browse-url-generic
-      browse-url-generic-program "chrome")
+;; c-x c-o 使用 chrome 访问 url
+;; (setq browse-url-browser-function 'browse-url-default-macosx-browser)
+;; (add-to-list 'exec-path "/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome")
+;; (setq browse-url-browser-function 'browse-url-generic
+;;       browse-url-generic-program "chrome")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
-;;  设置emacs-w3m浏览器
+;;  设置 emacs-w3m 浏览器
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -162,7 +153,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
-;; emms mpd config 使用前需要c-c m c 同步mpd服务器状态
+;; emms mpd config 使用前需要 c-c m c 同步 mpd 服务器状态
 ;; mpc search any 天空 | mpc add 添加新的专辑
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -202,3 +193,35 @@
 ;; edit src
 (global-set-key (kbd "C-c '") 'org-edit-sr)
 
+;; 默认 c-u 不能向上翻半页
+(define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
+
+;; 开启 org-mode <s 功能
+;; (require 'org-tempo)
+
+;; 关闭左右括号自动补全
+;; (electric-pair-mode -1)
+
+
+;; (global-set-key (kbd "C-c f") 'lsp-find-definition)
+
+(require 'ox-md)
+
+;; 1. xelatex install for macos
+;; 2. org file head set:
+;; #+LATEX_HEADER: \usepackage{fontspec}
+;; #+LATEX_HEADER: \setmainfont{PingFang SC}
+;; (setq org-latex-pdf-process '("xelatex -interaction nonstopmode %f"
+;;                               "xelatex -interaction nonstopmode %f"))
+
+
+;; 美化 org mode 层级
+(require 'org-bullets)
+(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+
+(setq org-image-actual-width 300)
+
+
+;; 中英文间添加空白符
+(global-pangu-spacing-mode 1)
+(setq pangu-spacing-real-insert-separtor t)

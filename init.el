@@ -80,6 +80,7 @@
   ;; `package-initialize' takes 35% of startup time
   ;; need check https://github.com/hlissner/doom-emacs/wiki/FAQ#how-is-dooms-startup-so-fast for solution
   (require 'init-autoload)
+  ;; (require 'init-package)
   (require 'init-modeline)
   (require 'init-utils)
   (require 'init-elpa)
@@ -116,8 +117,8 @@
   (require 'init-evil)
   (require 'init-multiple-cursors)
   (require 'init-ctags)
-  (require 'init-bbdb)
-  (require 'init-gnus)
+  ;; (require 'init-bbdb)
+  ;; (require 'init-gnus)
   (require 'init-lua-mode)
   (require 'init-workgroups2)
   (require 'init-term-mode)
@@ -131,6 +132,8 @@
   ;; projectile costs 7% startup time
 
   ;; misc has some crucial tools I need immediately
+  (require 'init-essential)
+  ;; misc has some crucial tools I need immediately
   (require 'init-misc)
 
   (require 'init-emacs-w3m)
@@ -139,9 +142,12 @@
   (require 'init-dired)
   (require 'init-alpha)
   (require 'init-erc)
-  (require 'init-go)
-  (require 'go-autocomplete)
-  (require 'go-flymake)
+  ;; (require 'init-lsp)
+  ;; (require 'init-go)
+  (require 'init-proto)
+  (require 'init-kube)
+  ;; (require 'go-autocomplete)
+  ;; (require 'go-flymake)
   ;; (require 'ob-go)
   ;; (require 'go-flycheck)
   (require 'init-artbollocks-mode)

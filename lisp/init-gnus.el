@@ -15,9 +15,11 @@
           (lambda () (local-set-key "o" 'my-gnus-group-list-subscribed-groups )))
 
 (setq message-send-mail-function 'smtpmail-send-it
-      smtpmail-default-smtp-server "smtp.gmail.com"
-      smtpmail-smtp-service 587
-      smtpmail-local-domain "homepc")
+      smtpmail-default-smtp-server "smtp.17zuoye.com"
+      smtpmail-smtp-service 25
+      user-full-name "李绪春"
+      user-mail-address "xuchun.li@17zuoye.com"
+      smtpmail-local-domain "mac-pc")
 
 ;; @see http://www.fnal.gov/docs/products/emacs/emacs/gnus_3.html#SEC60
 ;; QUOTED: If you are using an unthreaded display for some strange reason ...

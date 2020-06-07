@@ -478,7 +478,7 @@ Keep the last num lines if argument num if given."
 ;; # Langdao Chinese => English
 ;; curl http://abloz.com/huzheng/stardict-dic/zh_CN/stardict-langdao-ec-gb-2.4.2.tar.bz2 | tar jx -C ~/.stardict/dic
 ;;
-(setq sdcv-dictionary-simple-list '("朗道英汉字典5.0"))
+(setq sdcv-dictionary-simple-list '("朗道英汉字典 5.0"))
 (setq sdcv-dictionary-complete-list '("WordNet"))
 ;; }}
 
@@ -1039,9 +1039,9 @@ If no region is selected. You will be asked to use `kill-ring' or clipboard inst
 ;; }}
 
 ;; {{ my blog tools
-(defun open-blog-on-current-month ()
+(defun open-work-on-current-month ()
   (interactive)
-  (find-file (file-truename (concat "~/blog/" (format-time-string "%Y-%m") ".org"))))
+  (find-file (file-truename (concat "~/github/org-pages/workspace/17zuoye/" (format-time-string "%Y-%m-第 %W 周") ".org"))))
 
 (defun insert-blog-version ()
   "Insert version of my blog post."
@@ -1215,19 +1215,19 @@ Including indent-buffer, which should not be called automatically on save."
 
 ;; {{ easygpg setup
 ;; @see http://www.emacswiki.org/emacs/EasyPG#toc4
-(defadvice epg--start (around advice-epg-disable-agent disable)
-  "Make `epg--start' not able to find a gpg-agent."
-  (let ((agent (getenv "GPG_AGENT_INFO")))
-    (setenv "GPG_AGENT_INFO" nil)
-    ad-do-it
-    (setenv "GPG_AGENT_INFO" agent)))
-
-(unless (string-match-p "^gpg (GnuPG) 1.4"
-                        (shell-command-to-string (format "%s --version" epg-gpg-program)))
-
-  ;; `apt-get install pinentry-tty` if using emacs-nox
-  ;; Create `~/.gnupg/gpg-agent.conf' container one line `pinentry-program /usr/bin/pinentry-curses`
-  (setq epa-pinentry-mode 'loopback))
+;;(defadvice epg--start (around advice-epg-disable-agent disable)
+;;  "Make `epg--start' not able to find a gpg-agent."
+;;  (let ((agent (getenv "GPG_AGENT_INFO")))
+;;    (setenv "GPG_AGENT_INFO" nil)
+;;    ad-do-it
+;;    (setenv "GPG_AGENT_INFO" agent)))
+;;
+;;(unless (string-match-p "^gpg (GnuPG) 1.4"
+;;                        (shell-command-to-string (format "%s --version" epg-gpg-program)))
+;;
+;;  ;; `apt-get install pinentry-tty` if using emacs-nox
+;;  ;; Create `~/.gnupg/gpg-agent.conf' container one line `pinentry-program /usr/bin/pinentry-curses`
+;;  (setq epa-pinentry-mode 'loopback))
 ;; }}
 
 ;; {{ show current function name in `mode-line'
