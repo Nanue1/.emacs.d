@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: init-org-page-body
+# key: opb
+# --
+
+#+BEGIN_QUOTE
+
+    $0
+
+#+END_QUOTE

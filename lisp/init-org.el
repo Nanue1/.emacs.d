@@ -365,6 +365,7 @@ If use-indirect-buffer is not nil, use `indirect-buffer' to hold the widen conte
          "* %^u %?\n  #+BEGIN_QUOTE\n  %i\n  #+END_QUOTE\n"
          :prepend t)
 
+
         ("r" "Read" entry (file+olp"~/github/org-pages/read.org" "Reading List")
          "* TODO %^u %? \n  #+BEGIN_QUOTE\n  SCHEDULED: <%<%Y-%m-%d %a .+1d>>\n  %i\n  #+END_QUOTE\n"
          :clock-in t
@@ -458,17 +459,20 @@ If use-indirect-buffer is not nil, use `indirect-buffer' to hold the widen conte
 ;; (setq org-export-with-sub-superscripts nil)
 ;; (setq org-html-postamble nil)
 
+;; https://orgmode.org/manual/Publishing-options.html
 (setq org-publish-project-alist
       '(
         ("org-html"
          :base-directory "~/github/org-pages"
          :base-extension "org"
+         :exclude "workspace/*"
          :publishing-directory "~/github/html-pages"
          ;; :language "zh-CN"              ;; 设置为 zh-CN 会影响一些东西。比如：目录会显示为汉字
          ;; :section-numbers t             ;; 是否为标题编号
          ;; :with-toc t                    ;; 是否创建 table of contents
-         ;; :with-latex t                  ;; 是否可以使用 latex
+         ;; :with-latex nil                  ;; 是否可以使用 latex
          ;; :html-doctype "html5"          ;; 导出 h5
+         :with-sub-superscript nil
          :recursive t
          :publishing-function org-html-publish-to-html
          :headline-levels 4
@@ -494,6 +498,8 @@ If use-indirect-buffer is not nil, use `indirect-buffer' to hold the widen conte
 (setq org-html-head (read-html-template "html-head.html"))
 (setq org-html-preamble (read-html-template "preamble.html"))
 (setq org-html-postamble (read-html-template "postamble.html"))
+
+(setq org-confirm-babel-evaluate nil)
 
 (setq my-holidays '(
 ;;公历节日

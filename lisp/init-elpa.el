@@ -28,27 +28,7 @@
     ;;counsel
     ;;swiper
     ;; }}
-    moe-theme
-    ample-theme
-    molokai-theme
-    alect-themes
-    tangotango-theme
     gruber-darker-theme
-    ample-zen-theme
-    flatland-theme
-    clues-theme
-    darkburn-theme
-    soothe-theme
-    dakrone-theme
-    busybee-theme
-    bubbleberry-theme
-    cherry-blossom-theme
-    heroku-theme
-    hemisu-theme
-    badger-theme
-    distinguished-theme
-    challenger-deep-theme
-    tao-theme
     wgrep
     robe
     slime
@@ -98,35 +78,35 @@
       '(("localelpa" . "~/.emacs.d/localelpa/")
         ;; uncomment below line if you need use GNU ELPA
         ;; remove emacs itself org
-        ;; ("org" . "https://orgmode.org/elpa/")
-        ;; ("gnu" . "https://elpa.gnu.org/packages/")
-        ;; ("melpa" . "https://melpa.org/packages/")
-        ;; ("melpa-stable" . "https://stable.melpa.org/packages/")
+        ("org" . "https://orgmode.org/elpa/")
+        ("gnu" . "https://elpa.gnu.org/packages/")
+        ("melpa" . "https://melpa.org/packages/")
+        ("melpa-stable" . "https://stable.melpa.org/packages/")
         ;; emacs-china
-        ("org" . "http://elpa.emacs-china.org/org/")
-        ("gnu"   . "http://elpa.emacs-china.org/gnu/")
-        ("melpa" . "http://elpa.emacs-china.org/melpa/")
+        ;; ("org" . "http://elpa.emacs-china.org/org/")
+        ;; ("gnu"   . "http://elpa.emacs-china.org/gnu/")
+        ;; ("melpa" . "http://elpa.emacs-china.org/melpa/")
         ;; Use either 163 or tsinghua mirror repository when official melpa
         ;; is too slow or shutdown.
         ;; ;; {{ Option 1: 163 mirror repository:
-        ("gnu" . "https://mirrors.163.com/elpa/gnu/")
-        ("melpa" . "https://mirrors.163.com/elpa/melpa/")
-        ("melpa-stable" . "https://mirrors.163.com/elpa/melpa-stable/")
+        ;; ("gnu" . "https://mirrors.163.com/elpa/gnu/")
+        ;; ("melpa" . "https://mirrors.163.com/elpa/melpa/")
+        ;; ("melpa-stable" . "https://mirrors.163.com/elpa/melpa-stable/")
         ;; ;; }}
 
-        ("melpa" . "https://www.mirrorservice.org/sites/melpa.org/packages/")
+        ;; ("melpa" . "https://www.mirrorservice.org/sites/melpa.org/packages/")
 
 
-        ("gnu" . "https://mirrors.ustc.edu.cn/elpa/gnu/")
-        ("melpa" . "https://mirrors.ustc.edu.cn/elpa/melpa/")
+        ;; ("gnu" . "https://mirrors.ustc.edu.cn/elpa/gnu/")
+        ;; ("melpa" . "https://mirrors.ustc.edu.cn/elpa/melpa/")
 
 
-        ("gnu" . "https://mirrors.cloud.tencent.com/elpa/gnu/")
-        ("melpa" . "https://mirrors.cloud.tencent.com/elpa/melpa/")
+        ;; ("gnu" . "https://mirrors.cloud.tencent.com/elpa/gnu/")
+        ;; ("melpa" . "https://mirrors.cloud.tencent.com/elpa/melpa/")
 
 
-        ("gnu" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
-        ("melpa" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
+        ;; ("gnu" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
+        ;; ("melpa" . "https://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")
         ;; ;; {{ Option 2: tsinghua mirror repository
         ;; ;; @see https://mirror.tuna.tsinghua.edu.cn/help/elpa/ on usage:
         ;; ;; ("gnu"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
@@ -366,36 +346,11 @@
 (require-package 'reveal-in-osx-finder)
 
 (when *emacs25*
-  (require-package 'zenburn-theme)
-  (require-package 'color-theme-sanityinc-solarized)
-  (require-package 'color-theme-sanityinc-tomorrow)
-  (require-package 'monokai-theme)
   (require-package 'molokai-theme) ; recommended
-  (require-package 'moe-theme)
   (require-package 'cyberpunk-theme) ; recommended
-  (require-package 'ample-theme)
-  (require-package 'gotham-theme)
-  (require-package 'gruvbox-theme)
-  (require-package 'alect-themes)
-  (require-package 'grandshell-theme)
-  (require-package 'tangotango-theme)
-  (require-package 'gruber-darker-theme)
-  (require-package 'ample-zen-theme)
-  (require-package 'flatland-theme)
-  (require-package 'clues-theme)
   (require-package 'darkburn-theme) ; recommended
-  (require-package 'dracula-theme) ; recommended
-  (require-package 'soothe-theme)
   (require-package 'dakrone-theme)
-  (require-package 'busybee-theme)
-  (require-package 'bubbleberry-theme)
-  (require-package 'cherry-blossom-theme)
-  (require-package 'heroku-theme)
-  (require-package 'hemisu-theme)
-  (require-package 'badger-theme)
-  (require-package 'distinguished-theme)
-  (require-package 'challenger-deep-theme)
-  (require-package 'tao-theme))
+  (require-package 'doom-themes))
 ;; }}
 
 ;; kill buffer without my confirmation

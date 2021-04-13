@@ -11,7 +11,7 @@
 ;; 主题配置需要
 (when (or (display-graphic-p)
           (string-match-p "256color"(getenv "TERM")))
-  (load-theme 'gruvbox-light-soft t))
+  (load-theme 'doom-one t))
 
 ;; init enable proxy
 ;;(toggle-env-http-proxy)
@@ -61,11 +61,11 @@
 ;; (global-set-key (kbd "s-/") 'hippie-expand)
 
 ;;统一切换体验 c-n c-p
-;; (with-eval-after-load 'company
-;;   (define-key company-active-map (kbd "M-n") nil)
-;;   (define-key company-active-map (kbd "M-p") nil)
-;;   (define-key company-active-map (kbd "C-n") 'company-select-next)
-;;   (define-key company-active-map (kbd "C-p") 'company-select-previous))
+(with-eval-after-load 'company
+  (define-key company-active-map (kbd "M-n") nil)
+  (define-key company-active-map (kbd "M-p") nil)
+  (define-key company-active-map (kbd "C-n") 'company-select-next)
+  (define-key company-active-map (kbd "C-p") 'company-select-previous))
 
 
 ;; (ac-config-default);; 全局开启了 ac
@@ -148,8 +148,8 @@
 
 (add-to-list 'exec-path "/home/manue1/opt/w3m/bin")
 ;; 默认显示图片
-;;(setq w3m-default-display-inline-images t)
-;;(setq w3m-default-toggle-inline-images t)
+(setq w3m-default-display-inline-images t)
+(setq w3m-default-toggle-inline-images t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -191,7 +191,7 @@
 (global-set-key (kbd "C-c m u") 'mpd/update-database)
 
 ;; edit src
-(global-set-key (kbd "C-c '") 'org-edit-sr)
+(global-set-key (kbd "C-c '") 'org-edit-src-code)
 
 ;; 默认 c-u 不能向上翻半页
 (define-key evil-normal-state-map (kbd "C-u") 'evil-scroll-up)
@@ -203,7 +203,6 @@
 ;; (electric-pair-mode -1)
 
 
-;; (global-set-key (kbd "C-c f") 'lsp-find-definition)
 
 (require 'ox-md)
 
@@ -218,6 +217,8 @@
 ;; 美化 org mode 层级
 (require 'org-bullets)
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+(setq valign-mode t)
+
 
 (setq org-image-actual-width 300)
 
@@ -225,3 +226,21 @@
 ;; 中英文间添加空白符
 (global-pangu-spacing-mode 1)
 (setq pangu-spacing-real-insert-separtor t)
+
+
+(setq debug-on-error t)
+
+
+;; (require 'org-wiki)
+;; (setq org-wiki-location-list
+;;       '(
+;;         "~/github/org-wiki/note"
+;;         "~/github/org-wiki/golang"
+;;         "~/github/org-wiki/k8s"
+;;         "~/github/caiorss/org-wiki/sandbox/wiki"
+;;         ))
+;; (setq org-wiki-location (car org-wiki-location-list))
+
+;; mermaid-mod
+(setq mermaid-mmdc-location "/usr/local/bin/mmdc")
+(setq mermaid-output-format  "/Users/manue1/github/org-pages/images/mermaid")

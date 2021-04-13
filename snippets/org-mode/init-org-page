@@ -1,6 +1,5 @@
 # -*- mode: snippet -*-
 # name: init-org-page-header
-# key: header
+# key: oph
 # --
-#+SETUPFILE: setup.org
 #+TITLE: $0

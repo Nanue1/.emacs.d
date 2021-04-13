@@ -80,12 +80,14 @@
   ;; `package-initialize' takes 35% of startup time
   ;; need check https://github.com/hlissner/doom-emacs/wiki/FAQ#how-is-dooms-startup-so-fast for solution
   (require 'init-autoload)
-  ;; (require 'init-package)
   (require 'init-modeline)
   (require 'init-utils)
   (require 'init-elpa)
   (require 'init-exec-path) ;; Set up $PATH
   ;; Any file use flyspell should be initialized after init-spelling.el
+  (require 'init-pkg)
+  (require 'init-hydra-lsp)
+  (require 'init-lsp)
   (require 'init-spelling)
   (require 'init-gui-frames)
   (require 'init-uniquify)
@@ -96,6 +98,7 @@
   (require 'init-markdown)
   ;;(require 'init-erlang)
   (require 'init-javascript)
+  (require 'init-valign)
   (require 'init-org)
   (require 'init-css)
   (require 'init-python)
@@ -143,9 +146,11 @@
   (require 'init-alpha)
   (require 'init-erc)
   ;; (require 'init-lsp)
-  ;; (require 'init-go)
+  (require 'init-go)
+  (require 'init-mermaid)
   (require 'init-proto)
   (require 'init-kube)
+  ;; (require 'init-wiki)
   ;; (require 'go-autocomplete)
   ;; (require 'go-flymake)
   ;; (require 'ob-go)
