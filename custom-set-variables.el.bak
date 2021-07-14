@@ -1,0 +1,103 @@
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(Linum-format "%7i ")
+ '(ansi-color-faces-vector
+   [default bold shadow italic underline bold bold-italic bold])
+ '(beacon-color "#d33682")
+ '(bmkp-last-as-first-bookmark-file "~/.emacs.d/bookmarks")
+ '(company-quickhelp-color-background "#4F4F4F")
+ '(company-quickhelp-color-foreground "#DCDCCC")
+ '(diary-entry-marker 'font-lock-variable-name-face)
+ '(emms-mode-line-icon-image-cache
+   '(image :type xpm :ascent center :data "/* XPM */
+static char *note[] = {
+/* width height num_colors chars_per_pixel */
+\"    10   11        2            1\",
+/* colors */
+\". c #1fb3b3\",
+\"# c None s None\",
+/* pixels */
+\"###...####\",
+\"###.#...##\",
+\"###.###...\",
+\"###.#####.\",
+\"###.#####.\",
+\"#...#####.\",
+\"....#####.\",
+\"#..######.\",
+\"#######...\",
+\"######....\",
+\"#######..#\" };"))
+ '(fci-rule-character-color "#202020")
+ '(fci-rule-color "#222222")
+ '(flycheck-color-mode-line-face-to-color 'mode-line-buffer-id)
+ '(frame-background-mode 'light)
+ '(frame-brackground-mode 'dark)
+ '(fringe-mode 6 nil (fringe))
+ '(git-gutter:handled-backends '(svn hg git))
+ '(gnus-logo-colors '("#2fdbde" "#c0c0c0") t)
+ '(gnus-mode-line-image-cache
+   '(image :type xpm :ascent center :data "/* XPM */
+static char *gnus-pointer[] = {
+/* width height num_colors chars_per_pixel */
+\"    18    13        2            1\",
+/* colors */
+\". c #1fb3b3\",
+\"# c None s None\",
+/* pixels */
+\"##################\",
+\"######..##..######\",
+\"#####........#####\",
+\"#.##.##..##...####\",
+\"#...####.###...##.\",
+\"#..###.######.....\",
+\"#####.########...#\",
+\"###########.######\",
+\"####.###.#..######\",
+\"######..###.######\",
+\"###....####.######\",
+\"###..######.######\",
+\"###########.######\" };") t)
+ '(linum-format 'dynamic)
+ '(main-line-color1 "#1E1E1E")
+ '(main-line-color2 "#111111")
+ '(main-line-separator-style 'chamfer)
+ '(nrepl-message-colors
+   '("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3"))
+ '(package-selected-packages
+   '(toml-mode lsp-ui rustic rust-mode ob-mermaid mermaid mermaid-mode org-wiki subr-x easymenu ox-html valign valign-mode which-key helm-lsp pretty-hydra lsp-treemacs dap-mode lsp-ivy paradox gnu-elpa-keyring-update go-gen-test flycheck-golangci-lint dired pangu-spacing kubernetes-evil ob quelpa kubel go-eldoc use-package ox-gfm ox-pandoc org-bullets edit-indirect zenburn-theme yasnippet-snippets yaml-mode writeroom-mode workgroups2 wgrep web-mode w3m visual-regexp vimrc-mode unfill toc-org textile-mode tao-theme tangotango-theme tagedit stripe-buffer soothe-theme smex slime simple-httpd shackle session scss-mode scratch rvm ruby-compilation robe rjsx-mode reveal-in-osx-finder request regex-tool rainbow-delimiters pyim protobuf-mode popwin paredit package-lint org-plus-contrib nvm nodejs-repl neotree multi-term monokai-theme molokai-theme moe-theme markdown-mode magit lua-mode link legalese jump jss json-mode js2-refactor js-doc ivy-hydra ibuffer-vc hungry-delete htmlize heroku-theme hemisu-theme helm-ag haskell-mode haml-mode gruvbox-theme gruber-darker-theme groovy-mode grandshell-theme gotham-theme go-mode gitignore-mode gitconfig-mode git-timemachine git-link gist fringe-helper flyspell-lazy flymake-ruby flymake-lua flymake-jslint flymake-css flycheck flatland-theme find-by-pinyin-dired expand-region exec-path-from-shell evil-visualstar evil-textobj-syntax evil-surround evil-nerd-commenter evil-matchit evil-mark-replace evil-lion evil-iedit-state evil-find-char-pinyin evil-exchange evil-escape evil-args emms emmet-mode elpy elpa-mirror dumb-jump dsvn dracula-theme distinguished-theme diminish dictionary darkburn-theme dakrone-theme cyberpunk-theme cpputils-cmake counsel-gtags counsel-css counsel-bbdb connection company-statistics company-jedi company-go company-c-headers command-log-mode color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized color-theme cmake-mode clues-theme cliphist cherry-blossom-theme challenger-deep-theme busybee-theme buffer-move bubbleberry-theme bbdb bash-completion badger-theme auto-yasnippet auto-package-update auto-complete auto-compile artbollocks-mode anaconda-mode ample-zen-theme ample-theme alect-themes adoc-mode ace-window ace-pinyin ace-mc ace-link))
+ '(powerline-color1 "#3d3d68")
+ '(powerline-color2 "#292945")
+ '(session-use-package t nil (session))
+ '(vc-annotate-background "#222222")
+ '(vc-annotate-color-map
+   '((20 . "#db4334")
+     (40 . "#ea3838")
+     (60 . "#abab3a")
+     (80 . "#e5c900")
+     (100 . "#fe8b04")
+     (120 . "#e8e815")
+     (140 . "#3cb370")
+     (160 . "#099709")
+     (180 . "#7fb07f")
+     (200 . "#32cd32")
+     (220 . "#8ce096")
+     (240 . "#528d8d")
+     (260 . "#1fb3b3")
+     (280 . "#0c8782")
+     (300 . "#30a5f5")
+     (320 . "#62b6ea")
+     (340 . "#94bff3")
+     (360 . "#e353b9")))
+ '(vc-annotate-very-old-color "#e353b9")
+ '(window-divider-mode nil))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(lsp-ui-sideline-code-action ((t (:inherit warning))))
+ '(window-numbering-face ((t (:foreground "DeepPink" :underline "DeepPink" :weight bold))) t))

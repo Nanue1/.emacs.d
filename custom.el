@@ -3,6 +3,7 @@
  '((python . t)
    (C . t)
    (go . t)
+   (rust . t)
    (java . t)
    (emacs-lisp . t)
    (shell . t)))
@@ -14,7 +15,7 @@
   (load-theme 'doom-one t))
 
 ;; init enable proxy
-;;(toggle-env-http-proxy)
+(toggle-env-http-proxy)
 
 
 ;; utf-8 支持中文
@@ -228,7 +229,7 @@
 (setq pangu-spacing-real-insert-separtor t)
 
 
-(setq debug-on-error t)
+;(setq debug-on-error t)
 
 
 ;; (require 'org-wiki)

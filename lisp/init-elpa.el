@@ -83,9 +83,9 @@
         ("melpa" . "https://melpa.org/packages/")
         ("melpa-stable" . "https://stable.melpa.org/packages/")
         ;; emacs-china
-        ;; ("org" . "http://elpa.emacs-china.org/org/")
-        ;; ("gnu"   . "http://elpa.emacs-china.org/gnu/")
-        ;; ("melpa" . "http://elpa.emacs-china.org/melpa/")
+        ;;("org" . "http://elpa.emacs-china.org/org/")
+        ;;("gnu"   . "http://elpa.emacs-china.org/gnu/")
+        ;;("melpa" . "http://elpa.emacs-china.org/melpa/")
         ;; Use either 163 or tsinghua mirror repository when official melpa
         ;; is too slow or shutdown.
         ;; ;; {{ Option 1: 163 mirror repository:
@@ -221,9 +221,9 @@
 (require-package 'dsvn)
 (require-package 'git-timemachine)
 (require-package 'exec-path-from-shell) ;; mac requires
-(require-package 'flymake-css)
-(require-package 'flymake-jslint)
-(require-package 'flymake-ruby)
+;; (require-package 'flymake-css)
+;; (require-package 'flymake-jslint)
+;; (require-package 'flymake-ruby)
 (require-package 'ivy)
 (require-package 'swiper)
 (require-package 'company-jedi)
@@ -249,7 +249,7 @@
 (require-package 'bbdb)
 (require-package 'ox-gfm)
 ;; (require-package 'pomodoro)
-(require-package 'flymake-lua)
+;; (require-package 'flymake-lua)
 ;; rvm-open-gem to get gem's code
 (require-package 'rvm)
 ;; C-x r l to list bookmarks
@@ -272,8 +272,7 @@
 (require-package 'yasnippet-snippets)
 ;;自动补全
 (require-package 'company)
-(require-package 'company-lsp)
-                                        ;(require-package 'company-go)
+
 (require-package 'company-c-headers)
 (require-package 'company-statistics)
 (require-package 'auto-complete)
@@ -333,6 +332,9 @@
 (require-package 'seq)
 (require-package 'use-package)
 (require-package 'lsp-mode)
+;; (require-package 'rust-mode)
+;; (require-package 'rustic)
+(require-package 'go-mode)
 (require-package 'lsp-ui)
 (require-package 'stripe-buffer)
 (require-package 'visual-regexp) ;; Press "M-x vr-*"

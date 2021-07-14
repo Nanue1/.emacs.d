@@ -1,5 +1,4 @@
 
-[[https://github.com/redguardtoo/emacs.d][chen bin]]
 
 =ln -s github/.emacs.d  ~/.emacs.d=
 
